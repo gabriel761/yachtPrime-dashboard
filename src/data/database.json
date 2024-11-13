@@ -1,0 +1,114 @@
+{
+    "modelos": [
+        {
+            "marca": "Alfa",
+            "modelos": [
+                {"nome": "Alfa 300"}
+            ]
+        },
+        {
+            "marca": "Altamar",
+            "modelos": [
+                {"nome": "Altamar"},
+                {"nome": "Altamar 50"},
+                {"nome": "Altamar 50 - Fifty"},
+                {"nome": "Altamar 50 - Fly"}
+            ]
+        },
+        {
+            "marca": "Alternativa",
+            "modelos": [
+                {"nome": "Alternativa 21"},
+                {"nome": "Alternativa 630"},
+                {"nome": "Marlin 22"}
+            ]
+        },
+        {
+            "marca": "Alumnatec",
+            "modelos": [
+                {"nome": "Aluminatec 80"}
+            ]
+        },
+        {
+            "marca": "Angra",
+            "modelos": [
+                {"nome": "Angra 30"},
+                {"nome": "Angra 32 Full"}
+            ]
+        }
+    ],
+    "motores": [
+        {
+            "marca": "Caterpillar",
+            "motor": [
+                {"nome": "Caterpillar  - - 1653HP - Diesel"},
+                {"nome": "Caterpillar 3106 - 350HP - Diesel"},
+                {"nome": "Caterpillar 3116 - 350HP - Diesel"},
+                {"nome": "Caterpillar 3126 - 420HP - Diesel"},
+                {"nome": "Caterpillar 3208 - 350HP - Diesel"},
+                {"nome": "Caterpillar 3408 - 585HP - Diesel"},
+                {"nome": "Caterpillar 3408 - 800HP - Diesel"},
+                {"nome": "Caterpillar 3412 - 1200HP - Diesel"},
+                {"nome": "Caterpillar 420 - 420HP - Diesel"},
+                {"nome": "Caterpillar 435 - 435HP - Diesel"},
+                {"nome": "Caterpillar 700 - 700HP - Diesel"},
+                {"nome": "Caterpillar 750 - 750HP - Diesel"},
+                {"nome": "Caterpillar C32 - 1675HP - Diesel"},
+                {"nome": "Caterpillar C32 ACERT V12 - 1825HP - Diesel"},
+                {"nome": "Caterpillar C9 - 575HP - Diesel"},
+                {"nome": "Caterpillar Caterpillar 1015 - 1015HP - Diesel"},
+                {"nome": "Caterpillar Caterpillar 1150 - 1150HP - Diesel"},
+                {"nome": "Caterpillar DI 1015 - 1015HP - Diesel"}
+            ]
+        },
+        {
+            "marca": "Cummins",
+            "motor":[
+                {"nome": "Cummins 150 - 150HP - Diesel"},
+                {"nome": "Cummins 480 - 480HP - Diesel"},
+                {"nome": "Cummins 5,9L - 425HP - Diesel"},
+                {"nome": "Cummins 500 - 500HP - Diesel"},
+                {"nome": "Cummins 600 - 600HP - Diesel"},
+                {"nome": "Cummins 6CT - 220HP - Diesel"},
+                {"nome": "cummins Axus 350 - 350HP - Diesel"},
+                {"nome": "Cummins CMD ZEUS 380 - 364HP - Diesel"},
+                {"nome": "Cummins - 400HP - Diesel"},
+                {"nome": "Cummins 350 - 350HP - Diesel"},
+                {"nome": "Cummins QSB 8,3 600 CV - 600HP - Diesel"},
+                {"nome": "Cummins QSD 2.0L - 170HP - Diesel"},
+                {"nome": "Cummins NTA 855 - 500HP - Diesel"},
+                {"nome": "Cummins NTA 855 M3 - 420HP - Diesel"},
+                {"nome": "Cummins QSB - 435HP - Diesel"},
+                {"nome": "Cummins QSB 5.9 - 355HP - Diesel"},
+                {"nome": "Cummins QSD 4.2L - 270HP - Diesel"}
+            ]
+        },
+        {
+            "marca": "Detroit",
+            "motor": [
+                {"nome":"Detroit 8VF92 - 735HP - Diesel"}
+            ]
+        },
+        {
+            "marca": "Evinrude",
+            "motor": [
+                {"nome":"Evinrude 175 Ficht - 175HP - Gasolina"},
+                {"nome":"Evinrude 220 - 220HP - Gasolina"},
+                {"nome":"Evinrude E-tec - 115HP - Gasolina"},
+                {"nome":"Evinrude E-Tec - 150HP - Gasolina"},
+                {"nome":"Evinrude E-Tec - 225HP - Gasolina"},
+                {"nome":"Evinrude E-Tec - 250HP - Gasolina"},
+                {"nome":"Evinrude EFI - 150HP - Gasolina"},
+                {"nome":"Evinrude Ficht Ram - 225HP - Gasolina"},
+                {"nome":"Evinrude Fight Ram - 250HP - Gasolina"},
+                {"nome":"Evinrude Optimax - 200HP - Gasolina"},
+                {"nome":"Evinrude Vindicator - 200HP - Gasolina"}
+            ]
+        }
+    ],
+    "usuarios": [
+        {"nome": "Eduardo Omar"},
+        {"nome": "Paulo André"},
+        {"nome": "João Gabriel"}
+    ]
+}
