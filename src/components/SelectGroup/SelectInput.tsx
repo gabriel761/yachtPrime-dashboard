@@ -4,17 +4,20 @@ import React, { ReactNode, useEffect, useState } from "react";
 
 
 
-const SelectInput = ({children, label, placeholder}:
-  { children:React.ReactNode, label:string, placeholder: string}) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+const SelectInput = ({
+  children, label, placeholder, register, name
+}: {
+  children: React.ReactNode,
+  label: string,
+  placeholder: string,
+  register: any,
+  name: string
+}) => {
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
-  
 
   const changeTextColor = () => {
     setIsOptionSelected(true);
   };
-
-
 
   return (
     <>
@@ -23,20 +26,18 @@ const SelectInput = ({children, label, placeholder}:
       </label>
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
-          value={selectedOption}
+          defaultValue=""
+          {...register(name)}  // Adiciona o método register ao select
           onChange={(e) => {
-            setSelectedOption(e.target.value);
             changeTextColor();
           }}
-          className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
-            isOptionSelected ? "text-black dark:text-white" : ""
-          }`}
+          className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""
+            }`}
         >
           <option value="" disabled className="text-body dark:text-bodydark">
             {placeholder}
           </option>
-
-         {children}
+          {children}
         </select>
         <span className="absolute right-4 top-1/2 z-30 -translate-y-1/2">
           <svg

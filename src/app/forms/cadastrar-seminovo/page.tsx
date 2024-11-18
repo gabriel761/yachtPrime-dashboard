@@ -1,17 +1,18 @@
 'use client'
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-
-import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import Link from "next/link";
 import SelectModelos from "./form-components/SelectModelos";
 import InputElement from "./form-components/InputElement";
 import SelectMotor from "./form-components/SelectMotor";
 import FormCard from "./form-components/FormCard";
 import SelectQuantidade from "./form-components/SelectQuantidade";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import TextArea from "./form-components/TextArea";
+import SelectCombustivel from "./form-components/SelectCombustivel";
+import SelectPropulsao from "./form-components/SelectPropulsao";
 import SelectMoeda from "./form-components/SelectMoeda";
-import FileUpload from "./form-components/FileUpload";
+
 
 // export const metadata: Metadata = {
 //   title: "Next.js Form Layout | TailAdmin - Next.js Dashboard Template",
@@ -20,100 +21,124 @@ import FileUpload from "./form-components/FileUpload";
 // };
 
 const FormLayout = () => {
+  const [output, setOutput] = useState()
+
+  const { register, handleSubmit, formState: { errors } } = useForm()
+
+
+  const submit = (data: any) => {
+    data = JSON.stringify(data)
+    setOutput(data)
+  }
+
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Cadastrar Seminovo" />
 
       <div className="grid grid-cols-1 gap-9 xxl:grid-cols-2">
-        <div className="flex flex-col gap-9">
-          {/* <!-- Contact Form --> */}
-          <FormCard title="Motorização">
-            <div className="mb-4.5 w-full">
-              <SelectMotor />
-            </div>
-            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <div className="xl:w-1/3 w-full">
-                <SelectQuantidade />
+        <form onSubmit={handleSubmit(submit)}>
+          <div className="flex flex-col gap-9">
+            {/* <!-- Contact Form --> */}
+            <FormCard title="Motorização">
+              <div className="mb-4.5 w-full">
+                <SelectMotor register={register} registerName="motor"/>
               </div>
-              <div className="xl:w-1/3 w-full">
-                <InputElement label="Horas" type="number" placeholder="Numero de horas" />
+              {/* <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className="xl:w-1/3 w-full">
+                  <SelectQuantidade />
+                </div>
+                <div className="xl:w-1/3 w-full">
+                  <InputElement register={register} registerName="motorHoras" label="Horas" placeholder="Numero de horas" errorMessage={errors.motorHoras?.message} maxLength={6} />
+                </div>
+
+                <div className="xl:w-1/3 w-full">
+                  <InputElement register={register} registerName="motorAno" label="Ano" type="number" placeholder="Ano de fabricação" />
+                </div>
               </div>
-              <div className="xl:w-1/3 w-full">
-                <InputElement label="Ano" type="number" placeholder="Ano de fabricação" />
+              <div className="mb-4.5 ">
+                <TextArea label="Observações" placeholder="Comentários sobre o motor. Obrigatório caso o ano do motor seja diferente do ano do barco." />
+              </div> */}
+              <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+                Cadastrar seminovo
+              </button>
+              <div className="mt-10 ">
+                <pre>{output}</pre>
               </div>
-            </div>
-            <div className="mb-4.5 ">
-              <TextArea label="Observações" placeholder="Comentários sobre o motor. Obrigatório caso o ano do motor seja diferente do ano do barco." />
-            </div>
-          </FormCard>
-          <FormCard title="Embarcação">
-            <div className="mb-4.5 w-full">
-              {/* <SelectModelos /> */}
-            </div>
-            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <div className=" xl:w-2/3 w-full">
-                <InputElement label="Nome" placeholder="Nome do barco" />
+            </FormCard>
+            {/* <FormCard title="Embarcação">
+              <div className="mb-4.5 w-full">
+                <SelectModelos />
               </div>
-              <div className=" xl:w-1/3 w-full">
-                <InputElement label="Ano" placeholder="Ano de fabricação" type="number" />
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className=" xl:w-2/3 w-full">
+                  <InputElement register={register} registerName="nome" label="Nome" placeholder="Nome do barco" />
+                </div>
+                <div className=" xl:w-1/3 w-full">
+                  <InputElement register={register} registerName="ano" label="Ano" placeholder="Ano de fabricação" type="number" />
+                </div>
+
+              </div>
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className=" xl:w-1/4 w-full">
+                  <InputElement register={register} registerName="tamanho" label="Tamanho" placeholder="Tamanho da embarcação em pés" type="number" />
+                </div>
+                <div className=" xl:w-1/4 w-full">
+                  <InputElement register={register} registerName="potenciaTotal" label="Potência total" placeholder="Potência total em HP" type="number" />
+                </div>
+                <div className=" xl:w-1/4 w-full">
+                  <SelectCombustivel />
+                </div>
+                <div className=" xl:w-1/4 w-full">
+                  <SelectPropulsao />
+                </div>
               </div>
 
-            </div>
-            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <div className=" xl:w-1/4 w-full">
-                <InputElement label="Tamanho" placeholder="Tamanho da embarcação em pés" type="number" />
+            </FormCard>
+            <FormCard title="Informações">
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className="xl:w-1/2 w-full">
+                  <SelectMoeda />
+                </div>
+                <div className="xl:w-1/2 w-full">
+                  <InputElement register={register} registerName="preco" label="Preço" placeholder="Preço do barco" />
+                </div>
               </div>
-              <div className=" xl:w-1/4 w-full">
-                <InputElement label="Potência total" placeholder="Potência total em HP" type="number" />
-              </div>
-              <div className=" xl:w-1/4 w-full">
-                <InputElement label="Combustível" placeholder="Tipo de combustível" type="text" />
-              </div>
-              <div className=" xl:w-1/4 w-full">
-                <InputElement label="Propulsão" placeholder="Tipo de propulsão" type="text" />
-              </div>
-            </div>
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className=" xl:w-1/3 w-full">
+                  <InputElement register={register} registerName="cabinePassageiros" label="Cabines de passageiros" placeholder="Cabines para passageiros" type="text" />
+                </div>
+                <div className=" xl:w-1/3 w-full">
+                  <InputElement register={register} registerName="cabineTripulacao" label="Cabines de tripulação" placeholder="Cabines para tripulação" type="text" />
+                </div>
+                <div className=" xl:w-1/3 w-full">
+                  <InputElement register={register} registerName="procedencia" label="Procedência" placeholder="País de procedência" type="text" />
+                </div>
 
-          </FormCard>
-          <FormCard title="Informações">
-            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <div className="xl:w-1/2 w-full">
-                <SelectMoeda />
               </div>
-              <div className="xl:w-1/2 w-full">
-                <InputElement label="Preço" placeholder="Preço do barco" />
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className=" w-full">
+                  <InputElement register={register} registerName="destaque" label="Destaque" placeholder="Informações de destaque" type="text" />
+                </div>
               </div>
-            </div>
-            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <div className=" xl:w-1/3 w-full">
-                <InputElement label="Cabines de passageiros" placeholder="Cabines para passageiros" type="text" />
+              <div className=" xl:w-2/3 w-full ">
+                <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." />
               </div>
-              <div className=" xl:w-1/3 w-full">
-                <InputElement label="Cabines de tripulação" placeholder="Cabines para tripulação" type="text" />
+              <div className=" w-[30%] mt-10">
+                <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+                  Cadastrar seminovo
+                </button>
               </div>
-              <div className=" xl:w-1/3 w-full">
-                <InputElement label="Procedência" placeholder="País de procedência" type="text" />
+              <div className="mt-10 ">
+                <pre>{output}</pre>
               </div>
-
-            </div>
-            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <div className=" w-full">
-                <InputElement label="Destaque" placeholder="Informações de destaque" type="text" />
-              </div>
-            </div>
-            <div className="mb-4.5">
-              <TextArea label="Texto promocional" placeholder="Texto promocional para a venda do barco." />
-            </div>
-            <div className=" xl:w-2/3 w-full">
-              <InputElement label="Link de video promocional" placeholder="youtube, vimeo e etc..." />
-            </div>
-          </FormCard>
-        </div>
+            </FormCard> */}
+          </div>
+        </form>
 
 
-        <div className="flex flex-col gap-9">
-          {/* <!-- Sign In Form --> */}
-          <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        {/* <!-- Sign In Form --> */}
+        {/* <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
                 Sign In Form
@@ -182,15 +207,12 @@ const FormLayout = () => {
                   </Link>
                 </div>
 
-                <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                  Sign In
-                </button>
+                
               </div>
             </form>
-          </div>
-        </div>
+          </div> */}
       </div>
-    </DefaultLayout>
+    </DefaultLayout >
   );
 };
 

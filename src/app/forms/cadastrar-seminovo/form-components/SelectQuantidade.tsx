@@ -9,7 +9,7 @@ type Quantidades = Array<number>
 const SelectQuantidade = () => {
     const quantidades: Quantidades = [1, 2, 3, 4]
     return (
-        <SelectInput label="Quantidade" placeholder="Selecione a quantidade de motores">
+        <SelectInput  label="Quantidade" placeholder="Selecione a quantidade de motores">
             {
                 !quantidades ? null : quantidades.map((quantidade) => (
                         <option key={quantidade} value={quantidade}>{quantidade}</option>
