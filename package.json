@@ -10,8 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
     "apexcharts": "^3.45.2",
     "axios": "^1.7.7",
+    "firebase": "^11.0.2",
     "flatpickr": "^4.6.13",
     "free-nextjs-admin-dashboard": "file:",
     "jsvectormap": "^1.6.0",
@@ -20,7 +22,8 @@
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18",
     "react-hook-form": "^7.53.2",
-    "yatchprime-dashboard": "file:"
+    "yatchprime-dashboard": "file:",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",

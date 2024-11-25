@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import baseUrl from "@/infra/back-end-connection"
 import SelectInput from "@/components/SelectGroup/SelectInput";
 import httpClient from "@/infra/httpClient";
+import { Controller } from "react-hook-form";
 
 type Moeda = {
     id: number;
@@ -12,7 +13,7 @@ type Moeda = {
 
 
 
-const SelectMoeda = () => {
+const SelectMoeda = ({ control, errorMessage }: { control: any, errorMessage: string | undefined }) => {
     const [moedas, setMoedas] = useState<Moeda[] | null>(null)
 
     const getMoedas = async () => {
@@ -24,13 +25,19 @@ const SelectMoeda = () => {
         getMoedas()
     }, [])
     return (
-        <SelectInput label="Moeda" placeholder="Selecione a moeda do preço">
-            {
-                !moedas ? null : moedas.map((item) => (
-                    <option key={item.id} value={item.simbolo}>{item.nome}</option>
-                ))
-            }
-        </SelectInput>
+        <Controller
+            name="moeda"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+                <SelectInput errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Moeda" placeholder="Selecione a moeda do preço">
+                    {
+                        !moedas ? null : moedas.map((item) => (
+                            <option key={item.id} value={item.simbolo}>{item.nome}</option>
+                        ))
+                    }
+                </SelectInput>
+            )} />
     );
 }
 

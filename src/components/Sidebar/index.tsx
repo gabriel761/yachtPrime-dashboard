@@ -77,8 +77,6 @@ const menuGroups = [
         label: "Forms",
         route: "#",
         children: [
-          { label: "Form Elements", route: "/forms/form-elements" },
-          { label: "Form Layout", route: "/forms/form-layout" },
           { label: "Cadastrar Seminovo", route: "/forms/cadastrar-seminovo" },
         ],
       },

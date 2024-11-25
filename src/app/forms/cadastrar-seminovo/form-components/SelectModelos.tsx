@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import baseUrl from "@/infra/back-end-connection"
 import SelectInput from "@/components/SelectGroup/SelectInput";
+import { Controller } from "react-hook-form";
 
 export type Modelo = {
     id: number,
@@ -11,7 +12,7 @@ export type Modelo = {
 
 
 
-const SelectModelos = () => {
+const SelectModelos = ({ control, errorMessage }: { control: any, errorMessage: string | undefined }) => {
     const [selectItems, setSelectItems] = useState<Modelo[] | null>(null)
 
     const getModelos = async () => {
@@ -26,13 +27,22 @@ const SelectModelos = () => {
     }, [])
 
     return (
-        <SelectInput label="Modelo" placeholder="Selecione o modelo">
-            {
-                !selectItems ? null : selectItems.map((modelo) => (
-                    <option key={modelo.id} value={modelo.modelo}>{modelo.modelo}</option>
-                ))
-            }
-        </SelectInput>
+        <>
+        <Controller
+            name="modelo"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+                <SelectInput errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Modelo" placeholder="Selecione o modelo">
+                    {
+                        !selectItems ? null : selectItems.map((modelo) => (
+                            <option key={modelo.id} value={modelo.modelo}>{modelo.modelo}</option>
+                        ))
+                    }
+                </SelectInput>
+            )} />
+            
+        </>
     );
 }
 
