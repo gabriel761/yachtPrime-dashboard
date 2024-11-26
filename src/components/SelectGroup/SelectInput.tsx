@@ -34,7 +34,7 @@ const SelectInput = ({
             handleChange(e.target.value)
             changeTextColor();
           }}
-          className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""} ${!!errorMessage && "border-red"}`}
+          className={`relative z-20 w-full appearance-none rounded border  bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""} ${!!errorMessage ? "border-red" : "border-stroke"}`}
         >
           <option value="" disabled className="text-body dark:text-bodydark">
             {placeholder}

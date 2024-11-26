@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 
 
-const ItemSelect = ({addItemToTable}: {addItemToTable:Function}) => {
+const ItemSelect = ({addItemToTable, errorMessage}: {addItemToTable:Function, errorMessage: string | undefined}) => {
     const [selectItems, setSelectItems] = useState<ItemSeminovo[] | null>(null)
 
     const getItensSeminovo = async () => {
@@ -22,7 +22,7 @@ const ItemSelect = ({addItemToTable}: {addItemToTable:Function}) => {
 
    
     return (
-        <SelectInput placeholder="Adicione um item" label="Itens" errorMessage="" handleChange={addItemToTable}>
+        <SelectInput placeholder="Adicione um item" label="Itens" errorMessage={errorMessage} handleChange={addItemToTable}>
             {
                 !selectItems ? null : selectItems.map((item) => (
                     <option key={item.id} value={JSON.stringify(item)}>{item.item}</option>

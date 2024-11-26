@@ -32,7 +32,7 @@ const SelectCombustivel = ({ control, errorMessage }: { control: any, errorMessa
                 <SelectInput errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Combustível" placeholder="Tipo de Combustível">
                     {
                         !combustivel ? null : combustivel.map((item) => (
-                            <option key={item.id} value={item.opcao}>{item.opcao}</option>
+                            <option key={item.id} value={JSON.stringify(item)}>{item.opcao}</option>
                         ))
                     }
                 </SelectInput>

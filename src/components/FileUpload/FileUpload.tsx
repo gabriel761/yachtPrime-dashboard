@@ -3,8 +3,14 @@ import React, { useState } from "react";
 const MAX_FILE_SIZE_MB = 5;
 const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg"]; // MIME types
 
+
+export type ImageObject = {
+    filename: string
+    path: string
+}
+
 const FileUpload = ({ label, controlValue, errorMessage }: { label: string, controlValue: Function, errorMessage: string | undefined}) => {
-    const [imageUrls, setImageUrls] = useState<string[]>([]);
+    const [imageUrls, setImageUrls] = useState<ImageObject[]>([]);
     
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,10 +28,14 @@ const FileUpload = ({ label, controlValue, errorMessage }: { label: string, cont
             }
             validFiles.push(file);
         }
-        const urls = validFiles.map((file) => URL.createObjectURL(file));
-        const newImageUrls = [...imageUrls, ...urls]
-        controlValue(newImageUrls)
-        setImageUrls(newImageUrls);
+        const imageObjectList = validFiles.map((file):ImageObject =>{ 
+            const url = URL.createObjectURL(file)
+            const filename = file.name
+            return {filename:filename, path: url }
+        });
+        const newImageObjectList = [...imageUrls,...imageObjectList]
+        controlValue(newImageObjectList)
+        setImageUrls(newImageObjectList);
     };
 
     const handleRemoveImage = (index: number) => {
@@ -50,7 +60,7 @@ const FileUpload = ({ label, controlValue, errorMessage }: { label: string, cont
                 <p className="text-red ">{errorMessage}</p>
             </div>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                {imageUrls.map((url, index) => (
+                {imageUrls.map((imageObject, index) => (
                     <div key={index} className="relative group">
                         <button
                             onClick={() => handleRemoveImage(index)}
@@ -61,8 +71,8 @@ const FileUpload = ({ label, controlValue, errorMessage }: { label: string, cont
                         </button>
                         <div className="aspect-[16/9] overflow-hidden rounded">
                             <img
-                                src={url}
-                                alt={`Uploaded ${index + 1}`}
+                                src={imageObject.path}
+                                alt={`Uploaded ${imageObject.filename + index}`}
                                 className="h-full w-full object-cover"
                             />
                         </div>

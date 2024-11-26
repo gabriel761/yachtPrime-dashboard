@@ -52,8 +52,7 @@ const Itens = ({ control, errorMessage }: props) => {
             control={control}
             render={({field}) => (
                 <div className="border-red">
-                    <ItemSelect addItemToTable={(value:string) => addItemToTable(value,field.onChange)} />
-                    <p className="text-red ">{errorMessage?.message}</p>
+                    <ItemSelect errorMessage={errorMessage?.message} addItemToTable={(value:string) => addItemToTable(value,field.onChange)} />
                     <ItemTable errorMessage={errorMessage} itensSeminovo={itensSeminovo} handleDeleteItem={(id: number) => handleDeleteItem(id, field.onChange)} handleQuantityUpdate={(target: EventTarget & HTMLInputElement) => handleQuantityUpdate(target, field.onChange)} />
                     
                 </div>

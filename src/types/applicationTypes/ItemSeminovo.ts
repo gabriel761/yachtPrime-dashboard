@@ -1,5 +1,10 @@
 export type ItemSeminovo = {
-    id: number;
+    id?:number;
     item: string;
-    quantidade: number
+    quantidade: number;
+}
+
+export type ItemSeminovoCadastrado = {
+    id?: number;
+    item: string;
 }
