@@ -1,4 +1,4 @@
-import { formatPrice } from "@/util/maskMetoods";
+import { formatPrice } from "@/util/stringMetoods";
 import { ChangeEventHandler, HTMLInputTypeAttribute } from "react";
 
 

@@ -1,5 +1,5 @@
 import HttpClient from "@/types/infra-types/HttpClient";
-import axios from "axios";
+import axios from "./AxiosConfig"
 
 export default class AxiosAdapter implements HttpClient{
     async get(url: string): Promise<any> {

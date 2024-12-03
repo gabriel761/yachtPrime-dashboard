@@ -25,7 +25,7 @@ export class SeminovoService {
         const imageLinks = await imagemModel.uploadImageList(data.imagens)
         const barcoSeminovoModel = new BarcoSeminovoModel(formModelo , data.nome, data.ano, data.tamanho, motorizacaoData, data.potenciaTotal, formCombustivel, formPropulsao, cabineData, data.procedencia, data.destaque, precoData, imageLinks, data.equipadoCom, data.video)
         const barcoSeminovoData = barcoSeminovoModel.extractData()
-        
+
         return barcoSeminovoData
 
     }

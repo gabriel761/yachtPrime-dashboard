@@ -1,6 +1,6 @@
 import { Package } from "@/types/package";
 import InputElement from "../InputElement";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 
@@ -9,12 +9,16 @@ type props = {
     itensSeminovo: ItemSeminovo[],
     handleQuantityUpdate: Function, 
     handleDeleteItem: Function,
-    errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ id: number; item: string; quantidade: number; }>> | undefined)[]> | undefined
+    errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ id: number; item: string; quantidade: number; }>> | undefined)[]> | undefined,
+    controlValue: ItemSeminovo[],
+    syncControlerValueWithState: Function
 }
 
-const ItemTable = ({ itensSeminovo, handleQuantityUpdate, handleDeleteItem, errorMessage}:props) => {
+const ItemTable = ({ itensSeminovo, handleQuantityUpdate, handleDeleteItem, errorMessage, controlValue, syncControlerValueWithState}:props) => {
 
-   
+   useEffect(()=> {
+    syncControlerValueWithState()
+   }, [controlValue])
     return (
         <div className={`rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1  `}>
             <div className="max-w-full overflow-x-auto">

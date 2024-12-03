@@ -10,3 +10,6 @@ export const formatPrice = (rawValue:string) => {
         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 };
 
+export const generateDateString = () =>{
+    return new Date().toUTCString().replaceAll(",", "").replaceAll(" ", "-").replaceAll(":", "_")
+}

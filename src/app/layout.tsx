@@ -5,7 +5,8 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
-import AxiosAdapter from "@/infra/AxiosAdapter";
+import { ModalProvider } from "@/context/ModalContext";
+import Modal from "@/components/Modal/modal"
 
 export default function RootLayout({
   children,
@@ -26,7 +27,10 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
-          {loading ? <Loader /> : children}
+          <ModalProvider>
+            {loading ? <Loader /> : children}
+            <Modal />
+          </ModalProvider>
         </div>
       </body>
     </html>

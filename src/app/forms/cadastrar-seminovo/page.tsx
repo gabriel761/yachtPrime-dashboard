@@ -6,7 +6,7 @@ import InputElement from "./form-components/InputElement";
 import SelectMotor from "./form-components/SelectMotor";
 import FormCard from "./form-components/FormCard";
 import SelectQuantidade from "./form-components/SelectQuantidade";
-import { useState } from "react";
+import {useState } from "react";
 import { useForm } from "react-hook-form";
 import TextArea from "./form-components/TextArea";
 import SelectCombustivel from "./form-components/SelectCombustivel";
@@ -16,25 +16,55 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SeminovoForm, seminovoSchema } from "@/util/seminovoValidationSchema";
 import UploadFotos from "./form-components/UploadFotos";
 import Itens from "./form-components/Itens/Itens";
-import Modal from "@/components/Modal/modal";
 import { SeminovoService } from "@/domain/service/seminovoService";
-
+import httpClient from "@/infra/httpClient";
+import baseUrl from "@/infra/back-end-connection";
+import Spinner from "@/components/common/Spinner";
+import { CustomError } from "@/infra/CustomError";
+import { useModal } from "@/context/ModalContext"
 
 
 const FormLayout = () => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [output, setOutput] = useState()
-  const { register, handleSubmit, control, formState: { errors } } = useForm<SeminovoForm>({
+  const [isLoading, setIsLoading] = useState(false)
+  const [output, setOutput] = useState(null)
+  const { openModal } = useModal()
+
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm<SeminovoForm>({
     resolver: zodResolver(seminovoSchema)
   })
 
-  const submit = (data: any) => {
-    // data = JSON.stringify(data)
-    // setOutput(data)
+  const submit = async (data: any) => {
+    setIsLoading(true)
     const seminovoService = new SeminovoService()
-    seminovoService.submitSeminovo(data)
-    //setIsOpenModal(true)
+    let seminovoFinalData
+
+    try {
+      seminovoFinalData = await seminovoService.prepareForSubmitSeminovo(data)
+    } catch (error: any) {
+      openModal("clientError", error.message)
+      console.error(error)
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData)
+      openModal("success", "Barco seminovo cadastrado com sucesso!")
+    } catch (error: any) {
+      let errorMessage 
+      if (error instanceof CustomError) {
+        errorMessage = `Status ${error.statusCode}: ${error.message}`
+      } else {
+        errorMessage = error.message
+      }
+      openModal("serverError",  errorMessage)
+      console.error(error)
+    }
+   
+    reset()
+    setIsLoading(false)
   }
+
 
 
   return (
@@ -136,32 +166,23 @@ const FormLayout = () => {
                 <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." errorMessage={errors.video?.message} />
               </div>
               <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
-                <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                  Cadastrar seminovo
-                </button>
+                {
+                  isLoading ? <Spinner size={40} /> : (
+                    <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+                      Cadastrar seminovo
+                    </button>
+                  )
+                }
+
               </div>
               <div className="mt-10 ">
-                <pre>{output}</pre>
+                <pre>{JSON.stringify(output)}</pre>
               </div>
             </FormCard>
           </div>
         </form>
-
-
-        <Modal
-          isOpen={isOpenModal}
-          title="Título do Modal"
-        >
-          <div>
-            <p className="text-body">
-              Este é um exemplo de modal usando o tema personalizado.
-            </p>
-            <div className="w-full flex justify-end">
-              <button onClick={() => setIsOpenModal(false)} className="flex w-[200px] justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 mt-8">Ok</button>
-            </div>
-          </div>
-        </Modal>
       </div>
+      
     </DefaultLayout >
   );
 };

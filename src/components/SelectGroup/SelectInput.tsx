@@ -36,7 +36,7 @@ const SelectInput = ({
           }}
           className={`relative z-20 w-full appearance-none rounded border  bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""} ${!!errorMessage ? "border-red" : "border-stroke"}`}
         >
-          <option value="" disabled className="text-body dark:text-bodydark">
+          <option value="" disabled={true} className="text-opacity-50 dark:text-bodydark">
             {placeholder}
           </option>
           {children}

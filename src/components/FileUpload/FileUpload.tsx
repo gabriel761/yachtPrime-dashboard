@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_MB = 1;
 const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg"]; // MIME types
 
 
@@ -9,9 +9,12 @@ export type ImageObject = {
     path: string
 }
 
-const FileUpload = ({ label, controlValue, errorMessage }: { label: string, controlValue: Function, errorMessage: string | undefined}) => {
+const FileUpload = ({ label, changeControlValue, controlValue, errorMessage }: { label: string, changeControlValue: Function, controlValue:ImageObject[], errorMessage: string | undefined}) => {
     const [imageUrls, setImageUrls] = useState<ImageObject[]>([]);
     
+    useEffect(()=> {
+        setImageUrls(controlValue)
+    },[controlValue])
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -34,7 +37,7 @@ const FileUpload = ({ label, controlValue, errorMessage }: { label: string, cont
             return {filename:filename, path: url }
         });
         const newImageObjectList = [...imageUrls,...imageObjectList]
-        controlValue(newImageObjectList)
+        changeControlValue(newImageObjectList)
         setImageUrls(newImageObjectList);
     };
 
