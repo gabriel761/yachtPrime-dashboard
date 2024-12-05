@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <div className="dark:bg-boxdark-2 dark:text-bodydark">
+        <div className="dark:bg-boxdark-2 dark:text-bodydark ">
           <ModalProvider>
             {loading ? <Loader /> : children}
             <Modal />

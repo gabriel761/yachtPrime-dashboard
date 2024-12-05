@@ -24,3 +24,14 @@ export type BarcoSeminovoOutput = {
     equipadoCom: ItemSeminovo[];
     videoPromocional?: string | null;
 };
+
+export type BarcoSeminovoList = {
+    id: number,
+    modelo: string,
+    nome: string,
+    tamanho: 50,
+    imagem: string,
+    ano: 2018,
+    moeda: string,
+    valor: number
+}

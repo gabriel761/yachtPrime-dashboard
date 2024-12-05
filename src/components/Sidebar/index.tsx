@@ -109,7 +109,10 @@ const menuGroups = [
           </svg>
         ),
         label: "Tables",
-        route: "/",
+        route: "#",
+        children: [
+          { label: "Listar Seminovo", route: "/list/listar-seminovo" },
+        ]
       },
       {
         icon: (
