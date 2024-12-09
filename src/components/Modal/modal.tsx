@@ -11,6 +11,7 @@ const Modal = () => {
 
     if (!isOpenModal) return null;
 
+    if (!modalContent) return null;
     return (
         <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white max-w-[600px] w-[90%] px-8 py-8 rounded-lg shadow-card relative">
@@ -33,8 +34,14 @@ const Modal = () => {
                         <p className="text-body">
                             {modalContent.body}
                         </p>
-                        <div className="w-full flex justify-end">
-                            <button onClick={() => closeModal()} className={`flex w-[200px] justify-center rounded  p-3 font-medium text-gray hover:bg-opacity-90 mt-8 ${modalContent.buttonColor}`}>{modalContent.buttonText}</button>
+                        <div className="w-full flex justify-end gap-4">
+                        {
+                            modalContent.buttons.map((button) => (
+                                <button onClick={() => {button.onClick && button.onClick(); closeModal()}} className={`flex w-[150px] justify-center rounded  p-3 font-medium text-gray hover:bg-opacity-90 mt-8 ${button.type}`}>{button.text}</button>
+                            ))
+                        }
+                        
+                            
                         </div>
                     </div>
                 </div>

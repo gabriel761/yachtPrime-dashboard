@@ -1,49 +1,44 @@
 // context/ModalContext.tsx
-import { createContext, useContext, useState, useRef, ReactNode } from "react";
+import { createContext, useContext, useState, useRef, ReactNode, MouseEventHandler } from "react";
 
-const modalContentSwitch = {
-    success: {
-        title: "Sucesso!",
-        body: "",
-        buttonText: "Ok",
-        buttonColor: "bg-primary",
-    },
-    clientError: {
-        title: "Erro",
-        body: "Erro de cliente: ",
-        buttonText: "Ok",
-        buttonColor: "bg-danger",
-    },
-    serverError: {
-        title: "Erro",
-        body: "Erro de servidor: ",
-        buttonText: "Ok",
-        buttonColor: "bg-danger",
-    },
+const buttonTypeSwitch = {
+    primary: "bg-primary",
+    danger: "bg-danger",
+    warning: "bg-warning",
+    success: "bg-success"
 };
 
 interface ModalContextProps {
     isOpenModal: boolean;
     isClosable: boolean;
-    modalContent: typeof modalContentSwitch.success;
-    openModal: (modalSwitch: string, body?: string, title?: string, isClosable?: boolean) => void;
+    modalContent: ModalContent | null
+    openModal: (title?: string, body?: string, buttons?: ModalButton[]) => void;
     closeModal: () => void;
+}
+
+type ModalButton = {
+    text: string,
+    type: "bg-primary" | "bg-danger" | "bg-warning" | "bg-success",
+    onClick?: Function
+}
+
+type ModalContent = {
+    title: string,
+    body: string,
+    buttons: ModalButton[]
 }
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const isClosableRef = useRef(false);
-    const modalContentRef = useRef(modalContentSwitch.success);
+    const isClosableRef = useRef(false)
+    const modalContentRef = useRef<ModalContent | null>(null);
 
-    const openModal = (modalSwitch: string, body: string = "", title?: string, isClosable: boolean = false) => {
-        console.log("modal open")
-        const modalContent = { ...modalContentSwitch[modalSwitch as keyof typeof modalContentSwitch] };
-        modalContent.body += body;
-        modalContent.title += title || "";
+    const openModal = (title: string = "",body: string = "", buttons: ModalButton[] = []) => {
+        const modalContent = { title, body, buttons };
+        isClosableRef.current = buttons.length == 0 
         modalContentRef.current = modalContent;
-        isClosableRef.current = isClosable;
         setIsOpenModal(true);
     };
 

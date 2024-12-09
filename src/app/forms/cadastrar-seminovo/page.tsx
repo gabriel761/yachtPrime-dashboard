@@ -41,7 +41,7 @@ const FormLayout = () => {
     try {
       seminovoFinalData = await seminovoService.prepareForSubmitSeminovo(data)
     } catch (error: any) {
-      openModal("clientError", error.message)
+      openModal("Erro de cliente", error.message, [{ type: "bg-danger", text: "Ok" }])
       console.error(error)
       setIsLoading(false);
       return;
@@ -49,7 +49,8 @@ const FormLayout = () => {
 
     try {
       await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData)
-      openModal("success", "Barco seminovo cadastrado com sucesso!")
+      
+      openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{type: "bg-primary", text: "Ok" }])
     } catch (error: any) {
       let errorMessage 
       if (error instanceof CustomError) {
@@ -57,7 +58,7 @@ const FormLayout = () => {
       } else {
         errorMessage = error.message
       }
-      openModal("serverError",  errorMessage)
+      openModal("Erro de servidor", error.message, [{ type: "bg-danger", text: "Ok" }])
       console.error(error)
     }
    
@@ -175,9 +176,9 @@ const FormLayout = () => {
                 }
 
               </div>
-              <div className="mt-10 ">
+              {/* <div className="mt-10 ">
                 <pre>{JSON.stringify(output)}</pre>
-              </div>
+              </div> */}
             </FormCard>
           </div>
         </form>

@@ -6,7 +6,7 @@ import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
 import { ModalProvider } from "@/context/ModalContext";
-import Modal from "@/components/Modal/modal"
+import Modal from "@/components/Modal/Modal"
 
 export default function RootLayout({
   children,
