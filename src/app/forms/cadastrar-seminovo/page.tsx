@@ -1,30 +1,31 @@
 'use client'
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import SelectModelos from "./form-components/SelectModelos";
-import InputElement from "./form-components/InputElement";
-import SelectMotor from "./form-components/SelectMotor";
-import FormCard from "./form-components/FormCard";
-import SelectQuantidade from "./form-components/SelectQuantidade";
-import {useState } from "react";
+import SelectModelos from "../form-components/SelectModelos";
+import InputElement from "../form-components/InputElement";
+import SelectMotor from "../form-components/SelectMotor";
+import FormCard from "../form-components/FormCard";
+import SelectQuantidade from "../form-components/SelectQuantidade";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import TextArea from "./form-components/TextArea";
-import SelectCombustivel from "./form-components/SelectCombustivel";
-import SelectPropulsao from "./form-components/SelectPropulsao";
-import SelectMoeda from "./form-components/SelectMoeda";
+import TextArea from "../form-components/TextArea";
+import SelectCombustivel from "../form-components/SelectCombustivel";
+import SelectPropulsao from "../form-components/SelectPropulsao";
+import SelectMoeda from "../form-components/SelectMoeda";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SeminovoForm, seminovoSchema } from "@/util/seminovoValidationSchema";
-import UploadFotos from "./form-components/UploadFotos";
-import Itens from "./form-components/Itens/Itens";
+import UploadFotos from "../form-components/UploadFotos";
+import Itens from "../form-components/Itens/Itens";
 import { SeminovoService } from "@/domain/service/seminovoService";
 import httpClient from "@/infra/httpClient";
 import baseUrl from "@/infra/back-end-connection";
 import Spinner from "@/components/common/Spinner";
 import { CustomError } from "@/infra/CustomError";
 import { useModal } from "@/context/ModalContext"
+import { ImagemModel } from "@/domain/models/ImagemModel";
 
 
-const FormLayout = () => {
+const CadastrarSeminovo = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [output, setOutput] = useState(null)
   const { openModal } = useModal()
@@ -33,13 +34,17 @@ const FormLayout = () => {
     resolver: zodResolver(seminovoSchema)
   })
 
+
+
   const submit = async (data: any) => {
     setIsLoading(true)
+    
     const seminovoService = new SeminovoService()
+    const imagemModel = new ImagemModel()
     let seminovoFinalData
 
     try {
-      seminovoFinalData = await seminovoService.prepareForSubmitSeminovo(data)
+      seminovoFinalData = await seminovoService.prepareForSubmitSeminovo(data, imagemModel.prepareForUploadImageList)
     } catch (error: any) {
       openModal("Erro de cliente", error.message, [{ type: "bg-danger", text: "Ok" }])
       console.error(error)
@@ -49,10 +54,10 @@ const FormLayout = () => {
 
     try {
       await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData)
-      
-      openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{type: "bg-primary", text: "Ok" }])
+
+      openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
     } catch (error: any) {
-      let errorMessage 
+      let errorMessage
       if (error instanceof CustomError) {
         errorMessage = `Status ${error.statusCode}: ${error.message}`
       } else {
@@ -61,7 +66,7 @@ const FormLayout = () => {
       openModal("Erro de servidor", error.message, [{ type: "bg-danger", text: "Ok" }])
       console.error(error)
     }
-   
+
     reset()
     setIsLoading(false)
   }
@@ -183,9 +188,9 @@ const FormLayout = () => {
           </div>
         </form>
       </div>
-      
+
     </DefaultLayout >
   );
 };
 
-export default FormLayout;
+export default CadastrarSeminovo;

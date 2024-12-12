@@ -3,14 +3,15 @@ import { useModal } from "@/context/ModalContext";
 import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
 import { BarcoSeminovoList } from "@/types/applicationTypes/BarcoSeminovo";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BsTrash } from "react-icons/bs";
 
 
 
 const SeminovoTable = () => {
     const [seminovoData, setSeminovoData] = useState<BarcoSeminovoList[] | null>(null)
     const { openModal } = useModal()
+    const router = useRouter();
 
     const getSeminovos = async () => {
         try {
@@ -27,7 +28,7 @@ const SeminovoTable = () => {
             await httpClient.delete(`${baseUrl}/barco/seminovo`, { id })
             getSeminovos()
         } catch (error: any) {
-            openModal("clientError", error.message)
+            openModal("Server Error", error.message, [{text: "Ok", type:"bg-danger"}])
             console.error(error)
         }
     }
@@ -44,6 +45,10 @@ const SeminovoTable = () => {
                 text: "Cancelar",
             }
         ])
+    }
+
+    const handleEditSeminovo = (idSeminovo: number) => {
+        router.push(`/forms/editar-seminovo/${idSeminovo}`)
     }
 
     useEffect(() => {
@@ -114,7 +119,7 @@ const SeminovoTable = () => {
                     <div className="col-span-1 flex items-center">
                         <p className="text-sm text-meta-3">{seminovo.moeda + seminovo.valor}</p>
                     </div>
-                    <div className="col-span-1 flex items-center justify-around">
+                    <div className="col-span-1 flex items-center justify-start gap-6">
                         <button onClick={() => handleDeleteModal(seminovo.id)} className="hover:text-primary">
                             <svg
                                 className="fill-current"
@@ -141,6 +146,12 @@ const SeminovoTable = () => {
                                     fill=""
                                 />
                             </svg>
+                        </button>
+                        <button onClick={() => handleEditSeminovo(seminovo.id)} className="hover:text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                            </svg>
+
                         </button>
                     </div>
                 </div>

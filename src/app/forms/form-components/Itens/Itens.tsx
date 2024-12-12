@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import ItemSelect from "./itemSelect";
 import ItemTable from "./ItemTable";
 import { Controller, FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
@@ -32,7 +32,8 @@ const Itens = ({ control, errorMessage }: props) => {
         setItensSeminovo(newItensSeminovo)
     }
 
-    const handleDeleteItem = (id: number, updateControllerValue: Function) => {
+    const handleDeleteItem = (event: MouseEvent<HTMLButtonElement, MouseEvent>, id: number, updateControllerValue: Function) => {
+        event.preventDefault()
         const newItensSeminovo = itensSeminovo.filter((item) => item.id != id)
         updateControllerValue(newItensSeminovo)
         setItensSeminovo(newItensSeminovo)
@@ -65,7 +66,7 @@ const Itens = ({ control, errorMessage }: props) => {
                         syncControlerValueWithState={() => syncControlerValueWithState(field.value)}
                         errorMessage={errorMessage}
                         itensSeminovo={itensSeminovo}
-                        handleDeleteItem={(id: number) => handleDeleteItem(id, field.onChange)}
+                        handleDeleteItem={(event: MouseEvent<HTMLButtonElement, MouseEvent>,id: number) => handleDeleteItem(event ,id, field.onChange)}
                         handleQuantityUpdate={(target: EventTarget & HTMLInputElement) => handleQuantityUpdate(target, field.onChange)}
                     />
 

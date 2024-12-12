@@ -8,6 +8,7 @@ import { Preco } from "./Preco";
 import { Propulsao } from "./Propulsao";
 
 export type BarcoSeminovoOutput = {
+    id?:number
     modelo: Modelo;
     nome: string;
     ano: number;

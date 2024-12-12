@@ -33,7 +33,7 @@ const SelectModelos = ({ control, errorMessage }: { control: any, errorMessage: 
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Modelo" placeholder="Selecione o modelo">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Modelo" placeholder="Selecione o modelo">
                     {
                         !selectItems ? null : selectItems.map((modelo) => (
                             <option key={modelo.id} value={JSON.stringify(modelo)}>{modelo.modelo}</option>

@@ -30,7 +30,7 @@ const SelectMoeda = ({ control, errorMessage }: { control: any, errorMessage: st
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Moeda" placeholder="Selecione a moeda do preço">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Moeda" placeholder="Selecione a moeda do preço">
                     {
                         !moedas ? null : moedas.map((item) => (
                             <option key={item.id} value={item.simbolo}>{item.nome}</option>

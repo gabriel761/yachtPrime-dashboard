@@ -28,7 +28,7 @@ const SelectPropulsao = ({ control, errorMessage }: { control: any, errorMessage
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput errorMessage={errorMessage} handleChange={(value:string) => field.onChange(value)} label="Propulsão" placeholder="Tipo de propulsão">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value:string) => field.onChange(value)} label="Propulsão" placeholder="Tipo de propulsão">
                     {
                         !propulsao ? null : propulsao.map((item) => (
                             <option key={item.id} value={JSON.stringify(item)}>{item.opcao}</option>

@@ -7,7 +7,7 @@ const UploadFotos = ({ control, errorMessage }: { control: any, errorMessage: st
             control={control}
             defaultValue={[]}
             render={({ field }) => (
-                <FileUpload errorMessage={errorMessage} controlValue={field.value} changeControlValue={(value: string[]) => field.onChange(value)} label="Adicionar imagens" />
+                <FileUpload  errorMessage={errorMessage} controlValue={field.value} changeControlValue={(value: string[]) => field.onChange(value)} label="Adicionar imagens" />
             )}
         />
     );

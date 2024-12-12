@@ -15,7 +15,7 @@ const SelectQuantidade = ({ control, errorMessage }: { control: any, errorMessag
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput errorMessage={errorMessage} handleChange={(value: string) => field.onChange(parseInt(value))} label="Quantidade" placeholder="Quantidade de motores">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(parseInt(value))} label="Quantidade" placeholder="Quantidade de motores">
                     {
                         !quantidades ? null : quantidades.map((quantidade) => (
                             <option key={quantidade} value={quantidade}>{quantidade}</option>

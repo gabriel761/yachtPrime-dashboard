@@ -9,6 +9,7 @@ import { Preco } from "@/types/applicationTypes/Preco";
 import { Propulsao } from "@/types/applicationTypes/Propulsao";
 
 export class BarcoSeminovoModel implements BarcoSeminovoOutput {
+    public id?: number
     constructor (
        public modelo: Modelo,
        public nome: string,
@@ -28,9 +29,12 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     ){
 
     }
-
+    setId(id:number){
+        this.id = id
+    }
     extractData():BarcoSeminovoOutput{
         return {
+            id:this.id,
             modelo: this.modelo,
             nome:this.nome,
             ano: this.ano,

@@ -5,8 +5,8 @@ const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg"]; // MIME types
 
 
 export type ImageObject = {
-    filename: string
-    path: string
+    fileName: string
+    link: string
 }
 
 const FileUpload = ({ label, changeControlValue, controlValue, errorMessage }: { label: string, changeControlValue: Function, controlValue:ImageObject[], errorMessage: string | undefined}) => {
@@ -33,16 +33,19 @@ const FileUpload = ({ label, changeControlValue, controlValue, errorMessage }: {
         }
         const imageObjectList = validFiles.map((file):ImageObject =>{ 
             const url = URL.createObjectURL(file)
-            const filename = file.name
-            return {filename:filename, path: url }
+            const fileName = file.name
+            return {fileName:fileName, link: url }
         });
         const newImageObjectList = [...imageUrls,...imageObjectList]
         changeControlValue(newImageObjectList)
         setImageUrls(newImageObjectList);
     };
 
-    const handleRemoveImage = (index: number) => {
-        setImageUrls((prev) => prev.filter((_, i) => i !== index));
+    const handleRemoveImage = (index: number, event: React.MouseEvent<HTMLButtonElement>) => {
+         event.preventDefault()
+        const newImageObjectList = imageUrls.filter((_, i) => i !== index)
+        changeControlValue(newImageObjectList)
+        setImageUrls(newImageObjectList);
     };
 
    
@@ -66,7 +69,7 @@ const FileUpload = ({ label, changeControlValue, controlValue, errorMessage }: {
                 {imageUrls.map((imageObject, index) => (
                     <div key={index} className="relative group">
                         <button
-                            onClick={() => handleRemoveImage(index)}
+                            onClick={(event) => handleRemoveImage(index, event)}
                             className="absolute top-1 right-1 z-10 hidden h-6 w-6 items-center justify-center rounded-full bg-white text-black group-hover:flex"
                             title="Remover imagem"
                         >
@@ -74,8 +77,8 @@ const FileUpload = ({ label, changeControlValue, controlValue, errorMessage }: {
                         </button>
                         <div className="aspect-[16/9] overflow-hidden rounded">
                             <img
-                                src={imageObject.path}
-                                alt={`Uploaded ${imageObject.filename + index}`}
+                                src={imageObject.link}
+                                alt={`Uploaded ${imageObject.fileName + index}`}
                                 className="h-full w-full object-cover"
                             />
                         </div>

@@ -5,13 +5,14 @@ import React, { ReactNode, useEffect, useState } from "react";
 
 
 const SelectInput = ({
-  children, label, placeholder, handleChange, errorMessage
+  children, label, placeholder, handleChange, errorMessage, value = ''
 }: {
   children: React.ReactNode,
   label: string,
   placeholder: string,
   handleChange: Function,
   errorMessage:string | undefined
+  value: string
   // register: any,
   // name: string
 }) => {
@@ -28,8 +29,7 @@ const SelectInput = ({
       </label>
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
-          defaultValue=""
-          // {...register(name)}  // Adiciona o método register ao select
+        value={value}
           onChange={(e) => {
             handleChange(e.target.value)
             changeTextColor();
