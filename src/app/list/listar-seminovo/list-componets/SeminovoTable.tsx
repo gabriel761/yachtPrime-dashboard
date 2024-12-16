@@ -3,8 +3,11 @@ import { useModal } from "@/context/ModalContext";
 import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
 import { BarcoSeminovoList } from "@/types/applicationTypes/BarcoSeminovo";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
+
 
 
 
@@ -15,7 +18,7 @@ const SeminovoTable = () => {
 
     const getSeminovos = async () => {
         try {
-            const result = await httpClient.get(`${baseUrl}/barco/seminovo`)
+            const result = await httpClient.get(`${baseUrl}/barco/seminovo-dashboard`)
             setSeminovoData(result)
         } catch (error: any) {
             openModal("clientError", error.message)
@@ -25,7 +28,7 @@ const SeminovoTable = () => {
 
     const deleteSeminovo = async (id: number) => {
         try {
-            await httpClient.delete(`${baseUrl}/barco/seminovo`, { id })
+            await httpClient.delete(`${baseUrl}/barco/seminovo/`, { id })
             getSeminovos()
         } catch (error: any) {
             openModal("Server Error", error.message, [{text: "Ok", type:"bg-danger"}])
@@ -92,10 +95,16 @@ const SeminovoTable = () => {
                     <div className="col-span-2 flex items-center">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                             <div className="w-[32%] rounded-md">
-                                <img
-                                    className="h-full w-full"
+                                <Image
+                                    layout="responsive"
+                                    objectFit="cover"
+                                    width={110}
+                                    height={80}
                                     src={seminovo.imagem}
                                     alt={seminovo.modelo + "image"}
+                                    placeholder="blur"
+                                    blurDataURL={placeholder.src}
+                                    priority
                                 />
                             </div>
                             <p className="text-sm text-black dark:text-white">

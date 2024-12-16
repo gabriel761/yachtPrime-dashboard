@@ -24,6 +24,7 @@ export type BarcoSeminovoOutput = {
     imagens: Imagem[];
     equipadoCom: ItemSeminovo[];
     videoPromocional?: string | null;
+    oportunidade:boolean;
 };
 
 export type BarcoSeminovoList = {

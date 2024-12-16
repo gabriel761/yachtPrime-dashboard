@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-const CheckboxTwo = () => {
+const CheckboxTwo = ({checkBoxText, changeValue, value}:{checkBoxText?:string, changeValue: (value:boolean) => void, value:boolean}) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
-
+console.log(value)
   return (
     <div>
       <label
@@ -14,16 +14,14 @@ const CheckboxTwo = () => {
             type="checkbox"
             id="checkboxLabelTwo"
             className="sr-only"
-            onChange={() => {
-              setIsChecked(!isChecked);
-            }}
+            onChange={() => changeValue(!value)}
           />
           <div
             className={`mr-4 flex h-5 w-5 items-center justify-center rounded border ${
-              isChecked && "border-primary bg-gray dark:bg-transparent"
+              value && "border-primary bg-gray dark:bg-transparent"
             }`}
           >
-            <span className={`opacity-0 ${isChecked && "!opacity-100"}`}>
+            <span className={`opacity-0 ${value && "!opacity-100"}`}>
               <svg
                 width="11"
                 height="8"
@@ -41,7 +39,7 @@ const CheckboxTwo = () => {
             </span>
           </div>
         </div>
-        Checkbox Text
+        {checkBoxText}
       </label>
     </div>
   );

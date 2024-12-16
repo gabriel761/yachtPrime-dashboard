@@ -26,6 +26,7 @@ import { useModal } from "@/context/ModalContext"
 import { BarcoSeminovoOutput } from "@/types/applicationTypes/BarcoSeminovo";
 import { useRouter } from 'next/navigation';
 import { ImagemModel } from "@/domain/models/ImagemModel";
+import CheckBoxElement from "../../form-components/CheckboxElement";
 
 
 const EditarSeminovo = ({ params }: { params: { id: string } }) => {
@@ -70,7 +71,8 @@ const EditarSeminovo = ({ params }: { params: { id: string } }) => {
                 imagens: seminovo.imagens ?? [],
                 equipadoCom: seminovo.equipadoCom,
                 destaque: seminovo.destaque ?? "",
-                video: seminovo.videoPromocional ?? ""
+                video: seminovo.videoPromocional ?? "",
+                oportunidade: seminovo.oportunidade
             })
         } catch (error: any) {
             let errorMessage
@@ -114,7 +116,6 @@ const EditarSeminovo = ({ params }: { params: { id: string } }) => {
             console.error(error)
         }
 
-        reset()
         setIsLoading(false)
     }
 
@@ -217,6 +218,9 @@ const EditarSeminovo = ({ params }: { params: { id: string } }) => {
                             </div>
                             <div className=" xl:w-2/3 w-full ">
                                 <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." errorMessage={errors.video?.message} />
+                            </div>
+                            <div className=" xl:w-2/3 w-full mt-6">
+                                <CheckBoxElement control={control} />
                             </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                                 {

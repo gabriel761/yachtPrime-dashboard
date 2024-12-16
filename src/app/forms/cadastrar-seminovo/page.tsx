@@ -23,6 +23,8 @@ import Spinner from "@/components/common/Spinner";
 import { CustomError } from "@/infra/CustomError";
 import { useModal } from "@/context/ModalContext"
 import { ImagemModel } from "@/domain/models/ImagemModel";
+import CheckboxTwo from "@/components/Checkboxes/CheckboxTwo";
+import CheckBoxElement from "../form-components/CheckboxElement";
 
 
 const CadastrarSeminovo = () => {
@@ -31,7 +33,10 @@ const CadastrarSeminovo = () => {
   const { openModal } = useModal()
 
   const { register, handleSubmit, control, reset, formState: { errors } } = useForm<SeminovoForm>({
-    resolver: zodResolver(seminovoSchema)
+    resolver: zodResolver(seminovoSchema),
+    defaultValues:{
+      oportunidade:false
+    }
   })
 
 
@@ -170,6 +175,9 @@ const CadastrarSeminovo = () => {
               </div>
               <div className=" xl:w-2/3 w-full ">
                 <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." errorMessage={errors.video?.message} />
+              </div>
+              <div className=" xl:w-2/3 w-full mt-6">
+                <CheckBoxElement control={control}/>
               </div>
               <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                 {

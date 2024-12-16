@@ -10,36 +10,37 @@ import { Propulsao } from "@/types/applicationTypes/Propulsao";
 
 export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     public id?: number
-    constructor (
-       public modelo: Modelo,
-       public nome: string,
-       public ano: number,
-       public tamanho: number,
-       public motorizacao: Motorizacao,
-       public potenciaTotal: number,
-       public combustivel: Combustivel,
-       public propulsao: Propulsao,
-       public cabines: Cabine,
-       public procedencia: string,
-       public destaque: string,
-       public preco: Preco,
-       public imagens: Imagem[],
-       public equipadoCom: ItemSeminovo[],
-       public videoPromocional?: string | null
-    ){
+    constructor(
+        public modelo: Modelo,
+        public nome: string,
+        public ano: number,
+        public tamanho: number,
+        public motorizacao: Motorizacao,
+        public potenciaTotal: number,
+        public combustivel: Combustivel,
+        public propulsao: Propulsao,
+        public cabines: Cabine,
+        public procedencia: string,
+        public destaque: string,
+        public preco: Preco,
+        public imagens: Imagem[],
+        public equipadoCom: ItemSeminovo[],
+        public oportunidade: boolean,
+        public videoPromocional?: string | null,
+    ) {
 
     }
-    setId(id:number){
+    setId(id: number) {
         this.id = id
     }
-    extractData():BarcoSeminovoOutput{
+    extractData(): BarcoSeminovoOutput {
         return {
-            id:this.id,
+            id: this.id,
             modelo: this.modelo,
-            nome:this.nome,
+            nome: this.nome,
             ano: this.ano,
             tamanho: this.tamanho,
-            motorizacao: this.motorizacao, 
+            motorizacao: this.motorizacao,
             potenciaTotal: this.potenciaTotal,
             combustivel: this.combustivel,
             propulsao: this.propulsao,
@@ -49,7 +50,8 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
             preco: this.preco,
             imagens: this.imagens,
             equipadoCom: this.equipadoCom,
-            videoPromocional: this.videoPromocional
+            videoPromocional: this.videoPromocional,
+            oportunidade: this.oportunidade
         }
     }
 }
