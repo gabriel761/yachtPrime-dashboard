@@ -18,6 +18,7 @@ const ItemSelect = ({addItemToTable, errorMessage}: {addItemToTable:Function, er
 
     useEffect(() => {
         getItensSeminovo()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
    

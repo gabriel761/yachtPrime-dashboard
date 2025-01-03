@@ -118,8 +118,11 @@ const EditarSeminovo = (props: { params: Params}) => {
 
         setIsLoading(false)
     }
-
+useEffect(() => {
     getSeminovoData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+},[])
+    
 
     return (
         <DefaultLayout>
