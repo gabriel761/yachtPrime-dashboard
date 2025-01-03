@@ -1,5 +1,5 @@
 import { Package } from "@/types/package";
-import InputElement from "../InputElement";
+import InputElement from "../../../../components/InputElement";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
