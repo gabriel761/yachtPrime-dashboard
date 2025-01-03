@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const MAX_FILE_SIZE_MB = 1;
@@ -76,10 +77,14 @@ const FileUpload = ({ label, changeControlValue, controlValue, errorMessage }: {
                             X
                         </button>
                         <div className="aspect-[16/9] overflow-hidden rounded">
-                            <img
+                            <Image
+                                layout="responsive"
+                                objectFit="cover"
+                                width={110}
+                                height={80}
                                 src={imageObject.link}
                                 alt={`Uploaded ${imageObject.fileName + index}`}
-                                className="h-full w-full object-cover"
+                                priority
                             />
                         </div>
                     </div>

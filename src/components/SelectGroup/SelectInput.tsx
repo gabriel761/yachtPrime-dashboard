@@ -12,7 +12,7 @@ const SelectInput = ({
   placeholder: string,
   handleChange: Function,
   errorMessage:string | undefined
-  value: string
+  value?: string
   // register: any,
   // name: string
 }) => {

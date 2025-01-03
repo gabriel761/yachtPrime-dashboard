@@ -36,8 +36,8 @@ const Modal = () => {
                         </p>
                         <div className="w-full flex justify-end gap-4">
                         {
-                            modalContent.buttons.map((button) => (
-                                <button onClick={() => {button.onClick && button.onClick(); closeModal()}} className={`flex w-[150px] justify-center rounded  p-3 font-medium text-gray hover:bg-opacity-90 mt-8 ${button.type}`}>{button.text}</button>
+                            modalContent.buttons.map((button, index) => (
+                                <button key={index} onClick={() => {button.onClick && button.onClick(); closeModal()}} className={`flex w-[150px] justify-center rounded  p-3 font-medium text-gray hover:bg-opacity-90 mt-8 ${button.type}`}>{button.text}</button>
                             ))
                         }
                         

@@ -7,7 +7,7 @@ import InputElement from "../../../../components/InputElement";
 import SelectMotor from "../../form-components/SelectMotor";
 import FormCard from "../../form-components/FormCard";
 import SelectQuantidade from "../../form-components/SelectQuantidade";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import TextArea from "../../form-components/TextArea";
 import SelectCombustivel from "../../form-components/SelectCombustivel";
@@ -29,22 +29,22 @@ import { ImagemModel } from "@/domain/models/ImagemModel";
 import CheckBoxElement from "../../form-components/CheckboxElement";
 
 
-const EditarSeminovo = ({ params }: { params: { id: string } }) => {
+type Params = Promise<{ id: string }>
+
+
+const EditarSeminovo = (props: { params: Params}) => {
     const [isLoading, setIsLoading] = useState(false)
-    const [output, setOutput] = useState(null)
     const { openModal } = useModal()
     const router = useRouter()
     
-   
+   const params = use(props.params)
     const idSeminovo = params.id ? parseInt(params.id) : null
     const { register, handleSubmit, control, reset, formState: { errors } } = useForm<SeminovoForm>({
         resolver: zodResolver(seminovoSchema)
     })
 
 
-    useEffect(() => {
-        getSeminovoData()
-    }, [])
+    
 
     const getSeminovoData = async () => {
         try {
@@ -119,7 +119,7 @@ const EditarSeminovo = ({ params }: { params: { id: string } }) => {
         setIsLoading(false)
     }
 
-
+    getSeminovoData()
 
     return (
         <DefaultLayout>

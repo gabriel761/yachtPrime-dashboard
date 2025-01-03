@@ -1,4 +1,2 @@
-import config from "./config"
-
-const baseUrl = config.backendUrl
+const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 export default baseUrl
