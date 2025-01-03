@@ -54,8 +54,10 @@ const SeminovoTable = () => {
         router.push(`/forms/editar-seminovo/${idSeminovo}`)
     }
 
-    
+    useEffect(() => {
         getSeminovos()
+    },[])
+        
     
     
     return (
