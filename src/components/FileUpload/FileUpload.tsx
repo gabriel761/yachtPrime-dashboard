@@ -1,8 +1,8 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
-const MAX_FILE_SIZE_MB = 1;
-const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg"]; // MIME types
+const MAX_FILE_SIZE_MB = 3;
+const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg", "image/jpg"]; // MIME types
 
 
 export type ImageObject = {
@@ -59,7 +59,7 @@ const FileUpload = ({ label, changeControlValue, controlValue, errorMessage }: {
                 </label>
                 <input
                     type="file"
-                    accept="image/png, image/jpeg document/pdf"
+                    accept="image/png, image/jpeg, image/jpeg, document/pdf"
                     multiple
                     onChange={handleFileChange}
                     className={`w-full cursor-pointer rounded-lg border-[1.5px]  bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary ${!!errorMessage ? "border-red dark:border-red" : "border-stroke" }`}
