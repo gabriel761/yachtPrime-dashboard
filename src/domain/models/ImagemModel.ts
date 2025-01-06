@@ -26,8 +26,6 @@ export class ImagemModel {
     }
 
     extractImagesToDeleteFromFirebase(imagensForm: Imagem[], imagensDb: Imagem[]) {
-        console.log("images from db: ", imagensDb)
-        console.log("images from Form: ", imagensForm)
         const imagesToDelete = imagensDb.filter(
             (imagemDb) =>
                 !imagensForm.some((imagemForm) => imagemForm.fileName === imagemDb.fileName)
@@ -36,7 +34,6 @@ export class ImagemModel {
     }
 
     async deleteImageList(imageList: Imagem[]) {
-        console.log("images to delete: ", imageList)
         Promise.all(
             imageList.map((imagem) => {
                 if(imagem.link.includes("firebase")){

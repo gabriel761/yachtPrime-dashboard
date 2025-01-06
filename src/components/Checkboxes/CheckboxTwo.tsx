@@ -2,7 +2,6 @@ import { useState } from "react";
 
 const CheckboxTwo = ({checkBoxText, changeValue, value}:{checkBoxText?:string, changeValue: (value:boolean) => void, value:boolean}) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
-console.log(value)
   return (
     <div>
       <label

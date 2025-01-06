@@ -16,7 +16,7 @@ export class SeminovoService {
 
         const motorizacaoModel = new MotorizacaoModel(data.modeloMotor, data.quantidadeMotor, data.potenciaMotor, data.horasMotor, data.anoMotor)
         const cabineModel = new CabineModel(data.passageirosCabine, data.tripulacaoCabine)
-        const precoModel = new PrecoModel(data.moeda, parseFloat( data.preco))
+        const precoModel = new PrecoModel(data.moeda, data.preco)
         
         const cabineData = cabineModel.extractData()
         const motorizacaoData = motorizacaoModel.extractData()
@@ -38,7 +38,7 @@ export class SeminovoService {
 
         const motorizacaoModel = new MotorizacaoModel(data.modeloMotor, data.quantidadeMotor, data.potenciaMotor, data.horasMotor, data.anoMotor)
         const cabineModel = new CabineModel(data.passageirosCabine, data.tripulacaoCabine)
-        const precoModel = new PrecoModel(data.moeda, parseFloat(data.preco))
+        const precoModel = new PrecoModel(data.moeda, data.preco)
         const imagemModel = new ImagemModel()
 
         const cabineData = cabineModel.extractData()
