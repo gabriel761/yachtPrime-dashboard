@@ -9,7 +9,7 @@ import { error } from "console";
 export class ImagemModel {
     async prepareForUploadImageList(imageObjectList: ImageObject[]): Promise<Imagem[]> {
         const promises = imageObjectList.map((imageObject, index) =>{
-            if (!imageObject.link.includes("https://")) {
+            if (!imageObject.link.includes("firebase")) {
                 console.log("Entrou no upload firebase")
               return  uploadImageList(imageObject, index)
             }else{
@@ -41,7 +41,7 @@ export class ImagemModel {
         console.log("images to delete: ", imageList)
         Promise.all(
             imageList.map((imagem) => {
-                if(imagem.link.includes("https://")){
+                if(imagem.link.includes("firebase")){
                     deleteImage(imagem.fileName)
                 }
             })
