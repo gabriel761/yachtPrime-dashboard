@@ -10,10 +10,8 @@ export class ImagemModel {
     async prepareForUploadImageList(imageObjectList: ImageObject[]): Promise<Imagem[]> {
         const promises = imageObjectList.map((imageObject, index) =>{
             if (!imageObject.link.includes("firebase")) {
-                console.log("Entrou no upload firebase")
               return  uploadImageList(imageObject, index)
             }else{
-                console.log("pulou o upload firebase")
                 return {...imageObject, index}
             }
         }
