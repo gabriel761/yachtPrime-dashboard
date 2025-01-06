@@ -9,6 +9,7 @@ export const uploadImage = async (blobUrl: string, filename: string) => {
         const url = await getDownloadURL(metadata.ref)
         return url
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
