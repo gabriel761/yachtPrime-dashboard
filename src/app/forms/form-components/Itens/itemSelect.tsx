@@ -2,6 +2,7 @@ import SelectInput from "@/components/SelectGroup/SelectInput";
 import SelectWithSearch from "@/components/SelectGroup/SelectWithSearch";
 import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
+import { auth } from "@/lib/firebase/firebaseConfig";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { useEffect, useState } from "react";
 
@@ -12,7 +13,8 @@ const ItemSelect = ({addItemToTable, errorMessage}: {addItemToTable:Function, er
     const [selectItems, setSelectItems] = useState<ItemSeminovo[] | null>(null)
 
     const getItensSeminovo = async () => {
-        const itens = await httpClient.get(`${baseUrl}/resources/seminovo/item-seminovo`)
+        const token = await auth.currentUser?.getIdToken()
+        const itens = await httpClient.get(`${baseUrl}/resources/seminovo/item-seminovo`, token)
         setSelectItems(itens)
     }
 

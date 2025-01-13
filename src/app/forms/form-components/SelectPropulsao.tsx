@@ -3,6 +3,7 @@ import baseUrl from "@/infra/back-end-connection"
 import SelectInput from "@/components/SelectGroup/SelectInput";
 import httpClient from "@/infra/httpClient";
 import { Controller } from "react-hook-form";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 export type Propulsao = {
     opcao: string,
@@ -15,7 +16,8 @@ const SelectPropulsao = ({ control, errorMessage }: { control: any, errorMessage
     const [propulsao, setPropulsao] = useState<Propulsao[] | null>(null)
 
     const getpropulsao = async () => {
-        const propulsao = await httpClient.get(`${baseUrl}/resources/seminovo/propulsao`)
+        const token = await auth.currentUser?.getIdToken()
+        const propulsao = await httpClient.get(`${baseUrl}/resources/seminovo/propulsao`, token)
         setPropulsao(propulsao)
     }
 

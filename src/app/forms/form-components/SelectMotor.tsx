@@ -4,6 +4,7 @@ import baseUrl from "@/infra/back-end-connection"
 import SelectInput from "@/components/SelectGroup/SelectInput";
 import httpClient from "@/infra/httpClient";
 import { Controller } from "react-hook-form";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 type Motor = {
     id: number,
@@ -17,7 +18,8 @@ const SelectMotor = ({ control, errorMessage }: { control: any, errorMessage: st
     const [selectItems, setSelectItems] = useState<Motor[] | null>(null)
 
     const getMotores = async () => {
-        const motores = await httpClient.get(`${baseUrl}/resources/seminovo/motor`)
+        const token = await auth.currentUser?.getIdToken()
+        const motores = await httpClient.get(`${baseUrl}/resources/seminovo/motor`, token)
         setSelectItems(motores)
     }
 

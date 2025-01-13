@@ -3,6 +3,7 @@ import baseUrl from "@/infra/back-end-connection"
 import SelectInput from "@/components/SelectGroup/SelectInput";
 import httpClient from "@/infra/httpClient";
 import { Controller } from "react-hook-form";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 export type Combustivel = {
     opcao: string,
@@ -15,7 +16,8 @@ const SelectCombustivel = ({ control, errorMessage }: { control: any, errorMessa
     const [combustivel, setcombustivel] = useState<Combustivel[] | null>(null)
 
     const getCombustivel = async () => {
-        const combustivel = await httpClient.get(`${baseUrl}/resources/seminovo/combustivel`)
+        const token = await auth.currentUser?.getIdToken()
+        const combustivel = await httpClient.get(`${baseUrl}/resources/seminovo/combustivel`, token)
         setcombustivel(combustivel)
     }
 

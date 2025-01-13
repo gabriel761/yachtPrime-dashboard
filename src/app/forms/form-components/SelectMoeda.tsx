@@ -3,6 +3,7 @@ import baseUrl from "@/infra/back-end-connection"
 import SelectInput from "@/components/SelectGroup/SelectInput";
 import httpClient from "@/infra/httpClient";
 import { Controller } from "react-hook-form";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 type Moeda = {
     id: number;
@@ -17,7 +18,8 @@ const SelectMoeda = ({ control, errorMessage }: { control: any, errorMessage: st
     const [moedas, setMoedas] = useState<Moeda[] | null>(null)
 
     const getMoedas = async () => {
-        const moedas = await httpClient.get(`${baseUrl}/resources/moeda`)
+        const token = await auth.currentUser?.getIdToken()
+        const moedas = await httpClient.get(`${baseUrl}/resources/moeda`, token)
         setMoedas(moedas)
     }
 

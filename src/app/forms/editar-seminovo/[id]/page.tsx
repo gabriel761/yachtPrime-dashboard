@@ -27,6 +27,7 @@ import { BarcoSeminovoOutput } from "@/types/applicationTypes/BarcoSeminovo";
 import { useRouter } from 'next/navigation';
 import { ImagemModel } from "@/domain/models/ImagemModel";
 import CheckBoxElement from "../../form-components/CheckboxElement";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 
 type Params = Promise<{ id: string }>
@@ -102,7 +103,8 @@ const EditarSeminovo = (props: { params: Params}) => {
         }
 
         try {
-            await httpClient.patch(`${baseUrl}/barco/seminovo`, seminovoFinalData)
+            const token = await auth.currentUser?.getIdToken()
+            await httpClient.patch(`${baseUrl}/barco/seminovo`, seminovoFinalData, token || "")
 
             openModal("Sucesso!", "Barco seminovo editado com sucesso!", [{ type: "bg-primary", text: "Ok", onClick: () => router.replace("/list/listar-seminovo") }])
         } catch (error: any) {

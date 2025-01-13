@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import baseUrl from "@/infra/back-end-connection"
 import SelectInput from "@/components/SelectGroup/SelectInput";
 import { Controller } from "react-hook-form";
+import { auth } from "@/lib/firebase/firebaseConfig";
+import httpClient from "@/infra/httpClient";
 
 export type Modelo = {
     id: number,
@@ -16,8 +18,9 @@ const SelectModelos = ({ control, errorMessage }: { control: any, errorMessage: 
     const [selectItems, setSelectItems] = useState<Modelo[] | null>(null)
 
     const getModelos = async () => {
-        const res = await fetch(`${baseUrl}/resources/seminovo/modelo`)
-        const modelos = await res.json()
+        const token = await auth.currentUser?.getIdToken()
+        const res = await httpClient.get(`${baseUrl}/resources/seminovo/modelo`, token)
+        const modelos = res
 
         setSelectItems(modelos)
     }

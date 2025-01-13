@@ -11,6 +11,9 @@ axios.interceptors.response.use(
         if (error.response?.data?.message) {
             throw new CustomError(error.response.data.message, error.response.status);
         }
+        if (error.message){
+            throw new CustomError(error.message, 500);
+        }
         throw new CustomError("Erro desconhecido", error.response?.status || 500);
     }
 )

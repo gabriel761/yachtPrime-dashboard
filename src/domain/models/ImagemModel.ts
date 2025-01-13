@@ -1,6 +1,7 @@
 import { ImageObject } from "@/components/FileUpload/FileUpload"
 import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
+import { auth } from "@/lib/firebase/firebaseConfig";
 import { deleteImage, uploadImage } from "@/lib/firebase/firebaseMethods"
 import { Imagem } from "@/types/applicationTypes/Imagem"
 import { generateDateString } from "@/util/stringMetoods";
@@ -21,7 +22,8 @@ export class ImagemModel {
     }
 
     async getImagesFromDbByIdSeminovo(idSeminovo: number): Promise<Imagem[]> {
-        const images = await httpClient.get(`${baseUrl}/resources/seminovo/imagens-seminovo/${idSeminovo}` )
+        const token = await auth.currentUser?.getIdToken()
+        const images = await httpClient.get(`${baseUrl}/resources/seminovo/imagens-seminovo/${idSeminovo}`, token )
         return images
     }
 

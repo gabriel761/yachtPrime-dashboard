@@ -25,6 +25,7 @@ import { useModal } from "@/context/ModalContext"
 import { ImagemModel } from "@/domain/models/ImagemModel";
 import CheckboxTwo from "@/components/Checkboxes/CheckboxTwo";
 import CheckBoxElement from "../form-components/CheckboxElement";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 
 const CadastrarSeminovo = () => {
@@ -58,7 +59,8 @@ const CadastrarSeminovo = () => {
     }
 
     try {
-      await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData)
+      const token = await auth.currentUser?.getIdToken()
+      await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData, token || "")
 
       openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
     } catch (error: any) {

@@ -22,14 +22,15 @@ const Login = () => {
   const submit = async (data: LoginSchema) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.senha)
-      if(userCredential){
+      if (userCredential) {
+        document.cookie = `auth=${await userCredential.user.getIdToken()}; path=/; max-age=36000`;
         router.push("/list/listar-seminovo")
         setLoginError('')
       }
-    } catch (error:any) {
-      if(error?.code.includes("auth/")){
+    } catch (error: any) {
+      if (error?.code.includes("auth/")) {
         setLoginError(translateFirebaseError(error.code))
-      }else{
+      } else {
         setLoginError(error.message)
       }
       console.error(error)
@@ -51,7 +52,7 @@ const Login = () => {
           <button type="submit" className=" flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
             Login
           </button>
-          
+
         </form>
       </FormCard>
     </div>

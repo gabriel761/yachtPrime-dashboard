@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 
 
@@ -18,7 +19,8 @@ const SeminovoTable = () => {
 
     const getSeminovos = async () => {
         try {
-            const result = await httpClient.get(`${baseUrl}/barco/seminovo-dashboard`)
+            const token = await auth.currentUser?.getIdToken()
+            const result = await httpClient.get(`${baseUrl}/barco/seminovo-dashboard`, token)
             setSeminovoData(result)
         } catch (error: any) {
             openModal("clientError", error.message)
@@ -28,7 +30,8 @@ const SeminovoTable = () => {
 
     const deleteSeminovo = async (id: number) => {
         try {
-            await httpClient.delete(`${baseUrl}/barco/seminovo/`, { id })
+            const token = await auth.currentUser?.getIdToken()
+            await httpClient.delete(`${baseUrl}/barco/seminovo/`, { id }, token || "")
             getSeminovos()
         } catch (error: any) {
             openModal("Server Error", error.message, [{text: "Ok", type:"bg-danger"}])
