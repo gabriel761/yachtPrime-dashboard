@@ -4,6 +4,7 @@ import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
+import { onIdTokenChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 
@@ -19,7 +20,15 @@ const ItemSelect = ({addItemToTable, errorMessage}: {addItemToTable:Function, er
     }
 
     useEffect(() => {
-        getItensSeminovo()
+            const unsubscribe = onIdTokenChanged(auth, async (user) => {
+                if (user) {
+                    await getItensSeminovo(); // Só chama o método quando o token é garantido
+                } else {
+                    console.warn("Usuário não autenticado.");
+                }
+            });
+    
+            return () => unsubscribe(); // Remove o listener ao desmontar o componente
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

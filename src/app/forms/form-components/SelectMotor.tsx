@@ -5,6 +5,7 @@ import SelectInput from "@/components/SelectGroup/SelectInput";
 import httpClient from "@/infra/httpClient";
 import { Controller } from "react-hook-form";
 import { auth } from "@/lib/firebase/firebaseConfig";
+import { onIdTokenChanged } from "firebase/auth";
 
 type Motor = {
     id: number,
@@ -25,27 +26,36 @@ const SelectMotor = ({ control, errorMessage }: { control: any, errorMessage: st
 
 
     useEffect(() => {
-        getMotores()
-    }, [])
+        const unsubscribe = onIdTokenChanged(auth, async (user) => {
+            if (user) {
+                await getMotores(); // Só chama o método quando o token é garantido
+            } else {
+                console.warn("Usuário não autenticado.");
+            }
+        });
 
+        return () => unsubscribe(); // Remove o listener ao desmontar o componente
+    }, []);
+    
     return (
         <Controller
-        name="modeloMotor"
-        control={control}
-        defaultValue=""
-        render={({field })=>{ 
-             return(
-            <SelectInput value={field.value}  errorMessage={errorMessage} handleChange={(value:string)=>field.onChange(value) }  label="Motor" placeholder="Selecione o motor">
-                {
-                    !selectItems ? null : selectItems?.map((item) => (
-                        <option  key={item.id} value={item.modelo}>{item.modelo}</option>
-                    ))
-                }
-            </SelectInput>
-        )}}
-       />
-            
-       
+            name="modeloMotor"
+            control={control}
+            defaultValue=""
+            render={({ field }) => {
+                return (
+                    <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Motor" placeholder="Selecione o motor">
+                        {
+                            !selectItems ? null : selectItems?.map((item) => (
+                                <option key={item.id} value={item.modelo}>{item.modelo}</option>
+                            ))
+                        }
+                    </SelectInput>
+                )
+            }}
+        />
+
+
     );
 }
 

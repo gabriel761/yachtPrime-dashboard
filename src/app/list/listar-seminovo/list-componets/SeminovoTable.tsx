@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
 import { auth } from "@/lib/firebase/firebaseConfig";
+import { onIdTokenChanged } from "firebase/auth";
 
 
 
@@ -58,8 +59,16 @@ const SeminovoTable = () => {
     }
 
     useEffect(() => {
-        getSeminovos()
-    },[])
+        const unsubscribe = onIdTokenChanged(auth, async (user) => {
+            if (user) {
+                await getSeminovos(); // Só chama o método quando o token é garantido
+            } else {
+                console.warn("Usuário não autenticado.");
+            }
+        });
+
+        return () => unsubscribe(); // Remove o listener ao desmontar o componente
+    }, []);
         
     
     

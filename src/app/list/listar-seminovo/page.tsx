@@ -1,3 +1,4 @@
+'use client'
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SeminovoTable from "./list-componets/SeminovoTable";
 

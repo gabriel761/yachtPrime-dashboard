@@ -1,18 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { useRouter } from "next/navigation";
+import userPlaceholder from "../../../public/images/placeholder/user-placeholder.jpg"
+import { onIdTokenChanged } from "firebase/auth";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState<any>(null)
   const router = useRouter()
 
+  
+
   const handleSighOut = async () => {
+    auth.signOut()
+    // const date = new Date()
+    // document.cookie = "auth=; path=/; expires="+date.getUTCDate();
+
    await auth.signOut()
     router.push("/login")
   }
+
+  useEffect(() => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
+      if (user) {
+         setUser(user)// Só chama o método quando o token é garantido
+      } else {
+        console.warn("Usuário não autenticado.");
+      }
+    });
+
+    return () => unsubscribe(); // Remove o listener ao desmontar o componente
+  }, []);
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -23,23 +44,21 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {user?.displayName}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{user?.email}</span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
+        <span className="h-12 w-12 rounded-full overflow-hidden">
           <Image
             width={112}
             height={112}
-            src={"/images/user/user-01.png"}
-            style={{
-              width: "auto",
-              height: "auto",
-            }}
+            src={user?.photoURL || userPlaceholder.src}
+            className="w-full h-full object-cover"
             alt="User"
           />
         </span>
+
 
         <svg
           className="hidden fill-current sm:block"

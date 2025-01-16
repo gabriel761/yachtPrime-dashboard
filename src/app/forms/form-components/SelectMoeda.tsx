@@ -4,6 +4,7 @@ import SelectInput from "@/components/SelectGroup/SelectInput";
 import httpClient from "@/infra/httpClient";
 import { Controller } from "react-hook-form";
 import { auth } from "@/lib/firebase/firebaseConfig";
+import { onIdTokenChanged } from "firebase/auth";
 
 type Moeda = {
     id: number;
@@ -24,8 +25,17 @@ const SelectMoeda = ({ control, errorMessage }: { control: any, errorMessage: st
     }
 
     useEffect(() => {
-        getMoedas()
-    }, [])
+        const unsubscribe = onIdTokenChanged(auth, async (user) => {
+            if (user) {
+                await getMoedas(); // Só chama o método quando o token é garantido
+            } else {
+                console.warn("Usuário não autenticado.");
+            }
+        });
+
+        return () => unsubscribe(); // Remove o listener ao desmontar o componente
+    }, []);
+    
     return (
         <Controller
             name="moeda"

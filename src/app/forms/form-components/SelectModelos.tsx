@@ -5,6 +5,7 @@ import SelectInput from "@/components/SelectGroup/SelectInput";
 import { Controller } from "react-hook-form";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import httpClient from "@/infra/httpClient";
+import { onIdTokenChanged } from "firebase/auth";
 
 export type Modelo = {
     id: number,
@@ -26,8 +27,16 @@ const SelectModelos = ({ control, errorMessage }: { control: any, errorMessage: 
     }
 
     useEffect(() => {
-        getModelos()
-    }, [])
+            const unsubscribe = onIdTokenChanged(auth, async (user) => {
+                if (user) {
+                    await getModelos(); // Só chama o método quando o token é garantido
+                } else {
+                    console.warn("Usuário não autenticado.");
+                }
+            });
+    
+            return () => unsubscribe(); // Remove o listener ao desmontar o componente
+        }, []);
 
     return (
         <>
