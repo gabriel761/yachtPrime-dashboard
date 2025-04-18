@@ -17,7 +17,8 @@ const DropdownUser = () => {
   const handleSighOut = async () => {
     auth.signOut()
     // const date = new Date()
-    // document.cookie = "auth=; path=/; expires="+date.getUTCDate();
+    document.cookie = "auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
 
    await auth.signOut()
     router.push("/login")

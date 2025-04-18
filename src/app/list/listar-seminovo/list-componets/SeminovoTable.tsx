@@ -21,7 +21,7 @@ const SeminovoTable = () => {
     const getSeminovos = async () => {
         try {
             const token = await auth.currentUser?.getIdToken()
-            const result = await httpClient.get(`${baseUrl}/barco/seminovo-dashboard`, token)
+            const result = await httpClient.get(`${baseUrl}/barco/seminovo/list/dashboard`, token)
             setSeminovoData(result)
         } catch (error: any) {
             openModal("clientError", error.message)
