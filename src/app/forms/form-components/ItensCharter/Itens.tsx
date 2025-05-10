@@ -52,7 +52,7 @@ const Itens = ({ control, errorMessage }: props) => {
 
     return (
         <Controller
-            name="equipadoCom"
+            name="itensDisponiveis"
             defaultValue={[]}
             control={control}
             render={({ field }) => (

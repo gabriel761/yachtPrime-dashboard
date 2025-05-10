@@ -7,6 +7,7 @@ const selectMessage = {message: "Selecione 1 opção"}
 const numeroMinimoImagens = 3
 
 const currentYear = new Date().getFullYear();
+
 export const seminovoSchema = z.object({
     modeloMotor: z.string(textMessage).min(1, selectMessage), 
     quantidadeMotor: z.number(numberMessage).positive(numberMessage).min(1, selectMessage).max(50), 
@@ -15,7 +16,7 @@ export const seminovoSchema = z.object({
     potenciaMotor: z.number(numberMessage).positive(numberMessage).min(50, { message: "Potência muito baixa" }).max(150000, { message: "Potência muito alta" }),
     observacoesMotor: z.string(textMessage).max(200, { message: "Número máximo de caracteres: 200" }).or(z.string().length(0)),
     modelo: z.string(textMessage).min(1, selectMessage), 
-    nome: z.string(textMessage).min(1, selectMessage).max(150, {message: "Maximo de 150 characteres "}), 
+    nome: z.string(textMessage).max(150, {message: "Maximo de 150 characteres "}), 
     ano: z.number(numberMessage).positive(numberMessage).min(1950, { message: "Ano deve ser maior que 1950" }).max(currentYear, { message: "Ano deve ser menor do que o ano atual" }),
     tamanho: z.number(numberMessage).positive(numberMessage).min(5, {message: "Número de pés muito baixo"}).max(1000, {message: "Número de pés muito alto"}),
     potenciaTotal: z.number(numberMessage).positive(numberMessage).min(50, {message:"Potência muito baixa"}).max(200000, {message: "Potência muito alta"}),
