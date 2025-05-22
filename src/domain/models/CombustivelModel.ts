@@ -1,4 +1,4 @@
-import { Combustivel } from "@/types/applicationTypes/Combustivel";
+import { Combustivel } from "@/types/applicationTypes/TipoCombustivel";
 
 export class CombustivelModel implements Combustivel {
     constructor(

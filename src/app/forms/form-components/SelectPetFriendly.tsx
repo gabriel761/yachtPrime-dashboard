@@ -13,7 +13,7 @@ const SelectPetFriendly = ({ control, errorMessage }: { control: any, errorMessa
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(parseInt(value))} label="Pet friendly" placeholder="Pet friendly">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Pet friendly" placeholder="Pet friendly">
                     {
                         !petFriendly ? null : petFriendly.map((item) => (
                             <option key={item} value={item}>{item}</option>

@@ -4,8 +4,8 @@ import TextArea from "../TextArea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { roteiroCharterSchema, RoteiroCharterSchema } from "@/util/roteiroCharterSchema";
-import { useCallback } from "react";
-import { RoteiroCharter } from "@/types/applicationTypes/RoteiroCharter";
+import { FormEvent, useCallback } from "react";
+import { RoteiroCharter } from "@/types/applicationTypes/charter/RoteiroCharter";
 
 type props = {
     isOpenModal: boolean,
@@ -15,14 +15,17 @@ type props = {
 
 const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable}: props) => {
 
-    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<RoteiroCharterSchema>({
+    const { register, handleSubmit, control, resetField, formState: { errors } } = useForm<RoteiroCharterSchema>({
         resolver: zodResolver(roteiroCharterSchema)
     })
 
     const submit = (data: RoteiroCharter) => {
         const completed = addRoteiroToTable(data)
         if(completed){
-            reset()
+            resetField("nome")
+            resetField("descricao")
+            resetField("preco")
+            resetField("detalhesPagamento")
             setIsOpenModal(false)
         }
         

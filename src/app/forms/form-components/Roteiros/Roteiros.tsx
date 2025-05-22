@@ -3,7 +3,7 @@ import ItemTable from "./RoteirosTable";
 import { Controller, FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import AddRoteiroModal from "./AddRoteiroModal";
-import { RoteiroCharter } from "@/types/applicationTypes/RoteiroCharter";
+import { RoteiroCharter } from "@/types/applicationTypes/charter/RoteiroCharter";
 import { useModal } from "@/context/ModalContext";
 import RoteirosTable from "./RoteirosTable";
 
@@ -29,6 +29,7 @@ const Roteiros = ({ control, errorMessage }: props) => {
             return roteiro.nome == tableRoteiro.nome
         })
         if (checkRepeatedItem) {
+         //   alert("Erro: Já existe um roteiro com este nome adicionado")
             openModal("Erro", "Já existe um roteiro com este nome adicionado", [{ type: "bg-danger", text: "Ok" }])
             return false
         }
@@ -54,7 +55,7 @@ const Roteiros = ({ control, errorMessage }: props) => {
             control={control}
             render={({ field }) => (
                 <div className="border-red">
-                    <button onClick={() => setIsOpen(true)} className={`flex w-[150px] justify-center rounded  p-3 mb-5 font-medium text-gray hover:bg-opacity-90 mt-8 bg-primary`}>Adicionar roteiro</button>
+                    <button type="button" onClick={() => setIsOpen(true)} className={`flex w-[150px] justify-center rounded  p-3 mb-5 font-medium text-gray hover:bg-opacity-90 mt-8 bg-primary`}>Adicionar roteiro</button>
                     <AddRoteiroModal isOpenModal={isOpen} setIsOpenModal={setIsOpen} addRoteiroToTable={(value: RoteiroCharter) => addItemToTable(value, field.onChange)} />
                     <RoteirosTable
                         controlValue={field.value}

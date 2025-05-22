@@ -29,6 +29,7 @@ export const charterSchema = z.object({
     itensDisponiveis: z.array(z.object({
         id: z.number(numberMessage),
         item: z.string(),
+        itemLazer: z.boolean(),
         quantidade: z.number(numberMessage).min(1, "Mínimo de 1 unidade de cada item")
     })).min(1, { message: "Adicione pelo menos 1 item" }),
     petFriendly: z.string(textMessage).min(1, selectMessage).max(50),

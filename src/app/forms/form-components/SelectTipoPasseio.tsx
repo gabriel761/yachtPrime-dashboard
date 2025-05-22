@@ -42,7 +42,7 @@ const SelectTipoPasseio = ({ control, errorMessage }: { control: any, errorMessa
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(parseInt(value))} label="Tipo de Passeio" placeholder="Tipo de Passeio">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Tipo de Passeio" placeholder="Tipo de Passeio">
                     {
                         !tipoPasseio ? null : tipoPasseio.map((item) => (
                             <option key={item.id} value={JSON.stringify(item)}>{item.opcao}</option>

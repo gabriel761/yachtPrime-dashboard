@@ -1,4 +1,4 @@
-export type Combustivel = {
+export type TipoCombustivel = {
     id: number
     opcao:string,  
 }

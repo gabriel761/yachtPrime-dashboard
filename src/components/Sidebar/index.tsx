@@ -56,7 +56,7 @@ const menuGroups = [
         route: "#",
         children: [
           { label: "Cadastrar Seminovo", route: "/forms/cadastrar-seminovo" },
-          { label: "Cadastrar Charter", route: "/forms/cadastrar-charter" },
+          // { label: "Cadastrar Charter", route: "/forms/cadastrar-charter" },
         ],
       },
       {

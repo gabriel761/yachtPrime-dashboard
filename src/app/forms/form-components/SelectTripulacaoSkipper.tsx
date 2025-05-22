@@ -42,7 +42,7 @@ const SelectTripulacaoSkipper = ({ control, errorMessage }: { control: any, erro
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(parseInt(value))} label="Tripulação ou Skipper" placeholder="Tripulação ou Skipper">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Tripulação ou Skipper" placeholder="Tripulação ou Skipper">
                     {
                         !tripulacaoSkipper ? null : tripulacaoSkipper.map((item) => (
                             <option key={item.id} value={JSON.stringify(item)}>{item.opcao}</option>

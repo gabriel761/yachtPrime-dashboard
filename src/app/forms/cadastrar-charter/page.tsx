@@ -5,12 +5,12 @@ import SelectModelos from "../form-components/SelectModelos";
 import InputElement from "../../../components/InputElement";
 import FormCard from "../form-components/FormCard";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm,  } from "react-hook-form";
 import SelectCombustivel from "../form-components/SelectCombustivel";
 import SelectMoeda from "../form-components/SelectMoeda";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UploadFotos from "../form-components/UploadFotos";
-import { SeminovoService } from "@/domain/service/seminovoService";
+import { SeminovoService } from "@/domain/service/SeminovoService";
 import httpClient from "@/infra/httpClient";
 import baseUrl from "@/infra/back-end-connection";
 import { CustomError } from "@/infra/CustomError";
@@ -24,6 +24,8 @@ import AddRoteiroModal from "../form-components/Roteiros/AddRoteiroModal";
 import { charterSchema, CharterSchema } from "@/util/charterSchema";
 import Roteiros from "../form-components/Roteiros/Roteiros";
 import Itens from "../form-components/ItensCharter/Itens";
+import Spinner from "@/components/common/Spinner";
+import { CharterService } from "@/domain/service/CharterService";
 
 
 const CadastrarCharter = () => {
@@ -41,14 +43,17 @@ const CadastrarCharter = () => {
 
 
     const submit = async (data: any) => {
-        setIsLoading(true)
-
-        const seminovoService = new SeminovoService()
+        
+        console.log("funcionou")
+      setIsLoading(true)
+       
+        const charterService = new CharterService()
         const imagemModel = new ImagemModel()
-        let seminovoFinalData
+        let charterFinalData
 
         try {
-            seminovoFinalData = await seminovoService.prepareForSubmitSeminovo(data, imagemModel.prepareForUploadImageList)
+            charterFinalData = await charterService.prepareForSubmitCharter(data, imagemModel.prepareForUploadImageList)
+            console.log(charterFinalData)
         } catch (error: any) {
             openModal("Erro de cliente", error.message, [{ type: "bg-danger", text: "Ok" }])
             console.error(error)
@@ -58,8 +63,8 @@ const CadastrarCharter = () => {
 
         try {
             const token = await auth.currentUser?.getIdToken()
-            await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData, token || "")
-
+            await httpClient.post(`${baseUrl}/barco/charter`, charterFinalData, token || "")
+            reset()
             openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
         } catch (error: any) {
             let errorMessage
@@ -72,7 +77,8 @@ const CadastrarCharter = () => {
             console.error(error)
         }
 
-        reset()
+        
+        setOutput(data)
         setIsLoading(false)
     }
 
@@ -101,6 +107,14 @@ const CadastrarCharter = () => {
                                     <InputElement register={register} registerName="tamanho" label="Tamanho" placeholder="Tamanho da embarcação em pés" type="number" errorMessage={errors.tamanho?.message} />
                                 </div>
                             </div>
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className="xl:w-1/2 w-full">
+                                    <SelectMoeda control={control} errorMessage={errors.moeda?.message} />
+                                </div>
+                                <div className="xl:w-1/2 w-full">
+                                    <InputElement register={register} registerName="preco" label="Preço" placeholder="0,00" errorMessage={errors.preco?.message} />
+                                </div>
+                            </div>
 
 
                         </FormCard>
@@ -114,23 +128,23 @@ const CadastrarCharter = () => {
                                     <InputElement register={register} registerName="combustivelLitrosHora" label="Litros por hora" placeholder="0" type="number" errorMessage={errors.combustivelLitrosHora?.message} />
                                 </div>
                                 <div className="xl:w-1/4 w-full">
-                                    <SelectMoeda control={control} errorMessage={errors.combustivelMoeda?.message} />
+                                    <SelectMoeda control={control} name="combustivelMoeda" errorMessage={errors.combustivelMoeda?.message} />
                                 </div>
                                 <div className="xl:w-1/4 w-full">
-                                    <InputElement register={register} registerName="precoHora" label="Preço por hora" placeholder="0,00" type="number" errorMessage={errors.combustivelPrecoHora?.message} />
+                                    <InputElement register={register} registerName="combustivelPrecoHora" label="Preço por hora" placeholder="0,00" type="string" errorMessage={errors.combustivelPrecoHora?.message} />
                                 </div>
                             </div>
                         </FormCard>
                         <FormCard title="Passageiros">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="xl:w-1/3 w-full">
-                                    <InputElement register={register} registerName="passageiros" label="Passagerios" placeholder="0" type="number" errorMessage={errors.passageiros?.message} />
+                                    <InputElement register={register} registerName="passageiros" label="Passageiros" placeholder="0" type="number" errorMessage={errors.passageiros?.message} />
                                 </div>
                                 <div className="xl:w-1/3 w-full">
                                     <InputElement register={register} registerName="passageirosPernoite" label="Passagerios pernoite" placeholder="0" type="number" errorMessage={errors.passageirosPernoite?.message} />
                                 </div>
                                 <div className="xl:w-1/3 w-full">
-                                    <InputElement register={register} registerName="tripulacao" label="Tripulacao" placeholder="0" type="number" errorMessage={errors.passageirosTripulacao?.message} />
+                                    <InputElement register={register} registerName="passageirosTripulacao" label="Tripulacao" placeholder="0" type="number" errorMessage={errors.passageirosTripulacao?.message} />
                                 </div>
                             </div>
                         </FormCard>
@@ -167,26 +181,26 @@ const CadastrarCharter = () => {
                             </div>
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="xl:w-1/3 w-full">
-                                    <SelectMoeda control={control} errorMessage={errors.moedaTaxaExtra?.message} />
+                                    <SelectMoeda control={control} name="moedaTaxaExtra" errorMessage={errors.moedaTaxaExtra?.message} />
                                 </div>
                                 <div className="xl:w-1/3 w-full">
-                                    <InputElement register={register} registerName="taxaHoraExtra" label="Taxa de hora extra" placeholder="0,00" errorMessage={errors.precoTaxaExtra?.message} />
-                                </div>
-                            </div>
-                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                                <div className="xl:w-1/3 w-full">
-                                    <SelectMoeda control={control} errorMessage={errors.moedaAluguelLancha?.message} />
-                                </div>
-                                <div className="xl:w-1/3 w-full">
-                                    <InputElement register={register} registerName="aluguelLancha" label="Aluguel de lancha" placeholder="0,00" errorMessage={errors.precoAluguelLancha?.message} />
+                                    <InputElement register={register} registerName="precoTaxaExtra" label="Taxa de hora extra" placeholder="0,00" errorMessage={errors.precoTaxaExtra?.message} />
                                 </div>
                             </div>
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="xl:w-1/3 w-full">
-                                    <SelectMoeda control={control} errorMessage={errors.moedaTaxaChurrasco?.message} />
+                                    <SelectMoeda control={control} name="moedaAluguelLancha" errorMessage={errors.moedaAluguelLancha?.message} />
                                 </div>
                                 <div className="xl:w-1/3 w-full">
-                                    <InputElement register={register} registerName="taxaChurrasco" label="Taxa de churrasco" placeholder="0,00" errorMessage={errors.precoTaxaChurrasco?.message} />
+                                    <InputElement register={register} registerName="precoAluguelLancha" label="Aluguel de lancha" placeholder="0,00" errorMessage={errors.precoAluguelLancha?.message} />
+                                </div>
+                            </div>
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className="xl:w-1/3 w-full">
+                                    <SelectMoeda control={control} name="moedaTaxaChurrasco" errorMessage={errors.moedaTaxaChurrasco?.message} />
+                                </div>
+                                <div className="xl:w-1/3 w-full">
+                                    <InputElement register={register} registerName="precoTaxaChurrasco" label="Taxa de churrasco" placeholder="0,00" errorMessage={errors.precoTaxaChurrasco?.message} />
                                 </div>
                             </div>
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
@@ -201,6 +215,18 @@ const CadastrarCharter = () => {
                                 <div className=" w-full">
                                     <Roteiros control={control} errorMessage={errors.roteiros} />
                                 </div>
+                            </div>
+                            <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
+                                {
+                                    isLoading ? <Spinner size={40} /> : (
+                                        <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+                                            Cadastrar seminovo
+                                        </button>
+                                    )
+                                }
+                            </div>
+                            <div className="mt-10 ">
+                                <pre>{JSON.stringify(output)}</pre>
                             </div>
                         </FormCard>
                     </div>

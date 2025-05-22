@@ -1,12 +1,12 @@
-import { BarcoSeminovoOutput } from "@/types/applicationTypes/BarcoSeminovo";
-import { Cabine } from "@/types/applicationTypes/Cabine";
-import { Combustivel } from "@/types/applicationTypes/Combustivel";
+import { BarcoSeminovoOutput } from "@/types/applicationTypes/seminovo/BarcoSeminovo";
+import { Cabine } from "@/types/applicationTypes/seminovo/Cabine";
+import { Combustivel } from "@/types/applicationTypes/TipoCombustivel";
 import { Imagem } from "@/types/applicationTypes/Imagem";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { Modelo } from "@/types/applicationTypes/Modelo";
 import { Motorizacao } from "@/types/applicationTypes/Motorizacao";
 import { Preco } from "@/types/applicationTypes/Preco";
-import { Propulsao } from "@/types/applicationTypes/Propulsao";
+import { Propulsao } from "@/types/applicationTypes/seminovo/Propulsao";
 
 export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     public id?: number

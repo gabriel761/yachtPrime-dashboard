@@ -15,8 +15,9 @@ type Moeda = {
 
 
 
-const SelectMoeda = ({ control, errorMessage }: { control: any, errorMessage: string | undefined }) => {
+const SelectMoeda = ({ control, errorMessage, name }: { control: any, errorMessage: string | undefined, name?:string }) => {
     const [moedas, setMoedas] = useState<Moeda[] | null>(null)
+    const inputName = name ? name : "moeda"
 
     const getMoedas = async () => {
         const token = await auth.currentUser?.getIdToken()
@@ -37,16 +38,18 @@ const SelectMoeda = ({ control, errorMessage }: { control: any, errorMessage: st
     }, []);
     
     return (
+
         <Controller
-            name="moeda"
+            name={inputName}
             control={control}
             defaultValue=""
             render={({ field }) => (
                 <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Moeda" placeholder="Selecione a moeda do preço">
                     {
-                        !moedas ? null : moedas.map((item) => (
+                        !moedas ? null : moedas.map((item) =>{ 
+                            return (
                             <option key={item.id} value={item.simbolo}>{item.nome}</option>
-                        ))
+                        )})
                     }
                 </SelectInput>
             )} />

@@ -2,7 +2,7 @@ import { MouseEvent, useState } from "react";
 import ItemSelect from "./itemSelect";
 import ItemTable from "./ItemTable";
 import { Controller, FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
-import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
+import { ItemCharter } from "@/types/applicationTypes/charter/ItemCharter";
 
 
 type props = {
@@ -12,41 +12,41 @@ type props = {
 
 
 const Itens = ({ control, errorMessage }: props) => {
-    const [itensSeminovo, setItensSeminovo] = useState<ItemSeminovo[]>([])
+    const [itensCharter, setItensCharter] = useState<ItemCharter[]>([])
 
-    const syncControlerValueWithState = (value: ItemSeminovo[]) => {
-        setItensSeminovo(value)
+    const syncControlerValueWithState = (value: ItemCharter[]) => {
+        setItensCharter(value)
     }
 
-    const addItemToTable = (itemSeminovo: string, updateControllerValue: Function) => {
-        const tableItem: ItemSeminovo = JSON.parse(itemSeminovo)
-        const checkRepeatedItem = itensSeminovo.find((item) => {
+    const addItemToTable = (itemCharter: string, updateControllerValue: Function) => {
+        const tableItem: ItemCharter = JSON.parse(itemCharter)
+        const checkRepeatedItem = itensCharter.find((item) => {
             return item.id == tableItem.id
         })
         if (checkRepeatedItem) {
             return
         }
         tableItem.quantidade = 1
-        const newItensSeminovo = [...itensSeminovo, tableItem]
-        updateControllerValue(newItensSeminovo)
-        setItensSeminovo(newItensSeminovo)
+        const newItensCharter = [...itensCharter, tableItem]
+        updateControllerValue(newItensCharter)
+        setItensCharter(newItensCharter)
     }
 
     const handleDeleteItem = (event: MouseEvent<HTMLButtonElement, MouseEvent>, id: number, updateControllerValue: Function) => {
         event.preventDefault()
-        const newItensSeminovo = itensSeminovo.filter((item) => item.id != id)
-        updateControllerValue(newItensSeminovo)
-        setItensSeminovo(newItensSeminovo)
+        const newItensCharter = itensCharter.filter((item) => item.id != id)
+        updateControllerValue(newItensCharter)
+        setItensCharter(newItensCharter)
     }
 
     const handleQuantityUpdate = (target: HTMLInputElement, updateControllerValue: Function) => {
         const itemId = parseInt(target.id)
         const value = parseInt(target.value)
-        const newItensSeminovo = itensSeminovo.map((item) =>
+        const newItensCharter = itensCharter.map((item) =>
             item.id === itemId ? { ...item, quantidade: value } : item
         )
-        updateControllerValue(newItensSeminovo)
-        setItensSeminovo(newItensSeminovo);
+        updateControllerValue(newItensCharter)
+        setItensCharter(newItensCharter);
 
     }
 
@@ -67,7 +67,7 @@ const Itens = ({ control, errorMessage }: props) => {
                         controlValue={field.value}
                         syncControlerValueWithState={() => syncControlerValueWithState(field.value)}
                         errorMessage={errorMessage}
-                        itensSeminovo={itensSeminovo}
+                        itensCharter={itensCharter}
                         handleDeleteItem={(event: MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => handleDeleteItem(event, id, field.onChange)}
                         handleQuantityUpdate={(target: EventTarget & HTMLInputElement) => handleQuantityUpdate(target, field.onChange)}
                     />

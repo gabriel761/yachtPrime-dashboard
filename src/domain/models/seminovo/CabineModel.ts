@@ -1,4 +1,4 @@
-import { Cabine } from "@/types/applicationTypes/Cabine";
+import { Cabine } from "@/types/applicationTypes/seminovo/Cabine";
 
 export class CabineModel implements Cabine {
     constructor(

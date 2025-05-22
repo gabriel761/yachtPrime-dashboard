@@ -45,7 +45,7 @@ const PopUp = ({ title, children, buttons, isOpen, setIsOpen }: Props) => {
                         <div className="w-full flex justify-end gap-4">
                             {
                                 buttons.map((button, index) => (
-                                    <button key={index} onClick={() => { button.onClick && button.onClick()}} className={`flex w-[150px] justify-center rounded  p-3 font-medium text-gray hover:bg-opacity-90 mt-8 ${button.type}`}>{button.text}</button>
+                                    <button type="button" key={index} onClick={() => { button.onClick && button.onClick()}} className={`flex w-[150px] justify-center rounded  p-3 font-medium text-gray hover:bg-opacity-90 mt-8 ${button.type}`}>{button.text}</button>
                                 ))
                             }
 

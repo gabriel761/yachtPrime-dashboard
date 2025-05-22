@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
-import { RoteiroCharter } from "@/types/applicationTypes/RoteiroCharter";
+import { RoteiroCharter } from "@/types/applicationTypes/charter/RoteiroCharter";
 
 
 type props = {

@@ -1,20 +1,20 @@
 import { Package } from "@/types/package";
 import InputElement from "../../../../components/InputElement";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
+import { ItemCharter } from "@/types/applicationTypes/charter/ItemCharter";
 
 
 type props = {
-    itensSeminovo: ItemSeminovo[],
+    itensCharter: ItemCharter[],
     handleQuantityUpdate: Function, 
     handleDeleteItem: Function,
     errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ id: number; item: string; quantidade: number; }>> | undefined)[]> | undefined,
-    controlValue: ItemSeminovo[],
+    controlValue: ItemCharter[],
     syncControlerValueWithState: Function
 }
 
-const ItemTable = ({ itensSeminovo, handleQuantityUpdate, handleDeleteItem, errorMessage, controlValue, syncControlerValueWithState}:props) => {
+const ItemTable = ({ itensCharter, handleQuantityUpdate, handleDeleteItem, errorMessage, controlValue, syncControlerValueWithState}:props) => {
 
    useEffect(()=> {
     syncControlerValueWithState()
@@ -38,7 +38,7 @@ const ItemTable = ({ itensSeminovo, handleQuantityUpdate, handleDeleteItem, erro
                         </tr>
                     </thead>
                     <tbody>
-                        {itensSeminovo.map((item, index) => (
+                        {itensCharter.map((item, index) => (
                             <tr key={index}>
                                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                                     <p className="font-regular dark:text-white">

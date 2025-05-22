@@ -1,17 +1,17 @@
 import { SeminovoForm } from "@/util/seminovoValidationSchema";
-import { BarcoSeminovoModel } from "../models/BarcoSeminovoModel";
-import { MotorizacaoModel } from "../models/MotorizacaoModel";
-import { CabineModel } from "../models/CabineModel";
+import { BarcoSeminovoModel } from "../models/seminovo/BarcoSeminovoModel";
+import { MotorizacaoModel } from "../models/seminovo/MotorizacaoModel";
+import { CabineModel } from "../models/seminovo/CabineModel";
 import { PrecoModel } from "../models/PrecoModel";
 import { ImagemModel } from "../models/ImagemModel";
 import { Modelo } from "@/types/applicationTypes/Modelo";
-import { Combustivel } from "@/types/applicationTypes/Combustivel";
-import { Propulsao } from "@/types/applicationTypes/Propulsao";
+import { TipoCombustivel } from "@/types/applicationTypes/TipoCombustivel";
+import { Propulsao } from "@/types/applicationTypes/seminovo/Propulsao";
 
 export class SeminovoService {
     async prepareForSubmitSeminovo(data: SeminovoForm,  imageFirebaseHandling: Function){
         const formModelo:Modelo = JSON.parse(data.modelo)
-        const formCombustivel: Combustivel = JSON.parse(data.combustivel)
+        const formCombustivel: TipoCombustivel = JSON.parse(data.combustivel)
         const formPropulsao: Propulsao = JSON.parse(data.propulsao)
 
         const motorizacaoModel = new MotorizacaoModel(data.modeloMotor, data.quantidadeMotor, data.potenciaMotor, data.horasMotor, data.anoMotor)
@@ -33,7 +33,7 @@ export class SeminovoService {
     async prepareForUpdateSeminovo(data: SeminovoForm, idSeminovo: number | null, imageFirebaseHandling: Function) {
         if(!idSeminovo) throw new Error("Errro de cliente: idSeminovo não pode ser nulo")
         const formModelo: Modelo = JSON.parse(data.modelo)
-        const formCombustivel: Combustivel = JSON.parse(data.combustivel)
+        const formCombustivel: TipoCombustivel = JSON.parse(data.combustivel)
         const formPropulsao: Propulsao = JSON.parse(data.propulsao)
 
         const motorizacaoModel = new MotorizacaoModel(data.modeloMotor, data.quantidadeMotor, data.potenciaMotor, data.horasMotor, data.anoMotor)

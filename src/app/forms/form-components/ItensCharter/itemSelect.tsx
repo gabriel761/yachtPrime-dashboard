@@ -16,6 +16,7 @@ const ItemSelect = ({addItemToTable, errorMessage}: {addItemToTable:Function, er
     const getItensSeminovo = async () => {
         const token = await auth.currentUser?.getIdToken()
         const itens = await httpClient.get(`${baseUrl}/resources/charter/itens-charter`, token)
+        console.log(itens)
         setSelectItems(itens)
     }
 
