@@ -27,7 +27,7 @@ import { useRouter } from 'next/navigation';
 import { ImagemModel } from "@/domain/models/ImagemModel";
 import CheckBoxElement from "../../form-components/CheckboxElement";
 import { auth } from "@/lib/firebase/firebaseConfig";
-import { SeminovoService } from "@/domain/service/SeminovoService";
+import { SeminovoService } from "../../../../domain/service/SeminovoService";
 
 
 type Params = Promise<{ id: string }>
