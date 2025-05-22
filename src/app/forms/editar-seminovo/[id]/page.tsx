@@ -23,7 +23,7 @@ import baseUrl from "@/infra/back-end-connection";
 import Spinner from "@/components/common/Spinner";
 import { CustomError } from "@/infra/CustomError";
 import { useModal } from "@/context/ModalContext"
-import { BarcoSeminovoOutput } from "@/types/applicationTypes/BarcoSeminovo";
+import { BarcoSeminovoOutput } from "@/types/applicationTypes/seminovo/BarcoSeminovo";
 import { useRouter } from 'next/navigation';
 import { ImagemModel } from "@/domain/models/ImagemModel";
 import CheckBoxElement from "../../form-components/CheckboxElement";

@@ -1,13 +1,13 @@
-import { Combustivel } from "@/types/applicationTypes/TipoCombustivel";
+import { TipoCombustivel } from "@/types/applicationTypes/TipoCombustivel";
 
-export class CombustivelModel implements Combustivel {
+export class CombustivelModel implements TipoCombustivel {
     constructor(
         public id: number,
         public opcao:string,
     ){
 
     }
-    extractData():Combustivel{
+    extractData():TipoCombustivel{
         return {
             id: this.id,
             opcao: this.opcao

@@ -1,10 +1,11 @@
+
 import { Cabine } from "./Cabine";
-import { Combustivel } from "./Combustivel";
-import { Imagem } from "./Imagem";
-import { ItemSeminovo } from "./ItemSeminovo";
-import { Modelo } from "./Modelo";
-import { Motorizacao } from "./Motorizacao";
-import { Preco } from "./Preco";
+import { TipoCombustivel } from "../TipoCombustivel";
+import { Imagem } from "../Imagem";
+import { ItemSeminovo } from "../ItemSeminovo";
+import { Modelo } from "../Modelo";
+import { Motorizacao } from "../Motorizacao";
+import { Preco } from "../Preco";
 import { Propulsao } from "./Propulsao";
 
 export type BarcoSeminovoOutput = {
@@ -15,7 +16,7 @@ export type BarcoSeminovoOutput = {
     tamanho: number;
     motorizacao: Motorizacao;
     potenciaTotal: number;
-    combustivel: Combustivel;
+    combustivel: TipoCombustivel;
     propulsao: Propulsao;
     cabines: Cabine;
     procedencia: string;

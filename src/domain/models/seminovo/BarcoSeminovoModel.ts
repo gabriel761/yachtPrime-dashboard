@@ -1,6 +1,6 @@
 import { BarcoSeminovoOutput } from "@/types/applicationTypes/seminovo/BarcoSeminovo";
 import { Cabine } from "@/types/applicationTypes/seminovo/Cabine";
-import { Combustivel } from "@/types/applicationTypes/TipoCombustivel";
+import { TipoCombustivel } from "@/types/applicationTypes/TipoCombustivel";
 import { Imagem } from "@/types/applicationTypes/Imagem";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { Modelo } from "@/types/applicationTypes/Modelo";
@@ -17,7 +17,7 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
         public tamanho: number,
         public motorizacao: Motorizacao,
         public potenciaTotal: number,
-        public combustivel: Combustivel,
+        public combustivel: TipoCombustivel,
         public propulsao: Propulsao,
         public cabines: Cabine,
         public procedencia: string,

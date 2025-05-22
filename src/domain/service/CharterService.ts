@@ -18,7 +18,7 @@ export class CharterService {
         const tipoPasseio: TipoPasseio = JSON.parse(data.tipoPasseio)
         const tripulcaoSkipper: TripulacaoSkipper = JSON.parse(data.tripulacaoSkipper)
 
-        const consumoCombustivelModel = new ConsumoCombustivelModel(data.combustivelLitrosHora, {moeda: data.combustivelPrecoHora, valor: data.combustivelMoeda}, formCombustivel.opcao)
+        const consumoCombustivelModel = new ConsumoCombustivelModel(data.combustivelLitrosHora, {moeda: data.combustivelPrecoHora, valor: data.combustivelMoeda}, formCombustivel)
         const passageirosModel = new PassageirosModel(data.passageiros, data.passageirosPernoite, data.passageirosTripulacao)
         const precoModel = new PrecoModel(data.moeda, data.preco)
         const precoTaxaExtraModel = new PrecoModel(data.moedaTaxaExtra, data.precoTaxaExtra)

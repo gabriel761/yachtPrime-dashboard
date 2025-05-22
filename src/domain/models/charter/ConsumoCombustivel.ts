@@ -1,5 +1,5 @@
 import { ConsumoCombustivel } from "@/types/applicationTypes/charter/ConsumoCombustivel";
-import { Combustivel } from "@/types/applicationTypes/TipoCombustivel";
+import { TipoCombustivel } from "@/types/applicationTypes/TipoCombustivel";
 import { Preco } from "@/types/applicationTypes/Preco";
 
 export class ConsumoCombustivelModel {
@@ -7,7 +7,7 @@ export class ConsumoCombustivelModel {
         
         private litrosHora: number,
         private precoHora: Preco,
-        private tipoCombustivel: Combustivel,
+        private tipoCombustivel: TipoCombustivel,
         private id?: number,
     ){
 

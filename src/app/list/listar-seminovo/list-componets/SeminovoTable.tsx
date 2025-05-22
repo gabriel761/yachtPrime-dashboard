@@ -2,7 +2,7 @@
 import { useModal } from "@/context/ModalContext";
 import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
-import { BarcoSeminovoList } from "@/types/applicationTypes/BarcoSeminovo";
+import { BarcoSeminovoList } from "@/types/applicationTypes/seminovo/BarcoSeminovo";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
