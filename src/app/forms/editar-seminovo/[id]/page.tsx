@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SeminovoForm, seminovoSchema } from "@/util/seminovoValidationSchema";
 import UploadFotos from "../../form-components/UploadFotos";
 import Itens from "../../form-components/Itens/Itens";
-import { SeminovoService } from "@/domain/service/SeminovoService";
+import { SeminovoService } from "../../../../domain/service/SeminovoService";
 import httpClient from "@/infra/httpClient";
 import baseUrl from "@/infra/back-end-connection";
 import Spinner from "@/components/common/Spinner";
