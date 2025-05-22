@@ -26,7 +26,7 @@ import { ImagemModel } from "@/domain/models/ImagemModel";
 import CheckboxTwo from "@/components/Checkboxes/CheckboxTwo";
 import CheckBoxElement from "../form-components/CheckboxElement";
 import { auth } from "@/lib/firebase/firebaseConfig";
-import { SeminovoService } from "../../..//domain/service/SeminovoService";
+import { SeminovoService } from "../../../domain/service/SeminovoService";
 
 
 const CadastrarSeminovo = () => {
