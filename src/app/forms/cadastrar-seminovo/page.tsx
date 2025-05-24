@@ -64,6 +64,7 @@ const CadastrarSeminovo = () => {
       await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData, token || "")
 
       openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
+      reset()
     } catch (error: any) {
       let errorMessage
       if (error instanceof CustomError) {
@@ -75,7 +76,7 @@ const CadastrarSeminovo = () => {
       console.error(error)
     }
 
-    reset()
+    
     setIsLoading(false)
   }
 
