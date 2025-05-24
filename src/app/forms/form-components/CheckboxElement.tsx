@@ -8,7 +8,7 @@ const CheckBoxElement = ({ control }: { control: any }) => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <CheckboxTwo value={field.value} changeValue={(value) => field.onChange(value)} checkBoxText="Teste de redeploy" />
+                <CheckboxTwo value={field.value} changeValue={(value) => field.onChange(value)} checkBoxText="Barco seminovo é oportunidade para o cliente? (Oferta ou Promoção)" />
             )}
         />
     );
