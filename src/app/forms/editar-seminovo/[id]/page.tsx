@@ -57,7 +57,7 @@ const EditarSeminovo = (props: { params: Params}) => {
                 anoMotor: seminovo.motorizacao.ano,
                 potenciaMotor: seminovo.motorizacao.potencia,
                 observacoesMotor: seminovo.motorizacao.observacoes ?? "",
-                modelo: JSON.stringify(seminovo.modelo)  ?? "",
+                modelo: seminovo.modelo.modelo  ?? "",
                 nome: seminovo.nome,
                 ano: seminovo.ano,
                 tamanho: seminovo.tamanho,

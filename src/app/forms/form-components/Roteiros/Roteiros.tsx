@@ -3,7 +3,7 @@ import ItemTable from "./RoteirosTable";
 import { Controller, FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import AddRoteiroModal from "./AddRoteiroModal";
-import { RoteiroCharter } from "@/types/applicationTypes/charter/RoteiroCharter";
+import { RoteiroCharterForm } from "@/types/applicationTypes/charter/RoteiroCharter";
 import { useModal } from "@/context/ModalContext";
 import RoteirosTable from "./RoteirosTable";
 
@@ -15,15 +15,15 @@ type props = {
 
 
 const Roteiros = ({ control, errorMessage }: props) => {
-    const [roteirosCharter, setRoteirosCharter] = useState<RoteiroCharter[]>([])
+    const [roteirosCharter, setRoteirosCharter] = useState<RoteiroCharterForm[]>([])
     const [isOpen, setIsOpen] = useState(false)
     const { openModal } = useModal()
 
-    const syncControlerValueWithState = (value: RoteiroCharter[]) => {
+    const syncControlerValueWithState = (value: RoteiroCharterForm[]) => {
         setRoteirosCharter(value)
     }
 
-    const addItemToTable = (roteiroCharter: RoteiroCharter, updateControllerValue: Function) => {
+    const addItemToTable = (roteiroCharter: RoteiroCharterForm, updateControllerValue: Function) => {
         const tableRoteiro = roteiroCharter
         const checkRepeatedItem = roteirosCharter.find((roteiro) => {
             return roteiro.nome == tableRoteiro.nome
@@ -56,7 +56,7 @@ const Roteiros = ({ control, errorMessage }: props) => {
             render={({ field }) => (
                 <div className="border-red">
                     <button type="button" onClick={() => setIsOpen(true)} className={`flex w-[150px] justify-center rounded  p-3 mb-5 font-medium text-gray hover:bg-opacity-90 mt-8 bg-primary`}>Adicionar roteiro</button>
-                    <AddRoteiroModal isOpenModal={isOpen} setIsOpenModal={setIsOpen} addRoteiroToTable={(value: RoteiroCharter) => addItemToTable(value, field.onChange)} />
+                    <AddRoteiroModal isOpenModal={isOpen} setIsOpenModal={setIsOpen} addRoteiroToTable={(value: RoteiroCharterForm) => addItemToTable(value, field.onChange)} />
                     <RoteirosTable
                         controlValue={field.value}
                         syncControlerValueWithState={() => syncControlerValueWithState(field.value)}

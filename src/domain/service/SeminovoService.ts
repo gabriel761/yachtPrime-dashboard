@@ -47,7 +47,7 @@ export class SeminovoService {
 
         const imagensDB = await imagemModel.getImagesFromDbByIdSeminovo(idSeminovo)
         const imagensToDeleteFromFirebase = imagemModel.extractImagesToDeleteFromFirebase(data.imagens, imagensDB)
-        await imagemModel.deleteImageList(imagensToDeleteFromFirebase)
+        await imagemModel.deleteImageList(imagensToDeleteFromFirebase, "seminovos")
         const imageLinks = await imageFirebaseHandling(data.imagens)
         const barcoSeminovoModel = new BarcoSeminovoModel(formModelo, data.nome, data.ano, data.tamanho, motorizacaoData, data.potenciaTotal, formCombustivel, formPropulsao, cabineData, data.procedencia, data.destaque, precoData, imageLinks, data.equipadoCom, data.oportunidade, data.video)
         barcoSeminovoModel.setId(idSeminovo)

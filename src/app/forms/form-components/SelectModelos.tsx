@@ -27,34 +27,36 @@ const SelectModelos = ({ control, errorMessage }: { control: any, errorMessage: 
     }
 
     useEffect(() => {
-            const unsubscribe = onIdTokenChanged(auth, async (user) => {
-                if (user) {
-                    await getModelos(); // Só chama o método quando o token é garantido
-                } else {
-                    console.warn("Usuário não autenticado.");
-                }
-            });
-    
-            return () => unsubscribe(); // Remove o listener ao desmontar o componente
-        }, []);
+        const unsubscribe = onIdTokenChanged(auth, async (user) => {
+            if (user) {
+                await getModelos(); // Só chama o método quando o token é garantido
+            } else {
+                console.warn("Usuário não autenticado.");
+            }
+        });
+
+        return () => unsubscribe(); // Remove o listener ao desmontar o componente
+    }, []);
 
     return (
-        <>
+
         <Controller
             name="modelo"
             control={control}
             defaultValue=""
-            render={({ field }) => (
-                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Modelo" placeholder="Selecione o modelo">
-                    {
-                        !selectItems ? null : selectItems.map((modelo) => (
-                            <option key={modelo.id} value={JSON.stringify(modelo)}>{modelo.modelo}</option>
-                        ))
-                    }
-                </SelectInput>
-            )} />
-            
-        </>
+            render={({ field }) => {
+                return (
+                    <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Modelo" placeholder="Selecione o modelo">
+                        {
+                            !selectItems ? null : selectItems.map((modelo) => (
+                                <option key={modelo.id} value={modelo.modelo}>{modelo.modelo}</option>
+                            ))
+                        }
+                    </SelectInput>
+                )
+            }}
+        />
+
     );
 }
 

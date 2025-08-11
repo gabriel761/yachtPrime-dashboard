@@ -15,6 +15,7 @@ export const charterSchema = z.object({
     nome: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }),
     ano: z.number(numberMessage).positive(numberMessage).min(1950, { message: "Ano deve ser maior que 1950" }).max(currentYear, { message: "Ano deve ser menor do que o ano atual" }),
     tamanho: z.number(numberMessage).positive(numberMessage).min(5, { message: "Número de pés muito baixo" }).max(1000, { message: "Número de pés muito alto" }),
+    cidade: z.string(textMessage).min(1, selectMessage),
     moeda: z.string(textMessage).min(1, selectMessage).max(50),
     preco: z.string(numberMessage).min(1, { message: "Preço inválido" }),
     combustivel: z.string(textMessage).min(1, selectMessage).max(50),
@@ -45,6 +46,7 @@ export const charterSchema = z.object({
     roteiros: z.array(z.object({
         nome: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }),
         descricao: z.string(textMessage).max(250, { message: "Maximo de 250 characteres " }),
+        moeda: z.string(textMessage).min(1, selectMessage).max(50),
         preco: z.string(numberMessage).min(1, { message: "Preço inválido" }),
         detalhesPagamento: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }),
     }))

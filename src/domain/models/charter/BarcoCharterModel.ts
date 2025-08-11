@@ -8,6 +8,7 @@ import { TipoPasseio } from "@/types/applicationTypes/charter/TipoPasseio";
 import { TripulacaoSkipper } from "@/types/applicationTypes/charter/TripulacaoSkipper";
 import { TaxaChurrasco } from "@/types/applicationTypes/charter/TaxaChurrasco";
 import { BarcoCharter } from "@/types/applicationTypes/charter/BarcoCharter";
+import { Modelo } from "@/types/applicationTypes/Modelo";
 
 export class BarcoCharterModel {
     constructor(
@@ -15,9 +16,10 @@ export class BarcoCharterModel {
         public nome: string,
         public ano: number,
         public tamanho: number,
+        public cidade: string,
         public preco: Preco,
         public passageiros: Passageiros,
-        public petFriendly: string,
+        public petFriendly: PetFriendly,
         public itensDisponiveis: ItemCharter[],
         public imagens: Imagem[],
         public consumoCombustivel: ConsumoCombustivel,
@@ -34,6 +36,11 @@ export class BarcoCharterModel {
 
         
     }
+
+    setId(id: number){
+        this.id = id
+    }
+
     extractData(): BarcoCharter {
         return {
             id: this.id,
@@ -41,6 +48,7 @@ export class BarcoCharterModel {
             nome: this.nome,
             ano: this.ano,
             tamanho: this.tamanho,
+            cidade: this.cidade,
             preco: this.preco,
             passageiros: this.passageiros,
             petFriendly: this.petFriendly,

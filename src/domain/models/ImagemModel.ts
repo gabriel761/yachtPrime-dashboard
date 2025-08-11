@@ -8,10 +8,10 @@ import { generateDateString } from "@/util/stringMetoods";
 import { error } from "console";
 
 export class ImagemModel {
-    async prepareForUploadImageList(imageObjectList: ImageObject[]): Promise<Imagem[]> {
+    async prepareForUploadImageList(imageObjectList: ImageObject[], pasta: string): Promise<Imagem[]> {
         const promises = imageObjectList.map((imageObject, index) =>{
             if (!imageObject.link.includes("firebase")) {
-              return  uploadImageList(imageObject, index)
+              return  uploadImageList(imageObject, index, pasta)
             }else{
                 return {...imageObject, index}
             }
@@ -27,6 +27,12 @@ export class ImagemModel {
         return images
     }
 
+    async getImagesFromDbByIdCharter(idSeminovo: number): Promise<Imagem[]> {
+        const token = await auth.currentUser?.getIdToken()
+        const images = await httpClient.get(`${baseUrl}/resources/charter/imagens-charter/${idSeminovo}`, token)
+        return images
+    }
+
     extractImagesToDeleteFromFirebase(imagensForm: Imagem[], imagensDb: Imagem[]) {
         const imagesToDelete = imagensDb.filter(
             (imagemDb) =>
@@ -35,20 +41,20 @@ export class ImagemModel {
         return imagesToDelete
     }
 
-    async deleteImageList(imageList: Imagem[]) {
+    async deleteImageList(imageList: Imagem[], pasta: string) {
         Promise.all(
             imageList.map((imagem) => {
                 if(imagem.link.includes("firebase")){
-                    deleteImage(imagem.fileName)
+                    deleteImage(imagem.fileName, pasta)
                 }
             })
         )
     }
 }
 
-const uploadImageList = async (imageObject: ImageObject, index: number): Promise<{ index: number; link: string; fileName: string }> => {
+const uploadImageList = async (imageObject: ImageObject, index: number, pasta: string): Promise<{ index: number; link: string; fileName: string }> => {
     const date = generateDateString();
-    const imageLink = await uploadImage(imageObject.link, imageObject.fileName + date);
+    const imageLink = await uploadImage(imageObject.link, imageObject.fileName + date, pasta);
     const bucketFileName = imageObject.fileName + date;
     return { index, link: imageLink, fileName: bucketFileName };
 

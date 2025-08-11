@@ -4,13 +4,13 @@ import TextArea from "../TextArea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { roteiroCharterSchema, RoteiroCharterSchema } from "@/util/roteiroCharterSchema";
-import { FormEvent, useCallback } from "react";
-import { RoteiroCharter } from "@/types/applicationTypes/charter/RoteiroCharter";
+import { RoteiroCharterForm } from "@/types/applicationTypes/charter/RoteiroCharter";
+import SelectMoeda from "../SelectMoeda";
 
 type props = {
     isOpenModal: boolean,
     setIsOpenModal: (value: boolean) => void,
-    addRoteiroToTable: (roteiroCharter: RoteiroCharter) => boolean ,
+    addRoteiroToTable: (roteiroCharter: RoteiroCharterForm) => boolean ,
 }
 
 const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable}: props) => {
@@ -19,11 +19,12 @@ const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable}: prop
         resolver: zodResolver(roteiroCharterSchema)
     })
 
-    const submit = (data: RoteiroCharter) => {
+    const submit = (data: RoteiroCharterForm) => {
         const completed = addRoteiroToTable(data)
         if(completed){
             resetField("nome")
             resetField("descricao")
+            resetField("moeda")
             resetField("preco")
             resetField("detalhesPagamento")
             setIsOpenModal(false)
@@ -48,9 +49,14 @@ const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable}: prop
             </div>
             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                 <div className="xl:w-1/2 w-full">
-                    <InputElement register={register} registerName="preco" label="Preço" placeholder="0,00" errorMessage={errors.preco?.message} />
+                    <SelectMoeda control={control} name="moeda" errorMessage={errors.moeda?.message} />
                 </div>
                 <div className="xl:w-1/2 w-full">
+                    <InputElement register={register} registerName="preco" label="Preço" placeholder="0,00" errorMessage={errors.preco?.message} />
+                </div>
+            </div>
+            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className="w-full">
                     <InputElement register={register} registerName="detalhesPagamento" label="Detalhes pagamento" placeholder="ou 5x de R$2.000" errorMessage={errors.detalhesPagamento?.message} />
                 </div>
             </div>

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { ItemSeminovo } from "@/types/applicationTypes/ItemSeminovo";
 import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
-import { RoteiroCharter } from "@/types/applicationTypes/charter/RoteiroCharter";
+import { RoteiroCharterForm } from "@/types/applicationTypes/charter/RoteiroCharter";
 
 
 type props = {
-    roteirosCharter: RoteiroCharter[], 
+    roteirosCharter: RoteiroCharterForm[], 
     handleDeleteRoteiro: Function,
     errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ id: number; item: string; quantidade: number; }>> | undefined)[]> | undefined,
     controlValue: ItemSeminovo[],
@@ -18,6 +18,10 @@ const RoteirosTable = ({ roteirosCharter, handleDeleteRoteiro, controlValue, syn
     syncControlerValueWithState()
        // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [controlValue])
+
+ 
+
+
     return (
         <div className={`rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1  `}>
             <div className="max-w-full overflow-x-auto">
@@ -27,7 +31,7 @@ const RoteirosTable = ({ roteirosCharter, handleDeleteRoteiro, controlValue, syn
                             <th className="min-w-[160px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
                                 Roteiro
                             </th>
-                            <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white">
+                            <th className="max-w-[220px] px-4 py-4 font-medium text-black dark:text-white">
                                 Descrição
                             </th>
                             <th className="min-w-[100px] px-4 py-4 font-medium text-black dark:text-white">
@@ -56,7 +60,7 @@ const RoteirosTable = ({ roteirosCharter, handleDeleteRoteiro, controlValue, syn
                                 </td>
                                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                     <p className="font-regular dark:text-white">
-                                        {item.preco}
+                                      {item.moeda} {item.preco}
                                     </p>
                                 </td>
                                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">

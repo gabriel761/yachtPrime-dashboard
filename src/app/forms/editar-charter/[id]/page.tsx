@@ -1,15 +1,15 @@
 'use client'
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import SelectModelos from "../form-components/SelectModelos";
-import InputElement from "../../../components/InputElement";
-import FormCard from "../form-components/FormCard";
-import { useEffect, useState } from "react";
+import SelectModelos from "../../form-components/SelectModelos";
+import InputElement from "../../../../components/InputElement";
+import FormCard from "../../form-components/FormCard";
+import { use, useEffect, useState } from "react";
 import { useForm,  } from "react-hook-form";
-import SelectCombustivel from "../form-components/SelectCombustivel";
-import SelectMoeda from "../form-components/SelectMoeda";
+import SelectCombustivel from "../../form-components/SelectCombustivel";
+import SelectMoeda from "../../form-components/SelectMoeda";
 import { zodResolver } from "@hookform/resolvers/zod";
-import UploadFotos from "../form-components/UploadFotos";
+import UploadFotos from "../../form-components/UploadFotos";
 import { SeminovoService } from "@/domain/service/SeminovoService";
 import httpClient from "@/infra/httpClient";
 import baseUrl from "@/infra/back-end-connection";
@@ -17,23 +17,32 @@ import { CustomError } from "@/infra/CustomError";
 import { useModal } from "@/context/ModalContext"
 import { ImagemModel } from "@/domain/models/ImagemModel";
 import { auth } from "@/lib/firebase/firebaseConfig";
-import SelectPetFriendly from "../form-components/SelectPetFriendly";
-import SelectTripulacaoSkipper from "../form-components/SelectTripulacaoSkipper";
-import SelectTipoPasseio from "../form-components/SelectTipoPasseio";
-import AddRoteiroModal from "../form-components/Roteiros/AddRoteiroModal";
+import SelectPetFriendly from "../../form-components/SelectPetFriendly";
+import SelectTripulacaoSkipper from "../../form-components/SelectTripulacaoSkipper";
+import SelectTipoPasseio from "../../form-components/SelectTipoPasseio";
+import AddRoteiroModal from "../../form-components/Roteiros/AddRoteiroModal";
 import { charterSchema, CharterSchema } from "@/util/charterSchema";
-import Roteiros from "../form-components/Roteiros/Roteiros";
-import Itens from "../form-components/ItensCharter/Itens";
+import Roteiros from "../../form-components/Roteiros/Roteiros";
+import Itens from "../../form-components/ItensCharter/Itens";
 import Spinner from "@/components/common/Spinner";
 import { CharterService } from "@/domain/service/CharterService";
 import { json } from "stream/consumers";
-import SelectCidade from "../form-components/SelectCidade";
+import { useRouter } from 'next/navigation';
+import { BarcoCharter, BarcoCharterUpdate } from "@/types/applicationTypes/charter/BarcoCharter";
+import { RoteiroCharterModel } from "@/domain/models/charter/RoteiroCharterModel";
+import SelectCidade from "../../form-components/SelectCidade";
 
+type Params = Promise<{ id: string }>
 
-const CadastrarCharter = () => {
+const EditarCharter = (props: { params: Params }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [output, setOutput] = useState(null)
     const { openModal } = useModal()
+
+    const router = useRouter()
+        
+       const params = use(props.params)
+        const idCharter = params.id ? parseInt(params.id) : null
 
     const { register, handleSubmit, control, reset, formState: { errors } } = useForm<CharterSchema>({
         resolver: zodResolver(charterSchema),
@@ -41,6 +50,57 @@ const CadastrarCharter = () => {
             taxaChurrascoMessage: "Pagamento no dia do passeio diretamente ao capitão"
         }
     })
+
+
+    const getCharterData = async () => {
+        try{
+            const charter: BarcoCharter = await httpClient.get(`${baseUrl}/barco/charter/${idCharter}`)
+            const roteirosModel = new RoteiroCharterModel()
+            roteirosModel.setRoteirosForm(charter.roteiros)
+            const roteirosForm = roteirosModel.extractDataForm()
+
+            console.log(charter.modelo)
+            reset({
+                modelo: charter.modelo ?? "",
+                nome: charter.nome || "",
+                ano: charter.ano,
+                tamanho: charter.tamanho,
+                cidade: charter.cidade,
+                preco: charter.preco.valor.toString() ?? "",
+                moeda: charter.preco.moeda,
+                combustivel: JSON.stringify( charter.consumoCombustivel.tipoCombustivel) ,
+                combustivelLitrosHora: charter.consumoCombustivel.litrosHora,
+                combustivelMoeda: charter.consumoCombustivel.precoHora.moeda,
+                combustivelPrecoHora: charter.consumoCombustivel.precoHora.valor,
+                passageiros: charter.passageiros.passageiros,
+                passageirosPernoite: charter.passageiros.passageirosPernoite || 0,
+                passageirosTripulacao: charter.passageiros.tripulacao,
+                video: charter.videoPromocional || "",
+                imagens: charter.imagens,
+                itensDisponiveis: charter.itensDisponiveis,
+                petFriendly: JSON.stringify( charter.petFriendly),
+                tipoPasseio: JSON.stringify( charter.tipoPasseio),
+                tripulacaoSkipper: JSON.stringify( charter.tripulacaoSkipper),
+                moedaAluguelLancha: charter.aluguelLancha.moeda,
+                moedaTaxaChurrasco: charter.taxaChurrasco.preco.moeda,
+                moedaTaxaExtra: charter.horaExtra.moeda,
+                precoAluguelLancha: charter.aluguelLancha.valor,
+                precoTaxaChurrasco: charter.taxaChurrasco.preco.valor,
+                precoTaxaExtra: charter.horaExtra.valor,
+                taxaChurrascoMessage: charter.taxaChurrasco.mensagem,
+                roteiros: roteirosForm
+            })
+        } catch (error: any) {
+            let errorMessage
+            if (error instanceof CustomError) {
+                errorMessage = `Status ${error.statusCode}: ${error.message}`
+            } else {
+                errorMessage = error.message
+            }
+            openModal("Erro de servidor", error.message, [{ type: "bg-danger", text: "Ok" }])
+            console.error(error)
+        }
+    }
 
 
 
@@ -54,7 +114,7 @@ const CadastrarCharter = () => {
         let charterFinalData
 
         try {
-            charterFinalData = await charterService.prepareForSubmitCharter(data, imagemModel.prepareForUploadImageList)
+            charterFinalData = await charterService.prepareForUpdateCharter(data, idCharter, imagemModel.prepareForUploadImageList)
             console.log(charterFinalData)
         } catch (error: any) {
             openModal("Erro de cliente", error.message, [{ type: "bg-danger", text: "Ok" }])
@@ -67,9 +127,10 @@ const CadastrarCharter = () => {
 
         try {
             const token = await auth.currentUser?.getIdToken()
-            await httpClient.post(`${baseUrl}/barco/charter`, charterFinalData, token || "")
+            await httpClient.patch(`${baseUrl}/barco/charter`, charterFinalData, token || "")
             reset()
-            openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
+            openModal("Sucesso!", "Barco seminovo atualizado com sucesso!", [{ type: "bg-primary", text: "Ok", onClick: () => router.replace("/list/listar-charter") }])
+            await getCharterData()
         } catch (error: any) {
             let errorMessage
             if (error instanceof CustomError) {
@@ -82,11 +143,14 @@ const CadastrarCharter = () => {
         }
 
         
-        
+       
         setIsLoading(false)
     }
 
-
+    useEffect(() => {
+        getCharterData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <DefaultLayout>
@@ -227,7 +291,7 @@ const CadastrarCharter = () => {
                                 {
                                     isLoading ? <Spinner size={40} /> : (
                                         <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                                            Cadastrar seminovo
+                                            Atualizar seminovo
                                         </button>
                                     )
                                 }
@@ -244,4 +308,4 @@ const CadastrarCharter = () => {
     )
 }
 
-export default CadastrarCharter
+export default EditarCharter
