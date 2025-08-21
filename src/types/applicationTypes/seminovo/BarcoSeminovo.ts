@@ -10,7 +10,7 @@ import { Propulsao } from "./Propulsao";
 
 export type BarcoSeminovoOutput = {
     id?:number
-    modelo: Modelo;
+    modelo: string;
     nome: string;
     ano: number;
     tamanho: number;

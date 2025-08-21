@@ -11,7 +11,7 @@ import { Propulsao } from "@/types/applicationTypes/seminovo/Propulsao";
 export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     public id?: number
     constructor(
-        public modelo: Modelo,
+        public modelo: string,
         public nome: string,
         public ano: number,
         public tamanho: number,

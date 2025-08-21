@@ -10,7 +10,7 @@ import { Propulsao } from "@/types/applicationTypes/seminovo/Propulsao";
 
 export class SeminovoService {
     async prepareForSubmitSeminovo(data: SeminovoForm,  imageFirebaseHandling: Function){
-        const formModelo:Modelo = JSON.parse(data.modelo)
+        const formModelo:string = data.modelo
         const formCombustivel: TipoCombustivel = JSON.parse(data.combustivel)
         const formPropulsao: Propulsao = JSON.parse(data.propulsao)
 
@@ -32,7 +32,7 @@ export class SeminovoService {
 
     async prepareForUpdateSeminovo(data: SeminovoForm, idSeminovo: number | null, imageFirebaseHandling: Function) {
         if(!idSeminovo) throw new Error("Errro de cliente: idSeminovo não pode ser nulo")
-        const formModelo: Modelo = JSON.parse(data.modelo)
+        const formModelo: string = data.modelo
         const formCombustivel: TipoCombustivel = JSON.parse(data.combustivel)
         const formPropulsao: Propulsao = JSON.parse(data.propulsao)
 
