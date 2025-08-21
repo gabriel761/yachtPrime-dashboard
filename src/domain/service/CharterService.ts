@@ -40,7 +40,7 @@ export class CharterService {
         const precoTaxaChurrasco = precoTaxaChurrascoModel.extractData()
 
 
-        const imageLinks = await imageFirebaseHandling(data.imagens)
+        const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
 
         const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho,data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video )
         const barcoCharterData = barcoCharterModel.extractData()
@@ -79,7 +79,7 @@ export class CharterService {
         const imagensDB = await imagemModel.getImagesFromDbByIdCharter(idCharter)
         const imagensToDeleteFromFirebase = imagemModel.extractImagesToDeleteFromFirebase(data.imagens, imagensDB)
         await imagemModel.deleteImageList(imagensToDeleteFromFirebase, "charters")
-        const imageLinks = await imageFirebaseHandling(data.imagens)
+        const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
 
         const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video)
 
