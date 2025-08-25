@@ -10,7 +10,7 @@ import RoteirosTable from "./RoteirosTable";
 
 type props = {
     control: any,
-    errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ id: number; item: string; quantidade: number; }>> | undefined)[]> | undefined
+    errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ nome: string; moeda: string; preco: string; descricao: string; detalhesPagamento: string; }>> | undefined)[]> | undefined | {message: string}
 }
 
 
@@ -60,11 +60,11 @@ const Roteiros = ({ control, errorMessage }: props) => {
                     <RoteirosTable
                         controlValue={field.value}
                         syncControlerValueWithState={() => syncControlerValueWithState(field.value)}
-                        errorMessage={errorMessage}
+                        errorMessage={typeof errorMessage != "string"? errorMessage : {}}
                         roteirosCharter={roteirosCharter}
                         handleDeleteRoteiro={(event: MouseEvent<HTMLButtonElement, MouseEvent>, nome: string) => handleDeleteItem(event, nome, field.onChange)}
                     />
-
+                    <p className="text-danger">{errorMessage?.message}</p>
                 </div>
             )}
         />

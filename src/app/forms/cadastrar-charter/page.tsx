@@ -57,6 +57,7 @@ const CadastrarCharter = () => {
             charterFinalData = await charterService.prepareForSubmitCharter(data, imagemModel.prepareForUploadImageList)
             console.log(charterFinalData)
         } catch (error: any) {
+            console.log(error)
             openModal("Erro de cliente", error.message, [{ type: "bg-danger", text: "Ok" }])
             console.error(error)
             setIsLoading(false);

@@ -7,7 +7,7 @@ import { RoteiroCharterForm } from "@/types/applicationTypes/charter/RoteiroChar
 type props = {
     roteirosCharter: RoteiroCharterForm[], 
     handleDeleteRoteiro: Function,
-    errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ id: number; item: string; quantidade: number; }>> | undefined)[]> | undefined,
+    errorMessage: Merge<FieldError, (Merge<FieldError, FieldErrorsImpl<{ nome: string; moeda: string; preco: string; descricao: string; detalhesPagamento: string; }>> | undefined)[]> | undefined,
     controlValue: ItemSeminovo[],
     syncControlerValueWithState: Function
 }
