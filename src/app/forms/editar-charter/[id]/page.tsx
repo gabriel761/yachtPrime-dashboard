@@ -58,8 +58,6 @@ const EditarCharter = (props: { params: Params }) => {
             const roteirosModel = new RoteiroCharterModel()
             roteirosModel.setRoteirosForm(charter.roteiros)
             const roteirosForm = roteirosModel.extractDataForm()
-
-            console.log(charter.modelo)
             reset({
                 modelo: charter.modelo ?? "",
                 nome: charter.nome || "",
