@@ -6,21 +6,58 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { roteiroCharterSchema, RoteiroCharterSchema } from "@/util/roteiroCharterSchema";
 import { RoteiroCharterForm } from "@/types/applicationTypes/charter/RoteiroCharter";
 import SelectMoeda from "../SelectMoeda";
+import { MutableRefObject, useEffect } from "react";
 
 type props = {
     isOpenModal: boolean,
     setIsOpenModal: (value: boolean) => void,
     addRoteiroToTable: (roteiroCharter: RoteiroCharterForm) => boolean ,
+     roteiroForEditRef: MutableRefObject<RoteiroCharterForm | null>,
+    editItemOnTable: (roteiroCharter: RoteiroCharterForm) => boolean
 }
 
-const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable}: props) => {
+const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable, roteiroForEditRef, editItemOnTable}: props) => {
 
-    const { register, handleSubmit, control, resetField, formState: { errors } } = useForm<RoteiroCharterSchema>({
-        resolver: zodResolver(roteiroCharterSchema)
+    const { register, handleSubmit, control, resetField, reset, formState: { errors } } = useForm<RoteiroCharterSchema>({
+        resolver: zodResolver(roteiroCharterSchema),
     })
 
+    useEffect(() => {
+        if (isOpenModal && roteiroForEditRef.current) {
+            reset({
+                nome: roteiroForEditRef.current.nome,
+                descricao: roteiroForEditRef.current.descricao,
+                moeda: roteiroForEditRef.current.moeda,
+                preco: roteiroForEditRef.current.preco,
+                detalhesPagamento: roteiroForEditRef.current.detalhesPagamento,
+            });
+        } else {
+            reset({
+                nome: "",
+                descricao: "",
+                moeda: "",
+                preco: "",
+                detalhesPagamento: "",
+            });
+        }
+    }, [isOpenModal, reset, roteiroForEditRef]);
+
+
+    const handleCancel = () => {
+        roteiroForEditRef.current = null
+        setIsOpenModal(false)
+    }
+
     const submit = (data: RoteiroCharterForm) => {
-        const completed = addRoteiroToTable(data)
+        let completed
+        if(roteiroForEditRef.current){
+            const roteiro = {...data, id: roteiroForEditRef.current.id}
+            completed = editItemOnTable(roteiro)
+            roteiroForEditRef.current = null
+        }else{
+            completed = addRoteiroToTable(data)
+        }
+         
         if(completed){
             resetField("nome")
             resetField("descricao")
@@ -34,9 +71,8 @@ const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable}: prop
 
 
 
-
     return (
-        <PopUp title="Adicionar roteiro" buttons={[{ onClick: () => handleSubmit(submit)(), type: "bg-primary", text: "Adicionar" }, { onClick: () => setIsOpenModal(false), type: "bg-danger", text: "Cancelar" }]} isOpen={isOpenModal} setIsOpen={setIsOpenModal} >
+        <PopUp title="Adicionar roteiro" buttons={[{ onClick: () => handleSubmit(submit)(), type: "bg-primary", text: roteiroForEditRef.current ? "Atualizar" : "Adicionar" }, { onClick: () => handleCancel(), type: "bg-danger", text: "Cancelar" }]} isOpen={isOpenModal} setIsOpen={setIsOpenModal} >
             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                 <div className=" w-full">
                     <InputElement register={register} registerName="nome" label="Nome do roteiro" placeholder="Nome" errorMessage={errors.nome?.message} />

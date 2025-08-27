@@ -8,6 +8,7 @@ export type RoteiroCharter = {
 }
 
 export type RoteiroCharterForm = {
+    id?: string
     nome: string,
     descricao: string,
     moeda: string,
