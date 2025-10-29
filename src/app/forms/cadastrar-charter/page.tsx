@@ -70,7 +70,7 @@ const CadastrarCharter = () => {
             const token = await auth.currentUser?.getIdToken()
             await httpClient.post(`${baseUrl}/barco/charter`, charterFinalData, token || "")
             reset()
-            openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
+            openModal("Sucesso!", "Barco charter cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
         } catch (error: any) {
             let errorMessage
             if (error instanceof CustomError) {

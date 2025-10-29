@@ -152,7 +152,7 @@ const EditarCharter = (props: { params: Params }) => {
 
     return (
         <DefaultLayout>
-            <Breadcrumb pageName="Cadastrar Charter" />
+            <Breadcrumb pageName="Editar Charter" />
 
             <div className="grid grid-cols-1 gap-9 xxl:grid-cols-2">
                 <form onSubmit={handleSubmit(submit)}>

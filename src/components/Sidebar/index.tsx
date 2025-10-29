@@ -11,15 +11,29 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
+  userRole?: string
 }
+
+const menuLinks = {
+  cadastrarModeloBarco: { label: "Cadastrar Modelo de Barco", route: "/forms/cadastrar-modelo-barco" },
+  cadastrarMotor: { label: "Cadastrar Motor", route: "/forms/cadastrar-motor" },
+  cadatrarItemSeminovo: { label: "Cadastrar Item de Seminovo", route: "/forms/cadastrar-item-seminovo" },
+  cadastrarItemCharter: { label: "Cadastrar Item de Charter", route: "/forms/cadastrar-item-charter" },
+  cadastarSeminovo: { label: "Cadastrar Seminovo", route: "/forms/cadastrar-seminovo" },
+  cadastrarCharter: { label: "Cadastrar Charter", route: "/forms/cadastrar-charter" },
+  listarSeminovos: { label: "Listar Seminovos", route: "/list/listar-seminovo" },
+  listarCharters: { label: "Listar Charters", route: "/list/listar-charter" },
+  listarUsuarios: { label: "Listar Usuários", route: "/list/listar-usuario" }
+}
+
 
 const menuGroups = [
   {
     name: "MENU",
     menuItems: [
-      
-     
-     
+
+
+
       {
         icon: (
           <svg
@@ -55,8 +69,12 @@ const menuGroups = [
         label: "Cadastrar",
         route: "#",
         children: [
-          { label: "Cadastrar Seminovo", route: "/forms/cadastrar-seminovo" },
-          { label: "Cadastrar Charter", route: "/forms/cadastrar-charter" },
+          { label: "Cadastrar Modelo de Barco", route: "/forms/cadastrar-modelo-barco", role: ["Dono", "Administrador"] },
+          { label: "Cadastrar Motor", route: "/forms/cadastrar-motor", role: ["Dono", "Administrador"] },
+          { label: "Cadastrar Item de Seminovo", route: "/forms/cadastrar-item-seminovo", role: ["Dono", "Administrador"] },
+          { label: "Cadastrar Item de Charter", route: "/forms/cadastrar-item-charter", role: ["Dono", "Administrador"] },
+          { label: "Cadastrar Seminovo", route: "/forms/cadastrar-seminovo", role: ["Dono", "Administrador", "Editor"] },
+          { label: "Cadastrar Charter", route: "/forms/cadastrar-charter", role: ["Dono", "Administrador", "Editor"] },
         ],
       },
       {
@@ -90,26 +108,56 @@ const menuGroups = [
         label: "Listar",
         route: "#",
         children: [
-          { label: "Listar Seminovo", route: "/list/listar-seminovo" },
-          { label: "Listar Charter", route: "/list/listar-charter" }
+          { label: "Listar Seminovos", route: "/list/listar-seminovo", role: ["Dono", "Administrador", "Editor"] },
+          { label: "Listar Charters", route: "/list/listar-charter", role: ["Dono", "Administrador", "Editor"] },
+          { label: "Listar Usuários", route: "/list/listar-usuario", role: ["Dono"] }
         ]
       },
-     
+
     ],
   },
-  
+
 ];
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, userRole }: SidebarProps) => {
   const pathname = usePathname();
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
+  const [filteredMenuGroups, setFilteredMenuGroups] = useState(menuGroups);
 
+  const filterMenuItems = (children: any) => {
+    console.log("menu children roles", children)
+    const result = children.filter((item: any) => {
+      return !item.role.includes(userRole || "")
+    })
+    return result
+  }
+
+  useEffect(() => {
+    if (!userRole) return;
+
+    const newFilteredGroups = menuGroups.map(group => {
+      return ({
+        ...group,
+        menuItems: group.menuItems.map(menuItem => {
+          return ({
+            ...menuItem,
+            children: menuItem.children.filter(child => child.role.includes(userRole))
+          })
+        })
+      })
+    });
+
+    setFilteredMenuGroups(newFilteredGroups);
+  }, [userRole]);
+
+
+
+  if (!userRole) return null
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
@@ -148,7 +196,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
           {/* <!-- Sidebar Menu --> */}
           <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
-            {menuGroups.map((group, groupIndex) => (
+            {filteredMenuGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
                 <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
                   {group.name}

@@ -128,7 +128,7 @@ useEffect(() => {
 
     return (
         <DefaultLayout>
-            <Breadcrumb pageName="Cadastrar Seminovo" />
+            <Breadcrumb pageName="Editar Seminovo" />
 
             <div className="grid grid-cols-1 gap-9 xxl:grid-cols-2">
                 <form onSubmit={handleSubmit(submit, (errors) => console.log("Erros no formulário:", errors))}>
@@ -225,7 +225,7 @@ useEffect(() => {
                                 <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." errorMessage={errors.video?.message} />
                             </div>
                             <div className=" xl:w-2/3 w-full mt-6">
-                                <CheckBoxElement control={control} />
+                                <CheckBoxElement control={control}  registerName="oportunidade" errorMessage={errors.oportunidade?.message} label="Este seminovo é oportunidade (promoção)"/>
                             </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                                 {

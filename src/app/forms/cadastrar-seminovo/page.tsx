@@ -181,7 +181,7 @@ const CadastrarSeminovo = () => {
                 <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." errorMessage={errors.video?.message} />
               </div>
               <div className=" xl:w-2/3 w-full mt-6">
-                <CheckBoxElement control={control}/>
+                <CheckBoxElement control={control} registerName="oportunidade" errorMessage={errors.oportunidade?.message} label="Barco seminovo é oportunidade para o cliente? (Oferta ou Promoção)" />
               </div>
               <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                 {

@@ -13,38 +13,38 @@ type Cidade = {
 
 
 
-const SelectCidade = ({ control, errorMessage }: { control: any, errorMessage: string | undefined }) => {
-    const [cidade, setCidade] = useState<Cidade[] | null>(null)
+const SelectUserType = ({ control, errorMessage }: { control: any, errorMessage: string | undefined }) => {
+    const [userType, setUserType] = useState<Cidade[] | null>(null)
 
 
 
     const getCidade = async () => {
         const token = await auth.currentUser?.getIdToken()
-        const tipoCidade = await httpClient.get(`${baseUrl}/resources/charter/cidades`, token)
-        setCidade(tipoCidade)
+        const userTypeBackEnd = await httpClient.get(`${baseUrl}/user/user-types`, token)
+        setUserType(userTypeBackEnd)
     }
 
     useEffect(() => {
         const unsubscribe = onIdTokenChanged(auth, async (user) => {
             if (user) {
-                await getCidade(); 
+                await getCidade();
             } else {
                 console.warn("Usuário não autenticado.");
             }
         });
 
-        return () => unsubscribe(); 
+        return () => unsubscribe();
     }, []);
 
     return (
         <Controller
-            name="cidade"
+            name="userType"
             control={control}
             defaultValue=""
             render={({ field }) => (
-                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Cidade" placeholder="Cidade">
+                <SelectInput value={field.value} errorMessage={errorMessage} handleChange={(value: string) => field.onChange(value)} label="Tipo de usuário" placeholder="Tipo de usuário">
                     {
-                        !cidade ? null : cidade.map((item) => (
+                        !userType ? null : userType.map((item) => (
                             <option key={item.id} value={item.opcao}>{item.opcao}</option>
                         ))
                     }
@@ -53,4 +53,4 @@ const SelectCidade = ({ control, errorMessage }: { control: any, errorMessage: s
     );
 }
 
-export default SelectCidade;
+export default SelectUserType;

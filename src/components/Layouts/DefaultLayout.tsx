@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 export default function DefaultLayout({
   children,
@@ -9,12 +10,28 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userRole, setUserRole] = useState<any>('')
+  
+  useEffect(() => {
+    const unregisterAuthObserver = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const tokenResult = await user.getIdTokenResult(true);
+        setUserRole(tokenResult.claims.role || null);
+        console.log(tokenResult.claims.role)
+      } else {
+        setUserRole(null);
+      }
+    });
+
+    return () => unregisterAuthObserver();
+  }, []);
+
   return (
     <>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex">
         {/* <!-- ===== Sidebar Start ===== --> */}
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} userRole={userRole}/>
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}

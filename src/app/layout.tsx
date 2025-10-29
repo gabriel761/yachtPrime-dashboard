@@ -15,7 +15,6 @@ export default function RootLayout({
 }>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
-
   // const pathname = usePathname();
 
 

@@ -9,6 +9,8 @@ import { auth } from "@/lib/firebase/firebaseConfig";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import translateFirebaseError from "@/util/translateFirebaseError";
 import { useRouter } from "next/navigation";
+import httpClient from "@/infra/httpClient";
+import baseUrl from "@/infra/back-end-connection";
 
 
 const Login = () => {
@@ -22,8 +24,9 @@ const Login = () => {
   const submit = async (data: LoginSchema) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.senha)
-      if (userCredential) {
-        document.cookie = `auth=${await userCredential.user.getIdToken()}; path=/; max-age=36000`;
+      if (!!userCredential) {
+        const token = await userCredential.user.getIdToken()
+        document.cookie = `auth=${token}; path=/; max-age=360000`;
         router.push("/list/listar-seminovo")
         setLoginError('')
       }

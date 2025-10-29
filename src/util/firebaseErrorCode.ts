@@ -1,4 +1,4 @@
-const translateFirebaseError = (errorCode:string) => {
+const verifyFirebaseErrorCode = (errorCode: string) => {
     // fonte: https://firebase.google.com/docs/reference/js/firebase.auth.Auth
     // fonte: https://firebase.google.com/docs/auth/admin/errors?hl=pt-br
     switch (errorCode) {
@@ -49,7 +49,7 @@ const translateFirebaseError = (errorCode:string) => {
         case 'auth/unsupported-persistence-type':
             return 'O ambiente atual não suportar o tipo especificado para persistência dos dados.';
         case 'auth/invalid-credential':
-            return 'E-mail ou senha incorreta';
+            return 'A credencial expirou ou está mal formada.';
         case 'auth/wrong-password':
             return 'Senha incorreta.';
         case 'auth/invalid-verification-code':
@@ -179,4 +179,4 @@ const translateFirebaseError = (errorCode:string) => {
     }
 }
 
-export default translateFirebaseError
+export default verifyFirebaseErrorCode
