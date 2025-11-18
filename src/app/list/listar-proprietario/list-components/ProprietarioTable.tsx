@@ -2,47 +2,55 @@
 import { useModal } from "@/context/ModalContext";
 import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
-import { User } from "@/types/applicationTypes/User";
 import Pencil from "@/../public/images/svg/pencil.svg"
-import Bin from "@/../public/images/svg/bin.svg" 
+import Bin from "@/../public/images/svg/bin.svg"
+import { Proprietario } from "@/types/applicationTypes/Proprietario";
 
-const UserTable = () => {
-    const [userData, setUserData] = useState<User[] | null>(null)
+
+
+const ProprietarioTable = () => {
+    const [proprietarioData, setProprietarioData] = useState<Proprietario[] | null>(null)
     const { openModal } = useModal()
     const router = useRouter();
 
-    const getUsers = async () => {
+    const getProprietarios = async () => {
         try {
             const token = await auth.currentUser?.getIdToken()
-            const result = await httpClient.get(`${baseUrl}/user/all-users`, token)
-            setUserData(result)
+            const result = await httpClient.get(`${baseUrl}/resources/proprietario-dashboard-list`, token)
+            setProprietarioData(result)
         } catch (error: any) {
             openModal("clientError", error.message)
             console.error(error)
         }
     }
 
-    const deleteUser = async (id: number) => {
+    const deleteProprietario = async (id: number) => {
         try {
             const token = await auth.currentUser?.getIdToken()
-            await httpClient.delete(`${baseUrl}/user/user`, { id }, token || "")
-            getUsers()
+            await httpClient.delete(`${baseUrl}/resources/proprietario/`, { id }, token || "")
+            getProprietarios()
         } catch (error: any) {
             openModal("Server Error", error.message, [{ text: "Ok", type: "bg-danger" }])
             console.error(error)
         }
     }
 
-    const handleDeleteModal = (idUser: number) => {
+    const handleDeleteModal = (idProprietario?: number) => {
+        if(!idProprietario){
+            openModal("Erro", "id de proprietario indefinido")
+            return
+        }
         openModal("Atenção!", "Deseja realmente deletar permanentemente este item do banco de dados?", [
             {
                 type: "bg-danger",
                 text: "Deletar",
-                onClick: () => deleteUser(idUser)
+                onClick: () => deleteProprietario(idProprietario)
             },
             {
                 type: "bg-primary",
@@ -51,14 +59,18 @@ const UserTable = () => {
         ])
     }
 
-    const handleEditUser = (idUser: number) => {
-        router.push(`/forms/editar-usuario/${idUser}`)
+    const handleEditProprietario = (idProprietario?: number) => {
+        if (!idProprietario) {
+            openModal("Erro", "id de proprietario indefinido")
+            return
+        }
+        router.replace(`/forms/editar-proprietario/${idProprietario}`)
     }
 
     useEffect(() => {
         const unsubscribe = onIdTokenChanged(auth, async (user) => {
             if (user) {
-                await getUsers(); // Só chama o método quando o token é garantido
+                await getProprietarios(); // Só chama o método quando o token é garantido
             } else {
                 console.warn("Usuário não autenticado.");
             }
@@ -73,44 +85,52 @@ const UserTable = () => {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="px-4 py-6 md:px-6 xl:px-7.5">
                 <h4 className="text-xl font-semibold text-black dark:text-white">
-                    Seminovos
+                    Proprietários
                 </h4>
             </div>
 
             <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-                <div className="col-span-3 flex items-center">
-                    <p className="font-medium">Email/Login</p>
-                </div>
-                <div className="col-span-3 hidden items-center sm:flex justify-start">
-                    <p className="font-medium">Tipo de usuário </p>
+                <div className="col-span-2 flex items-center">
+                    <p className="font-medium">Nome</p>
                 </div>
                 <div className="col-span-2 hidden items-center sm:flex justify-start">
-                    <p className="font-medium">Ações </p>
+                    <p className="font-medium">E-mail </p>
+                </div>
+                <div className="col-span-2 flex items-center">
+                    <p className="font-medium">Telefone</p>
+                </div>
+                <div>
+                    <p>Ações</p>
                 </div>
             </div>
 
-            {userData && userData.map((user, index) => (
+            {proprietarioData && proprietarioData.map((proprietario, index) => (
                 <div
                     className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
                     key={index}
                 >
-
-                    <div className="col-span-3 hidden items-center sm:flex">
+                    <div className="col-span-2 flex items-center">
                         <p className="text-sm text-black dark:text-white">
-                            {user.email}
+                            {proprietario.nome}
                         </p>
                     </div>
-                    <div className="col-span-3 flex items-center">
+                    <div className="col-span-2 hidden items-center sm:flex">
                         <p className="text-sm text-black dark:text-white">
-                            {user.userType}
+                            {proprietario.email}
                         </p>
                     </div>
+                    <div className="col-span-2 flex items-center">
+                        <p className="text-sm text-black dark:text-white">
+                            {proprietario.telefone} 
+                        </p>
+                    </div>
+                   
                     <div className="col-span-1 flex items-center justify-start gap-6">
-                        <button onClick={() => handleDeleteModal(user.id)} className="hover:text-primary">
-                            <Bin width={20} height={20}/>
+                        <button onClick={() => handleDeleteModal(proprietario.id)} className="hover:text-primary">
+                            <Bin width={20} height={20} />
                         </button>
-                        <button onClick={() => handleEditUser(user.id)} className="hover:text-primary">
-                            <Pencil width={25} height={25}/>
+                        <button onClick={() => handleEditProprietario(proprietario.id)} className="hover:text-primary">
+                            <Pencil width={25} height={25} />
                         </button>
                     </div>
                 </div>
@@ -119,4 +139,4 @@ const UserTable = () => {
     );
 };
 
-export default UserTable;
+export default ProprietarioTable;

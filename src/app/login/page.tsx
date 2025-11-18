@@ -11,6 +11,8 @@ import translateFirebaseError from "@/util/translateFirebaseError";
 import { useRouter } from "next/navigation";
 import httpClient from "@/infra/httpClient";
 import baseUrl from "@/infra/back-end-connection";
+import { verifyToken } from "@/infra/VerifyToken";
+import Spinner from "@/components/common/Spinner";
 
 
 const Login = () => {
@@ -20,18 +22,24 @@ const Login = () => {
     resolver: zodResolver(loginSchema)
   })
   const [loginError, setLoginError] = useState<string | null>('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const submit = async (data: LoginSchema) => {
     try {
+      setIsLoading(true)
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.senha)
       if (!!userCredential) {
         const token = await userCredential.user.getIdToken()
-        document.cookie = `auth=${token}; path=/; max-age=360000`;
+        console.log(token)
+        document.cookie = `auth=${token}; path=/; max-age=86400`;
+        await verifyToken(token)
         router.push("/list/listar-seminovo")
         setLoginError('')
+        setIsLoading(false)
       }
     } catch (error: any) {
-      if (error?.code.includes("auth/")) {
+      setIsLoading(false)
+      if (error?.code?.includes("auth/")) {
         setLoginError(translateFirebaseError(error.code))
       } else {
         setLoginError(error.message)
@@ -50,6 +58,9 @@ const Login = () => {
           </div>
           <div className="mt-4 mb-4">
             <InputElement type="password" label="Senha" register={register} registerName="senha" errorMessage={errors.senha?.message} />
+          </div>
+          <div className="flex justify-center">
+            {isLoading && <Spinner size={30}/>}
           </div>
           <p className="text-danger mb-1">{loginError}</p>
           <button type="submit" className=" flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">

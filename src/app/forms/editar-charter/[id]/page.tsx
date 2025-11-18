@@ -31,12 +31,17 @@ import { useRouter } from 'next/navigation';
 import { BarcoCharter, BarcoCharterUpdate } from "@/types/applicationTypes/charter/BarcoCharter";
 import { RoteiroCharterModel } from "@/domain/models/charter/RoteiroCharterModel";
 import SelectCidade from "../../form-components/SelectCidade";
+import Bin from "@/../public/images/svg/bin.svg"
+import SearchProprietario from "../../form-components/SearchProprietarios/SearchProprietarios";
+import { onAuthStateChanged } from "firebase/auth";
+import { IoCloseSharp } from "react-icons/io5";
 
 type Params = Promise<{ id: string }>
 
 const EditarCharter = (props: { params: Params }) => {
     const [isLoading, setIsLoading] = useState(false)
-    const [output, setOutput] = useState(null)
+    const [pageIsLoading, setPageIsLoading] = useState(true)
+    const [token, setToken] = useState('')
     const { openModal } = useModal()
 
     const router = useRouter()
@@ -44,17 +49,28 @@ const EditarCharter = (props: { params: Params }) => {
        const params = use(props.params)
         const idCharter = params.id ? parseInt(params.id) : null
 
-    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<CharterSchema>({
+    const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues } = useForm<CharterSchema>({
         resolver: zodResolver(charterSchema),
         defaultValues: {
             taxaChurrascoMessage: "Pagamento no dia do passeio diretamente ao capitão"
         }
     })
 
+    const handleCleanChosenProprietario = (e: any) => {
+        e.preventDefault()
+        reset({
+            proprietarioId: undefined,
+            proprietarioNome: "",
+            proprietarioEmail: "",
+            proprietarioTelefone: "",
+        });
+
+    }
+
 
     const getCharterData = async () => {
         try{
-            const charter: BarcoCharter = await httpClient.get(`${baseUrl}/barco/charter/${idCharter}`)
+            const charter: BarcoCharter = await httpClient.get(`${baseUrl}/barco/charter/dashboard/${idCharter}`)
             const roteirosModel = new RoteiroCharterModel()
             roteirosModel.setRoteirosForm(charter.roteiros)
             const roteirosForm = roteirosModel.extractDataForm()
@@ -70,6 +86,10 @@ const EditarCharter = (props: { params: Params }) => {
                 combustivelLitrosHora: charter.consumoCombustivel.litrosHora,
                 combustivelMoeda: charter.consumoCombustivel.precoHora.moeda,
                 combustivelPrecoHora: charter.consumoCombustivel.precoHora.valor,
+                proprietarioId: charter.proprietario.id,
+                proprietarioNome: charter.proprietario.nome,
+                proprietarioEmail: charter.proprietario.email,
+                proprietarioTelefone: charter.proprietario.telefone,
                 passageiros: charter.passageiros.passageiros,
                 passageirosPernoite: charter.passageiros.passageirosPernoite || 0,
                 passageirosTripulacao: charter.passageiros.tripulacao,
@@ -103,8 +123,6 @@ const EditarCharter = (props: { params: Params }) => {
 
 
     const submit = async (data: any) => {
-        
-        console.log("funcionou")
       setIsLoading(true)
        
         const charterService = new CharterService()
@@ -113,7 +131,6 @@ const EditarCharter = (props: { params: Params }) => {
 
         try {
             charterFinalData = await charterService.prepareForUpdateCharter(data, idCharter, imagemModel.prepareForUploadImageList)
-            console.log(charterFinalData)
         } catch (error: any) {
             openModal("Erro de cliente", error.message, [{ type: "bg-danger", text: "Ok" }])
             console.error(error)
@@ -146,9 +163,32 @@ const EditarCharter = (props: { params: Params }) => {
     }
 
     useEffect(() => {
-        getCharterData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+            let unsub: any;
+            const load = async () => {
+                const authPromise = new Promise<void>((resolve) => {
+                    unsub = onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            const token = await user.getIdToken()
+                            setToken(token)
+                        }
+                        resolve()  // <-- só marca completo
+                    })
+                })
+                const seminovoPromise = getCharterData()
+                await Promise.all([authPromise, seminovoPromise])
+                setPageIsLoading(false)
+            }
+            load()
+            return () => unsub && unsub()
+        }, [])
+
+    if (pageIsLoading) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <Spinner size={40} />
+            </div>
+        )
+    }
 
     return (
         <DefaultLayout>
@@ -202,6 +242,44 @@ const EditarCharter = (props: { params: Params }) => {
                                 <div className="xl:w-1/4 w-full">
                                     <InputElement register={register} registerName="combustivelPrecoHora" label="Preço por hora" placeholder="0,00" type="string" errorMessage={errors.combustivelPrecoHora?.message} />
                                 </div>
+                            </div>
+                        </FormCard>
+                        <FormCard title="Proprietário">
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                {
+                                    watch("proprietarioId") ? (
+                                        <>
+                                            <div className="xl:w-1/7 w-full">
+                                                <button onClick={(e) => handleCleanChosenProprietario(e)} className="hover:text-primary flex align-bottom border-1">
+                                                     <IoCloseSharp size={25}/>
+                                                </button>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioNome")}</p>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioEmail")}</p>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioTelefone")}</p>
+                                            </div>
+                                        </>
+
+                                    ) : (
+                                        <>
+                                            <div className="xl:w-1/3 w-full">
+                                                <SearchProprietario token={token} setValueHookForm={setValue} control={control} name="proprietarioNome" label="Nome" placeholder="Nome" errorMessage={errors.proprietarioNome?.message} />
+                                            </div>
+                                            <div className="xl:w-1/3 w-full">
+                                                <InputElement register={register} registerName="proprietarioEmail" label="E-mal" placeholder="E-mail" errorMessage={errors.proprietarioEmail?.message} />
+                                            </div>
+                                            <div className="xl:w-1/3 w-full">
+                                                <InputElement register={register} registerName="proprietarioTelefone" label="Telefone" placeholder="Telefone" errorMessage={errors.proprietarioTelefone?.message} />
+                                            </div>
+                                        </>
+                                    )
+                                }
+
                             </div>
                         </FormCard>
                         <FormCard title="Passageiros">

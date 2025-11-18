@@ -7,6 +7,7 @@ import { Modelo } from "../Modelo";
 import { Motorizacao } from "../Motorizacao";
 import { Preco } from "../Preco";
 import { Propulsao } from "./Propulsao";
+import { Proprietario } from "../Proprietario";
 
 export type BarcoSeminovoOutput = {
     id?:number
@@ -19,6 +20,7 @@ export type BarcoSeminovoOutput = {
     combustivel: TipoCombustivel;
     propulsao: Propulsao;
     cabines: Cabine;
+    proprietario: Proprietario;
     procedencia: string;
     destaque?: string | null;
     preco: Preco;

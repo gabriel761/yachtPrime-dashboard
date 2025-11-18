@@ -1,6 +1,7 @@
 import { Imagem } from "../Imagem";
 import { Modelo } from "../Modelo";
 import { Preco } from "../Preco";
+import { Proprietario } from "../Proprietario";
 import { ConsumoCombustivel } from "./ConsumoCombustivel";
 import { ItemCharter } from "./ItemCharter";
 import { Passageiros } from "./Passageiros";
@@ -23,6 +24,7 @@ export type BarcoCharter = {
     itensDisponiveis: ItemCharter[];
     imagens: Imagem[];
     consumoCombustivel: ConsumoCombustivel;
+    proprietario: Proprietario;
     tipoPasseio: TipoPasseio;
     tripulacaoSkipper: TripulacaoSkipper;
     horaExtra: Preco;
@@ -45,6 +47,7 @@ export type BarcoCharterUpdate = {
     itensDisponiveis: ItemCharter[];
     imagens: Imagem[];
     consumoCombustivel: ConsumoCombustivel;
+    proprietario: Proprietario;
     tipoPasseio: TipoPasseio;
     tripulacaoSkipper: TripulacaoSkipper;
     horaExtra: Preco;

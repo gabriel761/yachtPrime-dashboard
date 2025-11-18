@@ -2,41 +2,45 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import FormCard from "../../form-components/FormCard";
-import InputElement from "@/components/InputElement";
-import Spinner from "@/components/common/Spinner";
-import baseUrl from "@/infra/back-end-connection";
-import httpClient from "@/infra/httpClient";
-import { auth } from "@/lib/firebase/firebaseConfig";
-import { CustomError } from "@/infra/CustomError";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useModal } from "@/context/ModalContext";
-import { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import SelectUserType from "../../form-components/SelectUserType";
-import { User } from '@/types/applicationTypes/User'
-import { UserFormUpdate, userSchemaUpdate } from "@/util/userSchemaUpdate";
+import { zodResolver } from "@hookform/resolvers/zod";
+import InputElement from "@/components/InputElement";
+import { ProprietarioForm, proprietarioSchema } from "@/util/proprietarioScema";
+import { use, useEffect, useState } from "react";
+import httpClient from "@/infra/httpClient";
+import { Proprietario } from "@/types/applicationTypes/Proprietario";
+import baseUrl from "@/infra/back-end-connection";
 import { useRouter } from "next/navigation";
+import { CustomError } from "@/infra/CustomError";
+import { useModal } from "@/context/ModalContext";
+import Spinner from "@/components/common/Spinner";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 
 type Params = Promise<{ id: string }>
-const CadastrarUsuario = (props: { params: Params }) => {
+
+const EditarProprietario = (props: { params: Params }) => {
     const [isLoading, setIsLoading] = useState(false)
-    //const [output, setOutput] = useState(null)
     const { openModal } = useModal()
     const router = useRouter()
 
     const params = use(props.params)
-    const idUser = params.id ? parseInt(params.id) : 0
-    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<UserFormUpdate>({
-        resolver: zodResolver(userSchemaUpdate)
+    const idProprietario = params.id ? parseInt(params.id) : 0
+
+    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<ProprietarioForm>({
+        resolver: zodResolver(proprietarioSchema)
+
     })
 
     const getUsuarioData = async () => {
         try {
-            const user: User = await httpClient.get(`${baseUrl}/user/user/${idUser}`)
+            const proprietario: Proprietario = await httpClient.get(`${baseUrl}/resources/proprietario/${idProprietario}`)
+            console.log(proprietario)
             reset({
-                email: user.email,
-                userType: user.userType
+                nome: proprietario.nome,
+                email: proprietario.email,
+                telefone: proprietario.telefone,
+                id: proprietario.id
             })
         } catch (error: any) {
             let errorMessage
@@ -50,24 +54,15 @@ const CadastrarUsuario = (props: { params: Params }) => {
         }
     }
 
-    const handleRedirectPassword = (e: any) => {
-        e.preventDefault()
-        router.replace(`/forms/editar-usuario-senha/${idUser}`)
-    }
 
     const submit = async (data: any) => {
         setIsLoading(true)
         try {
-            const userOutput: User = {
-                id: idUser,
-                email: data.email,
-                userType: data.userType,
-            }
             const token = await auth.currentUser?.getIdToken()
-            await httpClient.put(`${baseUrl}/user/user`, userOutput, token || "")
+            await httpClient.patch(`${baseUrl}/resources/proprietario`, data, token || "")
 
-            openModal("Sucesso!", "Usuário atualizado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
-            router.replace("/list/listar-usuario")
+            openModal("Sucesso!", "Proprietário atualizado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
+            router.replace("/list/listar-proprietario")
         } catch (error: any) {
             let errorMessage
             if (error instanceof CustomError) {
@@ -85,50 +80,42 @@ const CadastrarUsuario = (props: { params: Params }) => {
         getUsuarioData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
     return (
         <DefaultLayout>
-            <Breadcrumb pageName="Editar usuário" />
+            <Breadcrumb pageName="Editar proprietário" />
+
             <div className="grid grid-cols-1 gap-9 xxl:grid-cols-2">
                 <form onSubmit={handleSubmit(submit)}>
                     <div className="flex flex-col gap-9">
                         {/* <!-- Contact Form --> */}
-
-                        <FormCard title="Informações">
+                        <FormCard title="Dados do proprietário">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                                <div className=" xl:w-1/3 w-full ">
-                                    <SelectUserType control={control} errorMessage={errors.userType?.message} />
+                                <div className="xl:w-1/3 w-full">
+                                    <InputElement register={register} registerName="nome" label="Nome" placeholder="Nome" errorMessage={errors.nome?.message} />
                                 </div>
-                                <div className=" xl:w-1/3 w-full ">
-                                    <InputElement register={register} registerName="email" label="E-mail" placeholder="E-mail" errorMessage={errors.email?.message} />
+                                <div className="xl:w-1/3 w-full">
+                                    <InputElement register={register} registerName="email" label="E-mal" placeholder="E-mail" errorMessage={errors.email?.message} />
                                 </div>
-                                <div className="xl:w-1/3 w-full flex items-end">
-                                    <button onClick={(e) => handleRedirectPassword(e)} className="flex w-full justify-center rounded bg-danger p-3 font-medium text-gray hover:bg-opacity-90">
-                                        Alterar senha
-                                    </button>
+                                <div className="xl:w-1/3 w-full">
+                                    <InputElement register={register} registerName="telefone" label="Telefone" placeholder="Telefone" errorMessage={errors.telefone?.message} />
                                 </div>
                             </div>
-
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                                 {
                                     isLoading ? <Spinner size={40} /> : (
                                         <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                                            Atualizar Usuário
+                                            Atualizar Proprietário
                                         </button>
                                     )
                                 }
 
                             </div>
-                            {/* <div className="mt-10 ">
-                <pre>{JSON.stringify(output)}</pre>
-              </div> */}
                         </FormCard>
                     </div>
                 </form>
             </div>
-
-        </DefaultLayout >
+        </DefaultLayout>
     );
-};
+}
 
-export default CadastrarUsuario;
+export default EditarProprietario;

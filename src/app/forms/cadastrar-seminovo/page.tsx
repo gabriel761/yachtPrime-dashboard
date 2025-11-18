@@ -6,7 +6,7 @@ import InputElement from "../../../components/InputElement";
 import SelectMotor from "../form-components/SelectMotor";
 import FormCard from "../form-components/FormCard";
 import SelectQuantidade from "../form-components/SelectQuantidade";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import TextArea from "../form-components/TextArea";
 import SelectCombustivel from "../form-components/SelectCombustivel";
@@ -16,36 +16,48 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SeminovoForm, seminovoSchema } from "@/util/seminovoValidationSchema";
 import UploadFotos from "../form-components/UploadFotos";
 import Itens from "../form-components/Itens/Itens";
-
 import httpClient from "@/infra/httpClient";
 import baseUrl from "@/infra/back-end-connection";
 import Spinner from "@/components/common/Spinner";
 import { CustomError } from "@/infra/CustomError";
 import { useModal } from "@/context/ModalContext"
 import { ImagemModel } from "@/domain/models/ImagemModel";
-import CheckboxTwo from "@/components/Checkboxes/CheckboxTwo";
 import CheckBoxElement from "../form-components/CheckboxElement";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { SeminovoService } from "../../../domain/service/SeminovoService";
+import SearchProprietario from "../form-components/SearchProprietarios/SearchProprietarios";
+import Bin from "@/../public/images/svg/bin.svg"
+import { onAuthStateChanged } from "firebase/auth";
 
 
 const CadastrarSeminovo = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [output, setOutput] = useState(null)
+  const [pageIsLoading, setPageIsLoading] = useState(true)
+ // const [output, setOutput] = useState(null)
+  const [token, setToken] = useState('')
   const { openModal } = useModal()
 
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm<SeminovoForm>({
+  const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues } = useForm<SeminovoForm>({
     resolver: zodResolver(seminovoSchema),
-    defaultValues:{
-      oportunidade:false
+    defaultValues: {
+      oportunidade: false
     }
   })
 
+  const handleCleanChosenProprietario = (e: any) => {
+    e.preventDefault()
+    reset({
+      proprietarioId: undefined,
+      proprietarioNome: "",
+      proprietarioEmail: "",
+      proprietarioTelefone: "",
+    });
 
+  }
 
   const submit = async (data: any) => {
     setIsLoading(true)
-    
+
     const seminovoService = new SeminovoService()
     const imagemModel = new ImagemModel()
     let seminovoFinalData
@@ -58,12 +70,13 @@ const CadastrarSeminovo = () => {
       setIsLoading(false);
       return;
     }
-
+    
     try {
       const token = await auth.currentUser?.getIdToken()
       await httpClient.post(`${baseUrl}/barco/seminovo`, seminovoFinalData, token || "")
 
       openModal("Sucesso!", "Barco seminovo cadastrado com sucesso!", [{ type: "bg-primary", text: "Ok" }])
+     
       reset()
     } catch (error: any) {
       let errorMessage
@@ -76,12 +89,31 @@ const CadastrarSeminovo = () => {
       console.error(error)
     }
 
-    
+
     setIsLoading(false)
   }
 
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const token = await user.getIdToken()
+        setToken(token)
+      }
+
+      setPageIsLoading(false) // <-- sempre sai do loading
+    })
+
+    return () => unsub()
+  }, [])
 
 
+  if (pageIsLoading) {
+    return (
+      <div className="w-full flex justify-center mt-20">
+        <Spinner size={40} />
+      </div>
+    )
+  }
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Cadastrar Seminovo" />
@@ -142,6 +174,42 @@ const CadastrarSeminovo = () => {
               </div>
 
             </FormCard>
+            <FormCard title="Proprietário">
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                {
+                  watch("proprietarioId") ? (
+                    <>
+                      <div className="xl:w-1/7 w-full">
+                        <button onClick={(e) => handleCleanChosenProprietario(e)} className="hover:text-primary"><Bin width={20} height={20} /></button>
+                      </div>
+                      <div className="xl:w-2/7 w-full">
+                        <p>{getValues("proprietarioNome")}</p>
+                      </div>
+                      <div className="xl:w-2/7 w-full">
+                        <p>{getValues("proprietarioEmail")}</p>
+                      </div>
+                      <div className="xl:w-2/7 w-full">
+                        <p>{getValues("proprietarioTelefone")}</p>
+                      </div>
+                    </>
+
+                  ) : (
+                    <>
+                      <div className="xl:w-1/3 w-full">
+                        <SearchProprietario token={token} setValueHookForm={setValue} control={control} name="proprietarioNome" label="Nome" placeholder="Nome" errorMessage={errors.proprietarioNome?.message} />
+                      </div>
+                      <div className="xl:w-1/3 w-full">
+                        <InputElement register={register} registerName="proprietarioEmail" label="E-mal" placeholder="E-mail" errorMessage={errors.proprietarioEmail?.message} />
+                      </div>
+                      <div className="xl:w-1/3 w-full">
+                        <InputElement register={register} registerName="proprietarioTelefone" label="Telefone" placeholder="Telefone" errorMessage={errors.proprietarioTelefone?.message} />
+                      </div>
+                    </>
+                  )
+                }
+
+              </div>
+            </FormCard>
             <FormCard title="Informações">
               <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                 <div className="xl:w-1/2 w-full">
@@ -186,9 +254,23 @@ const CadastrarSeminovo = () => {
               <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                 {
                   isLoading ? <Spinner size={40} /> : (
-                    <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                      Cadastrar seminovo
-                    </button>
+                    <div>
+                      {Object.keys(errors).length > 0 && (
+                        <div className="mb-6 text-red-500 font-medium">
+                          <p className="text-center mb-2">Erros encontrados:</p>
+                          <ul className="list-disc list-inside text-sm">
+                            {Object.entries(errors).map(([field, error]) => (
+                              <li key={field}>
+                                <strong>{field}:</strong> {(error as any)?.message}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+                        Cadastrar seminovo
+                      </button>
+                    </div>
                   )
                 }
 

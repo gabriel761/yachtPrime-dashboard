@@ -22,6 +22,18 @@ export const charterSchema = z.object({
     combustivelLitrosHora: z.number(numberMessage).positive(numberMessage).min(5, { message: "Número de pés muito baixo" }).max(1000, { message: "Número de pés muito alto" }),
     combustivelMoeda: z.string(textMessage).min(1, selectMessage).max(50),
     combustivelPrecoHora: z.string(numberMessage).min(1, { message: "Preço inválido" }),
+    proprietarioId: z.number({ message: "id proprietário inválido" }).positive({ message: "id proprietário inválido" }).optional(),
+    proprietarioNome: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).min(1, { message: "Campo obrigatório" }),
+    proprietarioEmail: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).min(1, { message: "Campo obrigatório" }),
+    proprietarioTelefone: z.string(textMessage).min(1, { message: "Campo obrigatório" }).refine((v) => {
+        const digits = v.replace(/\D/g, "");
+        // internacional
+        if (v.startsWith("+")) {
+            return digits.length >= 8 && digits.length <= 15;
+        }
+        // fallback BR: 10 ou 11 dígitos → OK
+        return digits.length === 10 || digits.length === 11;
+    }, `Telefone inválido (telefones internacionais devem iniciar com "+")`),
     passageiros: z.number(numberMessage).positive(numberMessage).min(1, { message: "Número de passageiros muito baixo" }).max(1000, { message: "Número de passageiros muito alto" }),
     passageirosPernoite: z.number(numberMessage).positive(numberMessage).min(1, { message: "Número de passageiros muito baixo" }).max(1000, { message: "Número de passageiros muito alto" }),
     passageirosTripulacao: z.number(numberMessage).positive(numberMessage).min(1, { message: "Número de passageiros muito baixo" }).max(1000, { message: "Número de passageiros muito alto" }),

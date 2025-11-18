@@ -7,6 +7,8 @@ import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
 import { ModalProvider } from "@/context/ModalContext";
 import Modal from "@/components/Modal"
+import AuthTokenRefresher from "@/components/AuthTokenRefresher";
+
 
 export default function RootLayout({
   children,
@@ -23,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
+        <AuthTokenRefresher />
         <div className="dark:bg-boxdark-2 dark:text-bodydark min-h-[100vh]">
           <ModalProvider>
             {loading ? <Loader /> : children}

@@ -1,4 +1,4 @@
-import { RoteiroCharter, RoteiroCharterForm } from "@/types/applicationTypes/charter/RoteiroCharter";
+import { RoteiroCharter, RoteiroCharterForm, RoteiroCharterWithId } from "@/types/applicationTypes/charter/RoteiroCharter";
 import { Preco } from "@/types/applicationTypes/Preco";
 
 export class RoteiroCharterModel {
@@ -24,9 +24,10 @@ export class RoteiroCharterModel {
         this.roteiros = formatedRoteiros
     }
 
-    setRoteirosForm(roteiros: RoteiroCharter[]){
+    setRoteirosForm(roteiros: RoteiroCharterWithId[]){
         const formatedRoteirosForm: RoteiroCharterForm[] = roteiros.map((input) => {
             const roteiro: RoteiroCharterForm = {
+                id: input.id,
                 nome: input.nome,
                 descricao: input.descricao,
                 moeda: input.preco.moeda,

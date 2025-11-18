@@ -7,8 +7,16 @@ export type RoteiroCharter = {
     detalhesPagamento: string
 }
 
-export type RoteiroCharterForm = {
+export type RoteiroCharterWithId = {
     id?: string
+    nome: string,
+    descricao: string,
+    preco: Preco,
+    detalhesPagamento: string
+}
+
+export type RoteiroCharterForm = {
+    id?:string
     nome: string,
     descricao: string,
     moeda: string,

@@ -53,7 +53,7 @@ const AddRoteiroModal = ({ setIsOpenModal, isOpenModal, addRoteiroToTable, rotei
         if(roteiroForEditRef.current){
             const roteiro = {...data, id: roteiroForEditRef.current.id}
             completed = editItemOnTable(roteiro)
-            roteiroForEditRef.current = null
+            //roteiroForEditRef.current = null
         }else{
             completed = addRoteiroToTable(data)
         }

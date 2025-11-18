@@ -1,4 +1,4 @@
-import { formatPrice } from "@/util/stringMetoods";
+import { formatPhone, formatPrice } from "@/util/stringMetoods";
 import { ChangeEventHandler, HTMLInputTypeAttribute } from "react";
 
 
@@ -26,6 +26,8 @@ const InputElement = ({ label, placeholder, type, register, registerName,  error
                 onChange={(e) => {
                     if(placeholder === "0,00"){
                         e.target.value = formatPrice(e.target.value)
+                    } else if (placeholder === "Telefone") {
+                        e.target.value = formatPhone(e.target.value);
                     }
                 }}
                 defaultValue=""

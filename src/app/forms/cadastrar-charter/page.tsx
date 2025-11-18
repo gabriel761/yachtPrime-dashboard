@@ -28,20 +28,37 @@ import Spinner from "@/components/common/Spinner";
 import { CharterService } from "@/domain/service/CharterService";
 import { json } from "stream/consumers";
 import SelectCidade from "../form-components/SelectCidade";
+import SearchProprietario from "../form-components/SearchProprietarios/SearchProprietarios";
+import Bin from "@/../public/images/svg/bin.svg"
+import { IoCloseSharp } from "react-icons/io5";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 const CadastrarCharter = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const [output, setOutput] = useState(null)
+    const [pageIsLoading, setPageIsLoading] = useState(true)
+    //const [output, setOutput] = useState(null)
+    const [token, setToken] = useState('')
     const { openModal } = useModal()
 
-    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<CharterSchema>({
+    const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues } = useForm<CharterSchema>({
         resolver: zodResolver(charterSchema),
         defaultValues: {
             taxaChurrascoMessage: "Pagamento no dia do passeio diretamente ao capitão"
         }
     })
 
+
+    const handleCleanChosenProprietario = (e: any) => {
+        e.preventDefault()
+        reset({
+            proprietarioId: undefined,
+            proprietarioNome: "",
+            proprietarioEmail: "",
+            proprietarioTelefone: "",
+        });
+
+    }
 
 
     const submit = async (data: any) => {
@@ -87,7 +104,26 @@ const CadastrarCharter = () => {
         setIsLoading(false)
     }
 
+    useEffect(() => {
+        const unsub = onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const token = await user.getIdToken()
+            setToken(token)
+          }
+    
+          setPageIsLoading(false) // <-- sempre sai do loading
+        })
+    
+        return () => unsub()
+      }, [])
 
+    if (pageIsLoading) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <Spinner size={40} />
+            </div>
+        )
+    }
 
     return (
         <DefaultLayout>
@@ -154,6 +190,44 @@ const CadastrarCharter = () => {
                                 <div className="xl:w-1/3 w-full">
                                     <InputElement register={register} registerName="passageirosTripulacao" label="Tripulacao" placeholder="0" type="number" errorMessage={errors.passageirosTripulacao?.message} />
                                 </div>
+                            </div>
+                        </FormCard>
+                        <FormCard title="Proprietário">
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                {
+                                    watch("proprietarioId") ? (
+                                        <>
+                                            <div className="xl:w-1/7 w-full">
+                                                <button onClick={(e) => handleCleanChosenProprietario(e)} className="hover:text-primary">
+                                                        <IoCloseSharp size={20}/>
+                                                    </button>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioNome")}</p>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioEmail")}</p>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioTelefone")}</p>
+                                            </div>
+                                        </>
+
+                                    ) : (
+                                        <>
+                                            <div className="xl:w-1/3 w-full">
+                                                <SearchProprietario token={token} setValueHookForm={setValue} control={control} name="proprietarioNome" label="Nome" placeholder="Nome" errorMessage={errors.proprietarioNome?.message} />
+                                            </div>
+                                            <div className="xl:w-1/3 w-full">
+                                                <InputElement register={register} registerName="proprietarioEmail" label="E-mal" placeholder="E-mail" errorMessage={errors.proprietarioEmail?.message} />
+                                            </div>
+                                            <div className="xl:w-1/3 w-full">
+                                                <InputElement register={register} registerName="proprietarioTelefone" label="Telefone" placeholder="Telefone" errorMessage={errors.proprietarioTelefone?.message} />
+                                            </div>
+                                        </>
+                                    )
+                                }
+
                             </div>
                         </FormCard>
                         <FormCard title="Mídia">

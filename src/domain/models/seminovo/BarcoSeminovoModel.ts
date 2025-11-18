@@ -7,6 +7,7 @@ import { Modelo } from "@/types/applicationTypes/Modelo";
 import { Motorizacao } from "@/types/applicationTypes/Motorizacao";
 import { Preco } from "@/types/applicationTypes/Preco";
 import { Propulsao } from "@/types/applicationTypes/seminovo/Propulsao";
+import { Proprietario } from "@/types/applicationTypes/Proprietario";
 
 export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     public id?: number
@@ -20,6 +21,7 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
         public combustivel: TipoCombustivel,
         public propulsao: Propulsao,
         public cabines: Cabine,
+        public proprietario: Proprietario,
         public procedencia: string,
         public destaque: string,
         public preco: Preco,
@@ -45,6 +47,7 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
             combustivel: this.combustivel,
             propulsao: this.propulsao,
             cabines: this.cabines,
+            proprietario: this.proprietario,
             procedencia: this.procedencia,
             destaque: this.destaque,
             preco: this.preco,

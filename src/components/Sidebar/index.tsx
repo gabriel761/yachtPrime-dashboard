@@ -110,7 +110,8 @@ const menuGroups = [
         children: [
           { label: "Listar Seminovos", route: "/list/listar-seminovo", role: ["Dono", "Administrador", "Editor"] },
           { label: "Listar Charters", route: "/list/listar-charter", role: ["Dono", "Administrador", "Editor"] },
-          { label: "Listar Usuários", route: "/list/listar-usuario", role: ["Dono"] }
+          { label: "Listar Usuários", route: "/list/listar-usuario", role: ["Dono"] },
+          { label: "Listar Proprietários", route: "/list/listar-proprietario", role: ["Dono"] }
         ]
       },
 

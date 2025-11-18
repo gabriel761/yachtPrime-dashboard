@@ -12,6 +12,8 @@ import { TaxaChurrascoModel } from "../models/charter/TaxaChurrascoModel";
 import { BarcoCharterModel } from "../models/charter/BarcoCharterModel";
 import { RoteiroCharterModel } from "../models/charter/RoteiroCharterModel";
 import { ImagemModel } from "../models/ImagemModel";
+import { Imagem } from "@/types/applicationTypes/Imagem";
+import { ProprietarioModel } from "../models/ProprietarioModel";
 
 export class CharterService {
     async prepareForSubmitCharter(data: CharterSchema, imageFirebaseHandling: Function) {
@@ -20,6 +22,7 @@ export class CharterService {
         const tipoPasseio: TipoPasseio = JSON.parse(data.tipoPasseio)
         const tripulcaoSkipper: TripulacaoSkipper = JSON.parse(data.tripulacaoSkipper)
         const petFriendly: PetFriendly = JSON.parse(data.petFriendly)
+        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioEmail, data.proprietarioTelefone)
 
         const consumoCombustivelModel = new ConsumoCombustivelModel(data.combustivelLitrosHora, { moeda: data.combustivelMoeda, valor: data.combustivelPrecoHora }, formCombustivel)
         const passageirosModel = new PassageirosModel(data.passageiros, data.passageirosPernoite, data.passageirosTripulacao)
@@ -38,11 +41,12 @@ export class CharterService {
         const precoTaxaExtra = precoTaxaExtraModel.extractData()
         const precoAluguelLancha = precoAluguelLanchaModel.extractData()
         const precoTaxaChurrasco = precoTaxaChurrascoModel.extractData()
+        const proprietarioData = proprietarioModel.extractData()
 
 
         const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
 
-        const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho,data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video )
+        const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video )
         const barcoCharterData = barcoCharterModel.extractData()
 
         return barcoCharterData
@@ -55,6 +59,7 @@ export class CharterService {
         const tipoPasseio: TipoPasseio = JSON.parse(data.tipoPasseio)
         const tripulcaoSkipper: TripulacaoSkipper = JSON.parse(data.tripulacaoSkipper)
         const petFriendly: PetFriendly = JSON.parse(data.petFriendly)
+        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioEmail, data.proprietarioTelefone)
 
         const consumoCombustivelModel = new ConsumoCombustivelModel(data.combustivelLitrosHora, { moeda: data.combustivelMoeda, valor: data.combustivelPrecoHora }, formCombustivel)
         const passageirosModel = new PassageirosModel(data.passageiros, data.passageirosPernoite, data.passageirosTripulacao)
@@ -74,14 +79,16 @@ export class CharterService {
         const precoTaxaExtra = precoTaxaExtraModel.extractData()
         const precoAluguelLancha = precoAluguelLanchaModel.extractData()
         const precoTaxaChurrasco = precoTaxaChurrascoModel.extractData()
+        const proprietarioData = proprietarioModel.extractData()
 
 
         const imagensDB = await imagemModel.getImagesFromDbByIdCharter(idCharter)
         const imagensToDeleteFromFirebase = imagemModel.extractImagesToDeleteFromFirebase(data.imagens, imagensDB)
         await imagemModel.deleteImageList(imagensToDeleteFromFirebase, "charters")
-        const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
+       //const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
+      const imageLinks:Imagem[] = data.imagens
 
-        const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video)
+        const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video)
 
         barcoCharterModel.setId(idCharter)
         const barcoCharterData = barcoCharterModel.extractData()

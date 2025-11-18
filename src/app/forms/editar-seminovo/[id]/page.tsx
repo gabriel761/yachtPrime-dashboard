@@ -28,6 +28,9 @@ import { ImagemModel } from "@/domain/models/ImagemModel";
 import CheckBoxElement from "../../form-components/CheckboxElement";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { SeminovoService } from "../../../../domain/service/SeminovoService";
+import Bin from "@/../public/images/svg/bin.svg"
+import SearchProprietario from "../../form-components/SearchProprietarios/SearchProprietarios";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 type Params = Promise<{ id: string }>
@@ -35,21 +38,34 @@ type Params = Promise<{ id: string }>
 
 const EditarSeminovo = (props: { params: Params}) => {
     const [isLoading, setIsLoading] = useState(false)
+    const [pageIsLoading, setPageIsLoading] = useState(true)
+    const [token, setToken] = useState('')
     const { openModal } = useModal()
     const router = useRouter()
     
    const params = use(props.params)
     const idSeminovo = params.id ? parseInt(params.id) : null
-    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<SeminovoForm>({
+    const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues } = useForm<SeminovoForm>({
         resolver: zodResolver(seminovoSchema)
     })
 
+    const handleCleanChosenProprietario = (e: any) => {
+        e.preventDefault()
+        reset({
+            proprietarioId: undefined,
+            proprietarioNome: "",
+            proprietarioEmail: "",
+            proprietarioTelefone: "",
+        });
 
+    }
     
 
     const getSeminovoData = async () => {
         try {
-            const seminovo: BarcoSeminovoOutput = await httpClient.get(`${baseUrl}/barco/seminovo/${idSeminovo}`)
+            const seminovo: BarcoSeminovoOutput = await httpClient.get(`${baseUrl}/barco/seminovo/dashboard/${idSeminovo}`)
+            console.log(seminovo.imagens)
+            console.log(seminovo.equipadoCom)
             reset({
                 modeloMotor: seminovo.motorizacao.modelo,
                 quantidadeMotor: seminovo.motorizacao.quantidade,
@@ -64,13 +80,17 @@ const EditarSeminovo = (props: { params: Params}) => {
                 potenciaTotal: seminovo.potenciaTotal,
                 combustivel: JSON.stringify(seminovo.combustivel)  ?? "",
                 propulsao: JSON.stringify(seminovo.propulsao)  ?? "",
+                proprietarioId: seminovo.proprietario.id,
+                proprietarioNome: seminovo.proprietario.nome,
+                proprietarioEmail: seminovo.proprietario.email,
+                proprietarioTelefone: seminovo.proprietario.telefone,
                 preco: seminovo.preco.valor.toString() ?? "",
                 moeda: seminovo.preco.moeda,
                 passageirosCabine: seminovo.cabines.passageiros,
                 tripulacaoCabine: seminovo.cabines.tripulacao,
                 procedencia: seminovo.procedencia,
                 imagens: seminovo.imagens ?? [],
-                equipadoCom: seminovo.equipadoCom,
+                equipadoCom: seminovo.equipadoCom ?? [],
                 destaque: seminovo.destaque ?? "",
                 video: seminovo.videoPromocional ?? "",
                 oportunidade: seminovo.oportunidade
@@ -120,11 +140,34 @@ const EditarSeminovo = (props: { params: Params}) => {
 
         setIsLoading(false)
     }
-useEffect(() => {
-    getSeminovoData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-},[])
     
+    useEffect(() => {
+        let unsub: any;
+        const load = async () => {
+            const authPromise = new Promise<void>((resolve) => {
+                unsub = onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        const token = await user.getIdToken()
+                        setToken(token)
+                    }
+                    resolve()  // <-- só marca completo
+                })
+            })
+            const seminovoPromise = getSeminovoData()
+            await Promise.all([authPromise, seminovoPromise])
+            setPageIsLoading(false)
+        }
+        load()
+        return () => unsub && unsub()
+    }, [])
+    
+    if (pageIsLoading) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <Spinner size={40} />
+            </div>
+        )
+    }
 
     return (
         <DefaultLayout>
@@ -185,6 +228,42 @@ useEffect(() => {
                                 </div>
                             </div>
 
+                        </FormCard>
+                        <FormCard title="Proprietário">
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                {
+                                    watch("proprietarioId") ? (
+                                        <>
+                                            <div className="xl:w-1/7 w-full">
+                                                <button onClick={(e) => handleCleanChosenProprietario(e)} className="hover:text-primary"><Bin width={20} height={20} /></button>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioNome")}</p>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioEmail")}</p>
+                                            </div>
+                                            <div className="xl:w-2/7 w-full">
+                                                <p>{getValues("proprietarioTelefone")}</p>
+                                            </div>
+                                        </>
+
+                                    ) : (
+                                        <>
+                                            <div className="xl:w-1/3 w-full">
+                                                <SearchProprietario token={token} setValueHookForm={setValue} control={control} name="proprietarioNome" label="Nome" placeholder="Nome" errorMessage={errors.proprietarioNome?.message} />
+                                            </div>
+                                            <div className="xl:w-1/3 w-full">
+                                                <InputElement register={register} registerName="proprietarioEmail" label="E-mal" placeholder="E-mail" errorMessage={errors.proprietarioEmail?.message} />
+                                            </div>
+                                            <div className="xl:w-1/3 w-full">
+                                                <InputElement register={register} registerName="proprietarioTelefone" label="Telefone" placeholder="Telefone" errorMessage={errors.proprietarioTelefone?.message} />
+                                            </div>
+                                        </>
+                                    )
+                                }
+
+                            </div>
                         </FormCard>
                         <FormCard title="Informações">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">

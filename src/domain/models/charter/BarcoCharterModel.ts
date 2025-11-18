@@ -9,6 +9,7 @@ import { TripulacaoSkipper } from "@/types/applicationTypes/charter/TripulacaoSk
 import { TaxaChurrasco } from "@/types/applicationTypes/charter/TaxaChurrasco";
 import { BarcoCharter } from "@/types/applicationTypes/charter/BarcoCharter";
 import { Modelo } from "@/types/applicationTypes/Modelo";
+import { Proprietario } from "@/types/applicationTypes/Proprietario";
 
 export class BarcoCharterModel {
     constructor(
@@ -25,6 +26,7 @@ export class BarcoCharterModel {
         public consumoCombustivel: ConsumoCombustivel,
         public roteiros: RoteiroCharter[],
         public horaExtra: Preco,
+        public proprietario: Proprietario,
         public tipoPasseio: TipoPasseio,
         public tripulacaoSkipper: TripulacaoSkipper,
         public aluguelLancha: Preco,
@@ -57,6 +59,7 @@ export class BarcoCharterModel {
             consumoCombustivel: this.consumoCombustivel,
             roteiros: this.roteiros,
             horaExtra: this.horaExtra,
+            proprietario: this.proprietario,
             tipoPasseio: this.tipoPasseio,
             tripulacaoSkipper: this.tripulacaoSkipper,
             aluguelLancha: this.aluguelLancha,

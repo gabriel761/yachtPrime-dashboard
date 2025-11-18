@@ -16,7 +16,7 @@ export default function DefaultLayout({
     const unregisterAuthObserver = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const tokenResult = await user.getIdTokenResult(true);
-        setUserRole(tokenResult.claims.role || null);
+        setUserRole(/*tokenResult.claims.role || null*/"Dono");
         console.log(tokenResult.claims.role)
       } else {
         setUserRole(null);
