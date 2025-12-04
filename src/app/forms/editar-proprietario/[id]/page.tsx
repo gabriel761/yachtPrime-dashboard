@@ -17,12 +17,15 @@ import Spinner from "@/components/common/Spinner";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import Users from "../../form-components/UsersForProprietario/Users";
 import { User } from "@/types/applicationTypes/User";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 type Params = Promise<{ id: string }>
 
 const EditarProprietario = (props: { params: Params }) => {
     const [isLoading, setIsLoading] = useState(false)
+    const [pageIsLoading, setPageIsLoading] = useState(false)
+    const [token, setToken] = useState("")
     const { openModal } = useModal()
     const router = useRouter()
 
@@ -36,7 +39,7 @@ const EditarProprietario = (props: { params: Params }) => {
 
     const getProprietarioData = async () => {
         try {
-            const proprietario: ProprietarioForEdit = await httpClient.get(`${baseUrl}/resources/proprietario-dashboard/${idProprietario}`)
+            const proprietario: ProprietarioForEdit = await httpClient.get(`${baseUrl}/resources/proprietario-dashboard/${idProprietario}`, token)
            
             reset({
                 nome: proprietario.nome,
@@ -82,9 +85,33 @@ const EditarProprietario = (props: { params: Params }) => {
     }
 
     useEffect(() => {
-        getProprietarioData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         let unsub: any;
+                    const load = async () => {
+                        const authPromise = new Promise<void>((resolve) => {
+                            unsub = onAuthStateChanged(auth, async (user) => {
+                                if (user) {
+                                    const token = await user.getIdToken()
+                                    setToken(token)
+                                }
+                                resolve()  // <-- só marca completo
+                            })
+                        })
+                        const seminovoPromise = getProprietarioData()
+                        await Promise.all([authPromise, seminovoPromise])
+                        setPageIsLoading(false)
+                    }
+                    load()
+                    return () => unsub && unsub()
     }, [])
+
+    if (pageIsLoading) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <Spinner size={40} />
+            </div>
+        )
+    }
+
     return (
         <DefaultLayout>
             <Breadcrumb pageName="Editar proprietário" />

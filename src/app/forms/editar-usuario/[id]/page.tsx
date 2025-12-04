@@ -17,12 +17,15 @@ import { User, UserWithProprietarios } from '@/types/applicationTypes/User'
 import { UserFormUpdate, userSchemaUpdate } from "@/util/userSchemaUpdate";
 import { useRouter } from "next/navigation";
 import Proprietarios from "../../form-components/ProprietariosForUsers/Proprietarios";
+import { onAuthStateChanged } from "firebase/auth";
+import { get } from "http";
 
 
 type Params = Promise<{ id: string }>
 const CadastrarUsuario = (props: { params: Params }) => {
     const [isLoading, setIsLoading] = useState(false)
-    //const [output, setOutput] = useState(null)
+    const [pageIsLoading, setPageIsLoading] = useState(false)
+    const [token, setToken] = useState("")
     const { openModal } = useModal()
     const router = useRouter()
 
@@ -34,7 +37,7 @@ const CadastrarUsuario = (props: { params: Params }) => {
 
     const getUsuarioData = async () => {
         try {
-            const user: UserWithProprietarios = await httpClient.get(`${baseUrl}/user/user-dashboard/${idUser}`)
+            const user: UserWithProprietarios = await httpClient.get(`${baseUrl}/user/user-dashboard/${idUser}`, token)
             console.log(user)
             reset({
                 email: user.email,
@@ -88,9 +91,32 @@ const CadastrarUsuario = (props: { params: Params }) => {
     }
 
     useEffect(() => {
-        getUsuarioData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        let unsub: any;
+        const load = async () => {
+            const authPromise = new Promise<void>((resolve) => {
+                unsub = onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        const token = await user.getIdToken()
+                        setToken(token)
+                    }
+                    resolve()  // <-- só marca completo
+                })
+            })
+            const seminovoPromise = getUsuarioData()
+            await Promise.all([authPromise, seminovoPromise])
+            setPageIsLoading(false)
+        }
+        load()
+        return () => unsub && unsub()
     }, [])
+
+    if (pageIsLoading) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <Spinner size={40} />
+            </div>
+        )
+    }
 
     return (
         <DefaultLayout>
