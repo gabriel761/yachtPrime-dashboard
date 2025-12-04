@@ -10,7 +10,7 @@ import { auth } from "@/lib/firebase/firebaseConfig";
 import { CustomError } from "@/infra/CustomError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useModal } from "@/context/ModalContext";
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import SelectUserType from "../../form-components/SelectUserType";
 import { User, UserWithProprietarios } from '@/types/applicationTypes/User'
@@ -35,7 +35,7 @@ const CadastrarUsuario = (props: { params: Params }) => {
         resolver: zodResolver(userSchemaUpdate)
     })
 
-    const getUsuarioData = async (token:string) => {
+    const getUsuarioData = useCallback( async (token:string) => {
         try {
             const user: UserWithProprietarios = await httpClient.get(`${baseUrl}/user/user-dashboard/${idUser}`, token)
             console.log(user)
@@ -55,7 +55,7 @@ const CadastrarUsuario = (props: { params: Params }) => {
             openModal("Erro de servidor", error.message, [{ type: "bg-danger", text: "Ok" }])
             console.error(error)
         }
-    }
+    }, [idUser, openModal, reset])
 
     const handleRedirectPassword = (e: any) => {
         e.preventDefault()
