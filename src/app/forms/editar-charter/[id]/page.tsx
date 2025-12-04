@@ -177,8 +177,9 @@ const EditarCharter = (props: { params: Params }) => {
                         resolve()  // <-- só marca completo
                     })
                 })
-                const seminovoPromise = getCharterData()
-                await Promise.all([authPromise, seminovoPromise])
+                await authPromise
+                await getCharterData()
+                 
                 setPageIsLoading(false)
             }
             load()

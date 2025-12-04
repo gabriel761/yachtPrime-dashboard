@@ -62,7 +62,7 @@ const EditarSeminovo = (props: { params: Params}) => {
     }
     
 
-    const getSeminovoData = useCallback( async () => {
+    const getSeminovoData = useCallback( async (token: string) => {
         try {
             const seminovo: BarcoSeminovoOutput = await httpClient.get(`${baseUrl}/barco/seminovo/dashboard/${idSeminovo}`, token)
             console.log(seminovo.ativo)
@@ -145,23 +145,26 @@ const EditarSeminovo = (props: { params: Params}) => {
     
     useEffect(() => {
         let unsub: any;
+
         const load = async () => {
-            const authPromise = new Promise<void>((resolve) => {
+            const token = await new Promise<string>((resolve) => {
                 unsub = onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         const token = await user.getIdToken()
-                        setToken(token)
+                        setToken(token) // opcional, só se precisar depois
+                        resolve(token)
                     }
-                    resolve()  // <-- só marca completo
                 })
             })
-            const seminovoPromise = getSeminovoData()
-            await Promise.all([authPromise, seminovoPromise])
+
+            await getSeminovoData(token)
             setPageIsLoading(false)
         }
+
         load()
         return () => unsub && unsub()
     }, [getSeminovoData])
+
     
     if (pageIsLoading) {
         return (
