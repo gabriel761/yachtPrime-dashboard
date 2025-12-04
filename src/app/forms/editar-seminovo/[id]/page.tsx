@@ -65,7 +65,6 @@ const EditarSeminovo = (props: { params: Params}) => {
     const getSeminovoData = useCallback( async (token: string) => {
         try {
             const seminovo: BarcoSeminovoOutput = await httpClient.get(`${baseUrl}/barco/seminovo/dashboard/${idSeminovo}`, token)
-            console.log(seminovo.ativo)
             
             reset({
                 modeloMotor: seminovo.motorizacao.modelo,
