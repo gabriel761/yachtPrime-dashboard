@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputElement from "@/components/InputElement";
 import { ProprietarioForm, proprietarioSchema } from "@/util/proprietarioScema";
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import httpClient from "@/infra/httpClient";
 import { Proprietario, ProprietarioForEdit } from "@/types/applicationTypes/Proprietario";
 import baseUrl from "@/infra/back-end-connection";
@@ -37,7 +37,7 @@ const EditarProprietario = (props: { params: Params }) => {
 
     })
 
-    const getProprietarioData = async (token:string) => {
+    const getProprietarioData = useCallback( async (token:string) => {
         try {
             const proprietario: ProprietarioForEdit = await httpClient.get(`${baseUrl}/resources/proprietario-dashboard/${idProprietario}`, token)
            
@@ -59,7 +59,7 @@ const EditarProprietario = (props: { params: Params }) => {
             openModal("Erro de servidor", error.message, [{ type: "bg-danger", text: "Ok" }])
             console.error(error)
         }
-    }
+    }, [idProprietario, openModal, reset])
 
 
     const submit = async (data: any) => {
