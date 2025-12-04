@@ -1,17 +1,17 @@
 import { useState } from "react";
 
-const CheckboxTwo = ({checkBoxText, changeValue, value}:{checkBoxText?:string, changeValue: (value:boolean) => void, value:boolean}) => {
+const CheckboxTwo = ({checkBoxText, changeValue, value, registerName}:{checkBoxText?:string, changeValue: (value:boolean) => void, value:boolean, registerName: string}) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   return (
     <div>
       <label
-        htmlFor="checkboxLabelTwo"
+        htmlFor={registerName}
         className="flex cursor-pointer select-none items-center"
       >
         <div className="relative">
           <input
             type="checkbox"
-            id="checkboxLabelTwo"
+            id={registerName}
             className="sr-only"
             onChange={() => changeValue(!value)}
           />

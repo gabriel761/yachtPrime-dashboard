@@ -54,8 +54,21 @@ const config: Config = {
         "meta-8": "#F0950C",
         "meta-9": "#E5E7EB",
         "meta-10": "#0FADCF",
-        success: "#219653",
-        danger: "#D34053",
+        danger: {
+          DEFAULT: "#D34053",   // <-- isso mantém bg-danger e text-danger
+          100: "#FDE8EA",
+          300: "#F28B95",
+          500: "#D34053",
+          700: "#A12836",
+        },
+
+        success: {
+          DEFAULT: "#219653",
+          100: "#E6F7EF",
+          300: "#6FCF97",
+          500: "#219653",
+          700: "#145A32",
+        },
         warning: "#FFA70B",
       },
       fontSize: {

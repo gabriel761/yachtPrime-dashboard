@@ -32,6 +32,7 @@ import SearchProprietario from "../form-components/SearchProprietarios/SearchPro
 import Bin from "@/../public/images/svg/bin.svg"
 import { IoCloseSharp } from "react-icons/io5";
 import { onAuthStateChanged } from "firebase/auth";
+import CheckBoxElement from "../form-components/CheckboxElement";
 
 
 const CadastrarCharter = () => {
@@ -296,6 +297,11 @@ const CadastrarCharter = () => {
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className=" w-full">
                                     <Roteiros control={control} errorMessage={errors.roteiros} />
+                                </div>
+                            </div>
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-full">
+                                    <CheckBoxElement control={control} registerName="ativo" label="Ativo (Você pode desmarcar esta caixa para tornar seu barco invisível para os usuário de seu site)" errorMessage={errors.ativo?.message} />
                                 </div>
                             </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">

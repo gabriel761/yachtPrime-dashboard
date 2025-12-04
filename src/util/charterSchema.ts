@@ -61,7 +61,8 @@ export const charterSchema = z.object({
         moeda: z.string(textMessage).min(1, selectMessage).max(50),
         preco: z.string(numberMessage).min(1, { message: "Preço inválido" }),
         detalhesPagamento: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }),
-    })).min(1, { message: "Adicione pelo menos 1 roteiro" })
+    })).min(1, { message: "Adicione pelo menos 1 roteiro" }),
+    ativo: z.boolean({ message: "boleana em ativo inválida" }),
 })
 export type CharterSchema = z.infer<typeof charterSchema>
 

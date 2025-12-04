@@ -13,9 +13,10 @@ import { useModal } from "@/context/ModalContext";
 import { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import SelectUserType from "../../form-components/SelectUserType";
-import { User } from '@/types/applicationTypes/User'
+import { User, UserWithProprietarios } from '@/types/applicationTypes/User'
 import { UserFormUpdate, userSchemaUpdate } from "@/util/userSchemaUpdate";
 import { useRouter } from "next/navigation";
+import Proprietarios from "../../form-components/ProprietariosForUsers/Proprietarios";
 
 
 type Params = Promise<{ id: string }>
@@ -33,10 +34,13 @@ const CadastrarUsuario = (props: { params: Params }) => {
 
     const getUsuarioData = async () => {
         try {
-            const user: User = await httpClient.get(`${baseUrl}/user/user/${idUser}`)
+            const user: UserWithProprietarios = await httpClient.get(`${baseUrl}/user/user-dashboard/${idUser}`)
+            console.log(user)
             reset({
                 email: user.email,
-                userType: user.userType
+                nome: user.nome,
+                userType: user.userType,
+                proprietarios: user.proprietarios
             })
         } catch (error: any) {
             let errorMessage
@@ -58,10 +62,12 @@ const CadastrarUsuario = (props: { params: Params }) => {
     const submit = async (data: any) => {
         setIsLoading(true)
         try {
-            const userOutput: User = {
+            const userOutput: UserWithProprietarios = {
                 id: idUser,
+                nome: data.nome,
                 email: data.email,
                 userType: data.userType,
+                proprietarios : data.proprietarios
             }
             const token = await auth.currentUser?.getIdToken()
             await httpClient.put(`${baseUrl}/user/user`, userOutput, token || "")
@@ -96,36 +102,48 @@ const CadastrarUsuario = (props: { params: Params }) => {
 
                         <FormCard title="Informações">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className="xl:w-1/3 w-full">
+                                    <InputElement register={register} registerName="nome" label="Nome" placeholder="Nome" errorMessage={errors.nome?.message} />
+                                </div>
                                 <div className=" xl:w-1/3 w-full ">
                                     <SelectUserType control={control} errorMessage={errors.userType?.message} />
                                 </div>
                                 <div className=" xl:w-1/3 w-full ">
                                     <InputElement register={register} registerName="email" label="E-mail" placeholder="E-mail" errorMessage={errors.email?.message} />
                                 </div>
-                                <div className="xl:w-1/3 w-full flex items-end">
+
+                            </div>
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                                     <button onClick={(e) => handleRedirectPassword(e)} className="flex w-full justify-center rounded bg-danger p-3 font-medium text-gray hover:bg-opacity-90">
                                         Alterar senha
                                     </button>
                                 </div>
                             </div>
-
+                            {/* <div className="mt-10 ">
+                <pre>{JSON.stringify(output)}</pre>
+              </div> */}
+                        </FormCard>
+                        <FormCard title="Proprietários relacionados">
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-full">
+                                    <Proprietarios control={control} errorMessage={errors.email} />
+                                </div>
+                            </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                                 {
                                     isLoading ? <Spinner size={40} /> : (
                                         <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                                            Atualizar Usuário
+                                            Atualizar usário
                                         </button>
                                     )
                                 }
 
                             </div>
-                            {/* <div className="mt-10 ">
-                <pre>{JSON.stringify(output)}</pre>
-              </div> */}
                         </FormCard>
                     </div>
                 </form>
-            </div>
+            </div >
 
         </DefaultLayout >
     );

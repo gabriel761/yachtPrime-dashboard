@@ -31,9 +31,9 @@ const Modal = () => {
                 </div>
                 <div className="">
                     <div>
-                        <p className="text-body">
+                        
                             {modalContent.body}
-                        </p>
+                       
                         <div className="w-full flex justify-end gap-4">
                         {
                             modalContent.buttons.map((button, index) => (

@@ -16,6 +16,7 @@ import SelectUserType from "../form-components/SelectUserType";
 import { UserForm, userSchema } from "@/util/userSchema";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import verifyFirebaseErrorCode from "@/util/firebaseErrorCode";
+import Proprietarios from "../form-components/ProprietariosForUsers/Proprietarios";
 
 const CadastrarUsuario = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -60,10 +61,13 @@ const CadastrarUsuario = () => {
 
                         <FormCard title="Informações">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                                <div className=" xl:w-1/2 w-full ">
+                                <div className=" xl:w-1/3 w-full ">
                                     <SelectUserType control={control} errorMessage={errors.userType?.message} />
                                 </div>
-                                <div className=" xl:w-1/2 w-full ">
+                                <div className=" xl:w-1/3 w-full ">
+                                    <InputElement register={register} registerName="nome" label="Nome" placeholder="Nome" errorMessage={errors.nome?.message} />
+                                </div>
+                                <div className=" xl:w-1/3 w-full ">
                                     <InputElement register={register} registerName="email" label="E-mail" placeholder="E-mail" errorMessage={errors.email?.message} />
                                 </div>
                             </div>
@@ -75,19 +79,26 @@ const CadastrarUsuario = () => {
                                     <InputElement register={register} registerName="confirmarSenha" label="Confirmar senha" placeholder="Confirmar senha" errorMessage={errors.confirmarSenha?.message} type="password" />
                                 </div>
                             </div>
+                            {/* <div className="mt-10 ">
+                <pre>{JSON.stringify(output)}</pre>
+              </div> */}
+                        </FormCard>
+                        <FormCard title="Usuários relacionados">
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-full">
+                                    <Proprietarios control={control} errorMessage={errors.email} />
+                                </div>
+                            </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                                 {
                                     isLoading ? <Spinner size={40} /> : (
                                         <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                                            Cadastrar Usuário
+                                            Cadastar usuário
                                         </button>
                                     )
                                 }
 
                             </div>
-                            {/* <div className="mt-10 ">
-                <pre>{JSON.stringify(output)}</pre>
-              </div> */}
                         </FormCard>
                     </div>
                 </form>

@@ -20,7 +20,11 @@ export const proprietarioSchema = z.object({ id: z.number({message: "id propriet
         }
         // fallback BR: 10 ou 11 dígitos → OK
         return digits.length === 10 || digits.length === 11;
-    }, `Telefone inválido (telefones internacionais devem iniciar com "+")`)
+    }, `Telefone inválido (telefones internacionais devem iniciar com "+")`),
+    usuarios: z.array(z.object({
+        email: z.string(textMessage),
+        userType: z.string(textMessage),
+    }))
 })
 
 

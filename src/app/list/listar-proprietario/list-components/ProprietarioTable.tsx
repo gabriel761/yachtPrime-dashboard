@@ -4,22 +4,24 @@ import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
 import Pencil from "@/../public/images/svg/pencil.svg"
 import Bin from "@/../public/images/svg/bin.svg"
 import { Proprietario } from "@/types/applicationTypes/Proprietario";
+import CharterTable from "../../listar-charter/list-components/CharterTable";
+import BarcosTable from "./BarcosTable";
 
 
 
 const ProprietarioTable = () => {
     const [proprietarioData, setProprietarioData] = useState<Proprietario[] | null>(null)
-    const { openModal } = useModal()
+    const { openModal, closeModal } = useModal()
     const router = useRouter();
 
-    const getProprietarios = async () => {
+    const getProprietarios = useCallback( async () => {
         try {
             const token = await auth.currentUser?.getIdToken()
             const result = await httpClient.get(`${baseUrl}/resources/proprietario-dashboard-list`, token)
@@ -28,7 +30,7 @@ const ProprietarioTable = () => {
             openModal("clientError", error.message)
             console.error(error)
         }
-    }
+    },[openModal]);
 
     const deleteProprietario = async (id: number) => {
         try {
@@ -40,13 +42,12 @@ const ProprietarioTable = () => {
             console.error(error)
         }
     }
-
     const handleDeleteModal = (idProprietario?: number) => {
         if(!idProprietario){
             openModal("Erro", "id de proprietario indefinido")
             return
         }
-        openModal("Atenção!", "Deseja realmente deletar permanentemente este item do banco de dados?", [
+        openModal("Atenção!", <BarcosTable idProprietario={idProprietario} closeMainModal={closeModal}/>, [
             {
                 type: "bg-danger",
                 text: "Deletar",
@@ -77,7 +78,7 @@ const ProprietarioTable = () => {
         });
 
         return () => unsubscribe(); // Remove o listener ao desmontar o componente
-    }, []);
+    }, [getProprietarios]);
 
 
 

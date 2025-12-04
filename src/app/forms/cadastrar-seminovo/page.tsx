@@ -248,8 +248,13 @@ const CadastrarSeminovo = () => {
               <div className=" xl:w-2/3 w-full ">
                 <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." errorMessage={errors.video?.message} />
               </div>
-              <div className=" xl:w-2/3 w-full mt-6">
+              <div className="mb-3 xl:w-2/3 w-full mt-6">
                 <CheckBoxElement control={control} registerName="oportunidade" errorMessage={errors.oportunidade?.message} label="Barco seminovo é oportunidade para o cliente? (Oferta ou Promoção)" />
+              </div>
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className=" w-full">
+                  <CheckBoxElement control={control} registerName="ativo" label="Ativo (Você pode desmarcar esta caixa para tornar seu barco invisível para os usuário de seu site)" errorMessage={errors.ativo?.message} />
+                </div>
               </div>
               <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                 {

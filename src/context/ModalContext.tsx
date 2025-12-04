@@ -12,7 +12,7 @@ interface ModalContextProps {
     isOpenModal: boolean;
     isClosable: boolean;
     modalContent: ModalContent | null
-    openModal: (title?: string, body?: string, buttons?: ModalButton[]) => void;
+    openModal: (title?: string, body?: ReactNode, buttons?: ModalButton[]) => void;
     closeModal: () => void;
 }
 
@@ -24,7 +24,7 @@ type ModalButton = {
 
 type ModalContent = {
     title: string,
-    body: string,
+    body:  ReactNode,
     buttons: ModalButton[]
 }
 
@@ -35,7 +35,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const isClosableRef = useRef(false)
     const modalContentRef = useRef<ModalContent | null>(null);
 
-    const openModal = (title: string = "",body: string = "", buttons: ModalButton[] = []) => {
+    const openModal = (title: string = "",body:  ReactNode  = "", buttons: ModalButton[] = []) => {
         const modalContent = { title, body, buttons };
         isClosableRef.current = buttons.length == 0 
         modalContentRef.current = modalContent;

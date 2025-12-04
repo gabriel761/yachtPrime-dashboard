@@ -13,6 +13,7 @@ import { Proprietario } from "@/types/applicationTypes/Proprietario";
 
 export class BarcoCharterModel {
     constructor(
+        public ativo: boolean,
         public modelo: string,
         public nome: string,
         public ano: number,
@@ -46,6 +47,7 @@ export class BarcoCharterModel {
     extractData(): BarcoCharter {
         return {
             id: this.id,
+            ativo: this.ativo,
             modelo: this.modelo,
             nome: this.nome,
             ano: this.ano,

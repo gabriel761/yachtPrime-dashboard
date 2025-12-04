@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SelectModelos from "../../form-components/SelectModelos";
 import InputElement from "../../../../components/InputElement";
 import FormCard from "../../form-components/FormCard";
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { useForm,  } from "react-hook-form";
 import SelectCombustivel from "../../form-components/SelectCombustivel";
 import SelectMoeda from "../../form-components/SelectMoeda";
@@ -35,6 +35,8 @@ import Bin from "@/../public/images/svg/bin.svg"
 import SearchProprietario from "../../form-components/SearchProprietarios/SearchProprietarios";
 import { onAuthStateChanged } from "firebase/auth";
 import { IoCloseSharp } from "react-icons/io5";
+import CheckBoxElement from "../../form-components/CheckboxElement";
+import { get } from "http";
 
 type Params = Promise<{ id: string }>
 
@@ -68,7 +70,7 @@ const EditarCharter = (props: { params: Params }) => {
     }
 
 
-    const getCharterData = async () => {
+    const getCharterData = useCallback( async () => {
         try{
             const charter: BarcoCharter = await httpClient.get(`${baseUrl}/barco/charter/dashboard/${idCharter}`)
             const roteirosModel = new RoteiroCharterModel()
@@ -106,7 +108,8 @@ const EditarCharter = (props: { params: Params }) => {
                 precoTaxaChurrasco: charter.taxaChurrasco.preco.valor,
                 precoTaxaExtra: charter.horaExtra.valor,
                 taxaChurrascoMessage: charter.taxaChurrasco.mensagem,
-                roteiros: roteirosForm
+                roteiros: roteirosForm,
+                ativo: charter.ativo
             })
         } catch (error: any) {
             let errorMessage
@@ -118,7 +121,7 @@ const EditarCharter = (props: { params: Params }) => {
             openModal("Erro de servidor", error.message, [{ type: "bg-danger", text: "Ok" }])
             console.error(error)
         }
-    }
+    }, [idCharter, openModal, reset])
 
 
 
@@ -180,7 +183,7 @@ const EditarCharter = (props: { params: Params }) => {
             }
             load()
             return () => unsub && unsub()
-        }, [])
+        }, [getCharterData])
 
     if (pageIsLoading) {
         return (
@@ -361,6 +364,11 @@ const EditarCharter = (props: { params: Params }) => {
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className=" w-full">
                                     <Roteiros control={control} errorMessage={errors.roteiros} />
+                                </div>
+                            </div>
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-full">
+                                    <CheckBoxElement control={control} registerName="ativo" label="Ativo (Você pode desmarcar esta caixa para tornar seu barco invisível para os usuário de seu site)" errorMessage={errors.ativo?.message} />
                                 </div>
                             </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">

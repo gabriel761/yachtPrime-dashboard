@@ -7,7 +7,7 @@ import InputElement from "../../../../components/InputElement";
 import SelectMotor from "../../form-components/SelectMotor";
 import FormCard from "../../form-components/FormCard";
 import SelectQuantidade from "../../form-components/SelectQuantidade";
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import TextArea from "../../form-components/TextArea";
 import SelectCombustivel from "../../form-components/SelectCombustivel";
@@ -31,6 +31,7 @@ import { SeminovoService } from "../../../../domain/service/SeminovoService";
 import Bin from "@/../public/images/svg/bin.svg"
 import SearchProprietario from "../../form-components/SearchProprietarios/SearchProprietarios";
 import { onAuthStateChanged } from "firebase/auth";
+import { get } from "http";
 
 
 type Params = Promise<{ id: string }>
@@ -61,11 +62,11 @@ const EditarSeminovo = (props: { params: Params}) => {
     }
     
 
-    const getSeminovoData = async () => {
+    const getSeminovoData = useCallback( async () => {
         try {
             const seminovo: BarcoSeminovoOutput = await httpClient.get(`${baseUrl}/barco/seminovo/dashboard/${idSeminovo}`)
-            console.log(seminovo.imagens)
-            console.log(seminovo.equipadoCom)
+            console.log(seminovo.ativo)
+            
             reset({
                 modeloMotor: seminovo.motorizacao.modelo,
                 quantidadeMotor: seminovo.motorizacao.quantidade,
@@ -93,7 +94,8 @@ const EditarSeminovo = (props: { params: Params}) => {
                 equipadoCom: seminovo.equipadoCom ?? [],
                 destaque: seminovo.destaque ?? "",
                 video: seminovo.videoPromocional ?? "",
-                oportunidade: seminovo.oportunidade
+                oportunidade: seminovo.oportunidade,
+                ativo: seminovo.ativo
             })
         } catch (error: any) {
             let errorMessage
@@ -105,7 +107,7 @@ const EditarSeminovo = (props: { params: Params}) => {
             openModal("Erro de servidor", error.message, [{ type: "bg-danger", text: "Ok" }])
             console.error(error)
         }
-    }
+    }, [idSeminovo, openModal, reset])
 
     const submit = async (data: any) => {
         setIsLoading(true)
@@ -159,7 +161,7 @@ const EditarSeminovo = (props: { params: Params}) => {
         }
         load()
         return () => unsub && unsub()
-    }, [])
+    }, [getSeminovoData])
     
     if (pageIsLoading) {
         return (
@@ -303,8 +305,13 @@ const EditarSeminovo = (props: { params: Params}) => {
                             <div className=" xl:w-2/3 w-full ">
                                 <InputElement register={register} registerName="video" label="Link de video promocional" placeholder="youtube, vimeo e etc..." errorMessage={errors.video?.message} />
                             </div>
-                            <div className=" xl:w-2/3 w-full mt-6">
+                            <div className="mb-3 xl:w-2/3 w-full mt-6">
                                 <CheckBoxElement control={control}  registerName="oportunidade" errorMessage={errors.oportunidade?.message} label="Este seminovo é oportunidade (promoção)"/>
+                            </div>
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-full">
+                                    <CheckBoxElement control={control} registerName="ativo" label="Ativo (Você pode desmarcar esta caixa para tornar seu barco invisível para os usuário de seu site)" errorMessage={errors.ativo?.message} />
+                                </div>
                             </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">
                                 {

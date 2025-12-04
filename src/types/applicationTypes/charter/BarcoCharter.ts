@@ -12,6 +12,7 @@ import { TripulacaoSkipper } from "./TripulacaoSkipper";
 
 export type BarcoCharter = {
     id?: number;
+    ativo: boolean;
     modelo: string;
     nome: string | null;
     ano: number;
@@ -35,6 +36,7 @@ export type BarcoCharter = {
 
 export type BarcoCharterUpdate = {
     id?: number;
+    ativo: boolean;
     modelo: string;
     nome: string | null;
     ano: number;
@@ -59,6 +61,7 @@ export type BarcoCharterUpdate = {
 
 export type BarcoCharterList = {
     id: number,
+    ativo: boolean,
     imagem: string,
     nome: string,
     modelo: string,

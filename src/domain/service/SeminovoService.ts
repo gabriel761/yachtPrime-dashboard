@@ -26,7 +26,7 @@ export class SeminovoService {
         const proprietarioData = proprietarioModel.extractData()
         
         const imageLinks = await imageFirebaseHandling(data.imagens, "seminovos")
-        const barcoSeminovoModel = new BarcoSeminovoModel(formModelo, data.nome, data.ano, data.tamanho, motorizacaoData, data.potenciaTotal, formCombustivel, formPropulsao, cabineData, proprietarioData ,data.procedencia, data.destaque, precoData, imageLinks, data.equipadoCom, data.oportunidade, data.video)
+        const barcoSeminovoModel = new BarcoSeminovoModel(formModelo, data.ativo, data.nome, data.ano, data.tamanho, motorizacaoData, data.potenciaTotal, formCombustivel, formPropulsao, cabineData, proprietarioData ,data.procedencia, data.destaque, precoData, imageLinks, data.equipadoCom, data.oportunidade, data.video)
         const barcoSeminovoData = barcoSeminovoModel.extractData()
 
         return barcoSeminovoData
@@ -53,10 +53,9 @@ export class SeminovoService {
 
         const imagensDB = await imagemModel.getImagesFromDbByIdSeminovo(idSeminovo)
         const imagensToDeleteFromFirebase = imagemModel.extractImagesToDeleteFromFirebase(data.imagens, imagensDB)
-        console.log(imagensToDeleteFromFirebase)
         await imagemModel.deleteImageList(imagensToDeleteFromFirebase, "seminovos")
         const imageLinks = await imageFirebaseHandling(data.imagens, "seminovos")
-        const barcoSeminovoModel = new BarcoSeminovoModel(formModelo, data.nome, data.ano, data.tamanho, motorizacaoData, data.potenciaTotal, formCombustivel, formPropulsao, cabineData,proprietarioData, data.procedencia, data.destaque, precoData, imageLinks, data.equipadoCom, data.oportunidade, data.video)
+        const barcoSeminovoModel = new BarcoSeminovoModel(formModelo, data.ativo, data.nome, data.ano, data.tamanho, motorizacaoData, data.potenciaTotal, formCombustivel, formPropulsao, cabineData,proprietarioData, data.procedencia, data.destaque, precoData, imageLinks, data.equipadoCom, data.oportunidade, data.video)
         barcoSeminovoModel.setId(idSeminovo)
         const barcoSeminovoData = barcoSeminovoModel.extractData()
 

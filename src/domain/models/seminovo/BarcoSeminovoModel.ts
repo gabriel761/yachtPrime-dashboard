@@ -13,6 +13,7 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     public id?: number
     constructor(
         public modelo: string,
+        public ativo: boolean,
         public nome: string,
         public ano: number,
         public tamanho: number,
@@ -38,6 +39,7 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     extractData(): BarcoSeminovoOutput {
         return {
             id: this.id,
+            ativo: this.ativo,
             modelo: this.modelo,
             nome: this.nome,
             ano: this.ano,

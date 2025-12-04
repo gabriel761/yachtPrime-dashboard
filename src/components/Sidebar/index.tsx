@@ -69,6 +69,7 @@ const menuGroups = [
         label: "Cadastrar",
         route: "#",
         children: [
+          { label: "Cadastrar Usuário", route: "/forms/cadastrar-usuario", role: ["Dono"] },
           { label: "Cadastrar Modelo de Barco", route: "/forms/cadastrar-modelo-barco", role: ["Dono", "Administrador"] },
           { label: "Cadastrar Motor", route: "/forms/cadastrar-motor", role: ["Dono", "Administrador"] },
           { label: "Cadastrar Item de Seminovo", route: "/forms/cadastrar-item-seminovo", role: ["Dono", "Administrador"] },

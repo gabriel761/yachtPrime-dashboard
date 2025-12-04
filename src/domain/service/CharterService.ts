@@ -46,7 +46,7 @@ export class CharterService {
 
         const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
 
-        const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video )
+        const barcoCharterModel = new BarcoCharterModel(data.ativo ,formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video )
         const barcoCharterData = barcoCharterModel.extractData()
 
         return barcoCharterData
@@ -82,13 +82,13 @@ export class CharterService {
         const proprietarioData = proprietarioModel.extractData()
 
 
-        const imagensDB = await imagemModel.getImagesFromDbByIdCharter(idCharter)
+       const imagensDB = await imagemModel.getImagesFromDbByIdCharter(idCharter)
         const imagensToDeleteFromFirebase = imagemModel.extractImagesToDeleteFromFirebase(data.imagens, imagensDB)
         await imagemModel.deleteImageList(imagensToDeleteFromFirebase, "charters")
-       //const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
-      const imageLinks:Imagem[] = data.imagens
+       const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
+     // const imageLinks:Imagem[] = data.imagens
 
-        const barcoCharterModel = new BarcoCharterModel(formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video)
+        const barcoCharterModel = new BarcoCharterModel(data.ativo, formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video)
 
         barcoCharterModel.setId(idCharter)
         const barcoCharterData = barcoCharterModel.extractData()

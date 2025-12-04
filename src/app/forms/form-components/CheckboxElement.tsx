@@ -6,10 +6,9 @@ const CheckBoxElement = ({ control, registerName, errorMessage, label }: { contr
         <Controller
             name={registerName}
             control={control}
-            defaultValue=""
             render={({ field }) => (
                 <>
-                    <CheckboxTwo value={field.value} changeValue={(value) => field.onChange(value)} checkBoxText={label} />
+                    <CheckboxTwo value={field.value} changeValue={(value) => field.onChange(value)} checkBoxText={label} registerName={registerName}/>
                     <p className="text-red">{errorMessage}</p>
                 </>
             )}

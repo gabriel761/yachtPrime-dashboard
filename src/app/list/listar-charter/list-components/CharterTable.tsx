@@ -5,12 +5,13 @@ import httpClient from "@/infra/httpClient";
 import { BarcoCharterList } from "@/types/applicationTypes/charter/BarcoCharter";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
 import Pencil from "@/../public/images/svg/pencil.svg"
 import Bin from "@/../public/images/svg/bin.svg" 
+import { get } from "http";
 
 
 
@@ -20,7 +21,7 @@ const CharterTable = () => {
     const { openModal } = useModal()
     const router = useRouter();
 
-    const getCharters = async () => {
+    const getCharters = useCallback( async () => {
         try {
             const token = await auth.currentUser?.getIdToken()
             const result = await httpClient.get(`${baseUrl}/barco/charter/list/dashboard`, token)
@@ -29,7 +30,7 @@ const CharterTable = () => {
             openModal("clientError", error.message)
             console.error(error)
         }
-    }
+    },[openModal]);
 
     const deleteCharter = async (id: number) => {
         try {
@@ -70,7 +71,7 @@ const CharterTable = () => {
         });
 
         return () => unsubscribe(); // Remove o listener ao desmontar o componente
-    }, []);
+    }, [getCharters]);
 
 
 
@@ -86,7 +87,10 @@ const CharterTable = () => {
                 <div className="col-span-2 flex items-center">
                     <p className="font-medium">Modelo</p>
                 </div>
-                <div className="col-span-2 hidden items-center sm:flex justify-start">
+                <div className="col-span-1 hidden items-center sm:flex justify-start">
+                    <p className="font-medium">Status </p>
+                </div>
+                <div className="col-span-1 hidden items-center sm:flex justify-start">
                     <p className="font-medium">Nome </p>
                 </div>
                 <div className="col-span-1 flex items-center">
@@ -128,7 +132,15 @@ const CharterTable = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="col-span-2 hidden items-center sm:flex">
+                    <div className="col-span-1 hidden items-center sm:flex">
+                        <p
+                            className={`inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-medium
+                            ${charter.ativo ? "bg-success/15 text-success" : "bg-danger/15 text-danger"}`}
+                        >
+                            {charter.ativo ? "Ativo" : "Desativado"}
+                        </p>
+                    </div>
+                    <div className="col-span-1 hidden items-center sm:flex">
                         <p className="text-sm text-black dark:text-white">
                             {charter.nome}
                         </p>

@@ -43,7 +43,8 @@ export const seminovoSchema = z.object({
     equipadoCom: z.array(z.object({ id: z.number(numberMessage), item: z.string(), quantidade: z.number(numberMessage).min(1, "Mínimo de 1 unidade de cada item") })).min(1, {message: "Adicione pelo menos 1 item"}),
     destaque: z.string(textMessage).max(100, { message: "Número máximo de caracteres: 100" }).or(z.string().length(0)),
     video: z.string(textMessage).url({ message: "Link inválido" }).or(z.string().length(0)),
-    oportunidade: z.boolean({message:"boleana em oportunidade inválida"})
+    oportunidade: z.boolean({message:"boleana em oportunidade inválida"}),
+    ativo: z.boolean({message:"boleana em ativo inválida"}),
 })
 export type SeminovoForm = z.infer<typeof seminovoSchema>
 

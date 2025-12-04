@@ -3,19 +3,20 @@ import { useModal } from "@/context/ModalContext";
 import baseUrl from "@/infra/back-end-connection";
 import httpClient from "@/infra/httpClient";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
 import { User } from "@/types/applicationTypes/User";
 import Pencil from "@/../public/images/svg/pencil.svg"
 import Bin from "@/../public/images/svg/bin.svg" 
+import { get } from "http";
 
 const UserTable = () => {
     const [userData, setUserData] = useState<User[] | null>(null)
     const { openModal } = useModal()
     const router = useRouter();
 
-    const getUsers = async () => {
+    const getUsers = useCallback( async () => {
         try {
             const token = await auth.currentUser?.getIdToken()
             const result = await httpClient.get(`${baseUrl}/user/all-users`, token)
@@ -24,7 +25,7 @@ const UserTable = () => {
             openModal("clientError", error.message)
             console.error(error)
         }
-    }
+    },[openModal]);
 
     const deleteUser = async (id: number) => {
         try {
@@ -65,7 +66,7 @@ const UserTable = () => {
         });
 
         return () => unsubscribe(); // Remove o listener ao desmontar o componente
-    }, []);
+    }, [getUsers]);
 
 
 
