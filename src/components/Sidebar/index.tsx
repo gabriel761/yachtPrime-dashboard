@@ -14,18 +14,6 @@ interface SidebarProps {
   userRole?: string
 }
 
-const menuLinks = {
-  cadastrarModeloBarco: { label: "Cadastrar Modelo de Barco", route: "/forms/cadastrar-modelo-barco" },
-  cadastrarMotor: { label: "Cadastrar Motor", route: "/forms/cadastrar-motor" },
-  cadatrarItemSeminovo: { label: "Cadastrar Item de Seminovo", route: "/forms/cadastrar-item-seminovo" },
-  cadastrarItemCharter: { label: "Cadastrar Item de Charter", route: "/forms/cadastrar-item-charter" },
-  cadastarSeminovo: { label: "Cadastrar Seminovo", route: "/forms/cadastrar-seminovo" },
-  cadastrarCharter: { label: "Cadastrar Charter", route: "/forms/cadastrar-charter" },
-  listarSeminovos: { label: "Listar Seminovos", route: "/list/listar-seminovo" },
-  listarCharters: { label: "Listar Charters", route: "/list/listar-charter" },
-  listarUsuarios: { label: "Listar Usuários", route: "/list/listar-usuario" }
-}
-
 
 const menuGroups = [
   {
