@@ -70,7 +70,7 @@ const EditarCharter = (props: { params: Params }) => {
     }
 
 
-    const getCharterData = useCallback( async () => {
+    const getCharterData = useCallback( async (token:string) => {
         try{
             const charter: BarcoCharter = await httpClient.get(`${baseUrl}/barco/charter/dashboard/${idCharter}`, token)
             const roteirosModel = new RoteiroCharterModel()
@@ -148,7 +148,6 @@ const EditarCharter = (props: { params: Params }) => {
             await httpClient.patch(`${baseUrl}/barco/charter`, charterFinalData, token || "")
             reset()
             openModal("Sucesso!", "Barco seminovo atualizado com sucesso!", [{ type: "bg-primary", text: "Ok", onClick: () => router.replace("/list/listar-charter") }])
-            await getCharterData()
         } catch (error: any) {
             let errorMessage
             if (error instanceof CustomError) {
@@ -166,25 +165,26 @@ const EditarCharter = (props: { params: Params }) => {
     }
 
     useEffect(() => {
-            let unsub: any;
-            const load = async () => {
-                const authPromise = new Promise<void>((resolve) => {
-                    unsub = onAuthStateChanged(auth, async (user) => {
-                        if (user) {
-                            const token = await user.getIdToken()
-                            setToken(token)
-                        }
-                        resolve()  // <-- só marca completo
-                    })
+        let unsub: any;
+
+        const load = async () => {
+            const token = await new Promise<string>((resolve) => {
+                unsub = onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        const token = await user.getIdToken()
+                        setToken(token) // opcional, só se precisar depois
+                        resolve(token)
+                    }
                 })
-                await authPromise
-                await getCharterData()
-                 
-                setPageIsLoading(false)
-            }
-            load()
-            return () => unsub && unsub()
-        }, [getCharterData])
+            })
+
+            await getCharterData(token)
+            setPageIsLoading(false)
+        }
+
+        load()
+        return () => unsub && unsub()
+    }, [getCharterData])
 
     if (pageIsLoading) {
         return (

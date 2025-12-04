@@ -35,7 +35,7 @@ const CadastrarUsuario = (props: { params: Params }) => {
         resolver: zodResolver(userSchemaUpdate)
     })
 
-    const getUsuarioData = async () => {
+    const getUsuarioData = async (token:string) => {
         try {
             const user: UserWithProprietarios = await httpClient.get(`${baseUrl}/user/user-dashboard/${idUser}`, token)
             console.log(user)
@@ -92,23 +92,25 @@ const CadastrarUsuario = (props: { params: Params }) => {
 
     useEffect(() => {
         let unsub: any;
+
         const load = async () => {
-            const authPromise = new Promise<void>((resolve) => {
+            const token = await new Promise<string>((resolve) => {
                 unsub = onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         const token = await user.getIdToken()
-                        setToken(token)
+                        setToken(token) // opcional, só se precisar depois
+                        resolve(token)
                     }
-                    resolve()  // <-- só marca completo
                 })
             })
-            const seminovoPromise = getUsuarioData()
-            await Promise.all([authPromise, seminovoPromise])
+
+            await getUsuarioData(token)
             setPageIsLoading(false)
         }
+
         load()
         return () => unsub && unsub()
-    }, [])
+    }, [getUsuarioData])
 
     if (pageIsLoading) {
         return (

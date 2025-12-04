@@ -37,7 +37,7 @@ const EditarProprietario = (props: { params: Params }) => {
 
     })
 
-    const getProprietarioData = async () => {
+    const getProprietarioData = async (token:string) => {
         try {
             const proprietario: ProprietarioForEdit = await httpClient.get(`${baseUrl}/resources/proprietario-dashboard/${idProprietario}`, token)
            
@@ -85,24 +85,26 @@ const EditarProprietario = (props: { params: Params }) => {
     }
 
     useEffect(() => {
-         let unsub: any;
-                    const load = async () => {
-                        const authPromise = new Promise<void>((resolve) => {
-                            unsub = onAuthStateChanged(auth, async (user) => {
-                                if (user) {
-                                    const token = await user.getIdToken()
-                                    setToken(token)
-                                }
-                                resolve()  // <-- só marca completo
-                            })
-                        })
-                        const seminovoPromise = getProprietarioData()
-                        await Promise.all([authPromise, seminovoPromise])
-                        setPageIsLoading(false)
+        let unsub: any;
+
+        const load = async () => {
+            const token = await new Promise<string>((resolve) => {
+                unsub = onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        const token = await user.getIdToken()
+                        setToken(token) // opcional, só se precisar depois
+                        resolve(token)
                     }
-                    load()
-                    return () => unsub && unsub()
-    }, [])
+                })
+            })
+
+            await getProprietarioData(token)
+            setPageIsLoading(false)
+        }
+
+        load()
+        return () => unsub && unsub()
+    }, [getProprietarioData])
 
     if (pageIsLoading) {
         return (
