@@ -5,23 +5,26 @@ import httpClient from "@/infra/httpClient";
 import { BarcoCharterList } from "@/types/applicationTypes/charter/BarcoCharter";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
 import Pencil from "@/../public/images/svg/pencil.svg"
-import Bin from "@/../public/images/svg/bin.svg" 
-import { get } from "http";
+import Bin from "@/../public/images/svg/bin.svg"
+import { MdOutlineContentCopy } from "react-icons/md";
+import frontEndLink from "@/infra/front-end-connection"
+import SuccessAlert, {SuccessAlertRef} from "@/components/Alerts/SuccessAlert";
 
 
 
 
 const CharterTable = () => {
     const [charterData, setCharterData] = useState<BarcoCharterList[] | null>(null)
+    const toastRef = useRef<SuccessAlertRef>(null);
     const { openModal } = useModal()
     const router = useRouter();
 
-    const getCharters = useCallback( async () => {
+    const getCharters = useCallback(async () => {
         try {
             const token = await auth.currentUser?.getIdToken()
             const result = await httpClient.get(`${baseUrl}/barco/charter/list/dashboard`, token)
@@ -30,12 +33,12 @@ const CharterTable = () => {
             openModal("clientError", error.message)
             console.error(error)
         }
-    },[openModal]);
+    }, [openModal]);
 
-    const deleteCharter = async (id: number) => {
+    const deleteCharter = async (codigo: string) => {
         try {
             const token = await auth.currentUser?.getIdToken()
-            await httpClient.delete(`${baseUrl}/barco/charter/`, { id }, token || "")
+            await httpClient.delete(`${baseUrl}/barco/charter/`, {codigo }, token || "")
             getCharters()
         } catch (error: any) {
             openModal("Server Error", error.message, [{ text: "Ok", type: "bg-danger" }])
@@ -43,12 +46,12 @@ const CharterTable = () => {
         }
     }
 
-    const handleDeleteModal = (idCharter: number) => {
+    const handleDeleteModal = (codigo: string) => {
         openModal("Atenção!", "Deseja realmente deletar permanentemente este item do banco de dados?", [
             {
                 type: "bg-danger",
                 text: "Deletar",
-                onClick: () => deleteCharter(idCharter)
+                onClick: () => deleteCharter(codigo)
             },
             {
                 type: "bg-primary",
@@ -57,9 +60,29 @@ const CharterTable = () => {
         ])
     }
 
-    const handleEditCharter = (idCharter: number) => {
-        router.push(`/forms/editar-charter/${idCharter}`)
+    const handleEditCharter = (codigo: string) => {
+        router.push(`/forms/editar-charter/${codigo}`)
     }
+
+    const openCharterPage = (codigo: string) => {
+        router.push(`/info-page/charter/${codigo}`)
+    }
+
+    const copyCharterLink = (codigo: string) => {
+        const link = `${frontEndLink}/charter/barco-charter/${codigo}`;
+
+        navigator.clipboard.writeText(link)
+            .then(() => {
+                toastRef.current?.showToast(
+                    "Link copiado!",
+                    "O link de compartilhamento do barco foi copiado para a área de transferência.",
+                    3000
+                )
+            })
+            .catch(err => {
+                console.error("Erro ao copiar:", err);
+            });
+    };
 
     useEffect(() => {
         const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -91,10 +114,10 @@ const CharterTable = () => {
                     <p className="font-medium">Status </p>
                 </div>
                 <div className="col-span-1 hidden items-center sm:flex justify-start">
-                    <p className="font-medium">Nome </p>
+                    <p className="font-medium">Cidade </p>
                 </div>
                 <div className="col-span-1 flex items-center">
-                    <p className="font-medium">Tamanho</p>
+                    <p className="font-medium">Código</p>
                 </div>
                 <div className="col-span-1 flex items-center">
                     <p className="font-medium">Capacidade</p>
@@ -127,7 +150,7 @@ const CharterTable = () => {
                                     priority
                                 />
                             </div>
-                            <p className="text-sm text-black dark:text-white">
+                            <p onClick={() => openCharterPage(charter.codigo)} className="text-sm text-black dark:text-white hover:text-primary cursor-pointer">
                                 {charter.modelo}
                             </p>
                         </div>
@@ -142,12 +165,12 @@ const CharterTable = () => {
                     </div>
                     <div className="col-span-1 hidden items-center sm:flex">
                         <p className="text-sm text-black dark:text-white">
-                            {charter.nome}
+                            {charter.cidade}
                         </p>
                     </div>
-                    <div className="col-span-1 flex items-center">
-                        <p className="text-sm text-black dark:text-white">
-                            {charter.tamanho} pés
+                    <div className="col-span-1 flex items-center pr-4">
+                        <p className="inline-flex items-center justify-center pr-3 py-1 text-sm">
+                            {charter.codigo}
                         </p>
                     </div>
                     <div className="col-span-1 flex items-center">
@@ -157,15 +180,21 @@ const CharterTable = () => {
                         <p className="text-sm text-meta-3">{charter.preco.moeda + charter.preco.valor}</p>
                     </div>
                     <div className="col-span-1 flex items-center justify-start gap-6">
-                        <button onClick={() => handleDeleteModal(charter.id)} className="hover:text-primary">
-                            <Bin width={20} height={20}/>
+                        <button onClick={() => handleDeleteModal(charter.codigo)} className="hover:text-primary">
+                            <Bin width={20} height={20} />
                         </button>
-                        <button onClick={() => handleEditCharter(charter.id)} className="hover:text-primary">
+                        <button onClick={() => handleEditCharter(charter.codigo)} className="hover:text-primary">
                             <Pencil width={25} height={25} />
+                        </button>
+                        <button onClick={() => copyCharterLink(charter.codigo)} className="hover:text-primary">
+                            <MdOutlineContentCopy width={25} height={25} />
                         </button>
                     </div>
                 </div>
             ))}
+            <div >
+                <SuccessAlert ref={toastRef} />
+            </div>
         </div>
     );
 };

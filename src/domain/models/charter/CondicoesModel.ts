@@ -2,7 +2,7 @@ import { Condicao } from "@/types/applicationTypes/charter/Condicoes";
 
 export class CondicoesModel {
     constructor(
-      public  id: number,
+      public  id: string,
       public  opcao: string
     ){
         

@@ -1,4 +1,4 @@
 export type Condicao = {
-    id: number;
+    id?: string;
     opcao: string
 }

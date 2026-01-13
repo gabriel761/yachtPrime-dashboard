@@ -28,7 +28,7 @@ export const seminovoSchema = z.object({
     tripulacaoCabine: z.number(numberMessage).positive(numberMessage).max(50, { message: "Número de cabines muito alto" }),
     proprietarioId: z.number({message: "id proprietário inválido"}).positive({message: "id proprietário inválido"}).optional(),
     proprietarioNome: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).min(1,{message: "Campo obrigatório"}), 
-    proprietarioEmail: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).min(1, { message: "Campo obrigatório" }), 
+    proprietarioEmail: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).optional(), 
     proprietarioTelefone: z.string(textMessage).min(1, { message: "Campo obrigatório" }).refine((v) => {
         const digits = v.replace(/\D/g, "");
         // internacional

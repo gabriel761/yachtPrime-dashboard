@@ -7,6 +7,8 @@ import Image from "next/image";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import Logo from "@/../public/images/logo/logo-hero.png"
+import Pencil from "@/../public/images/svg/pencil.svg"
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -56,6 +58,7 @@ const menuGroups = [
         ),
         label: "Cadastrar",
         route: "#",
+        role: ["Dono", "Administrador", "Editor"],
         children: [
           { label: "Cadastrar Usuário", route: "/forms/cadastrar-usuario", role: ["Dono"] },
           { label: "Cadastrar Modelo de Barco", route: "/forms/cadastrar-modelo-barco", role: ["Dono", "Administrador"] },
@@ -96,6 +99,7 @@ const menuGroups = [
         ),
         label: "Listar",
         route: "#",
+        role: ["Dono", "Administrador", "Editor"],
         children: [
           { label: "Listar Seminovos", route: "/list/listar-seminovo", role: ["Dono", "Administrador", "Editor"] },
           { label: "Listar Charters", route: "/list/listar-charter", role: ["Dono", "Administrador", "Editor"] },
@@ -103,7 +107,17 @@ const menuGroups = [
           { label: "Listar Proprietários", route: "/list/listar-proprietario", role: ["Dono"] }
         ]
       },
-
+      {
+        icon: (
+          <Pencil width={25} height={25} />
+        ),
+        label: "Editar",
+        route: "#",
+        role: ["Dono", "Administrador"],
+        children: [
+          { label: "Editar condições padrão de charter", route: "/forms/editar-condicoes-padrao", role: ["Dono", "Administrador"] },
+        ]
+      },
     ],
   },
 
@@ -114,31 +128,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, userRole }: SidebarProps) => {
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
   const [filteredMenuGroups, setFilteredMenuGroups] = useState(menuGroups);
 
-  const filterMenuItems = (children: any) => {
-    console.log("menu children roles", children)
-    const result = children.filter((item: any) => {
-      return !item.role.includes(userRole || "")
-    })
-    return result
-  }
+  
 
   useEffect(() => {
     if (!userRole) return;
 
-    const newFilteredGroups = menuGroups.map(group => {
-      return ({
-        ...group,
-        menuItems: group.menuItems.map(menuItem => {
-          return ({
-            ...menuItem,
-            children: menuItem.children.filter(child => child.role.includes(userRole))
-          })
-        })
-      })
-    });
+    const newFilteredGroups = menuGroups.map(group => ({
+      ...group,
+      menuItems: group.menuItems
+        // mantém apenas itens permitidos
+        .filter(menuItem => menuItem.role.includes(userRole))
+        // ajusta os children
+        .map(menuItem => ({
+          ...menuItem,
+          children: menuItem.children?.filter(child =>
+            child.role.includes(userRole)
+          ) ?? []
+        }))
+    }));
 
     setFilteredMenuGroups(newFilteredGroups);
   }, [userRole]);
+
+
 
 
 
@@ -146,7 +158,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, userRole }: SidebarProps) => {
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed left-0 top-0 z-30 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         {/* <!-- SIDEBAR HEADER --> */}
@@ -155,7 +167,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, userRole }: SidebarProps) => {
             <Image
               width={176}
               height={32}
-              src={"/images/logo/logo.svg"}
+              src={Logo.src}
               alt="Logo"
               priority
             />

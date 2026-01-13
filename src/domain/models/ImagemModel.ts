@@ -21,13 +21,13 @@ export class ImagemModel {
         return results.sort((a, b) => a.index - b.index).map(({ index, ...image }) => image);
     }
 
-    async getImagesFromDbByIdSeminovo(idSeminovo: number): Promise<Imagem[]> {
+    async getImagesFromDbByIdSeminovo(idSeminovo: string): Promise<Imagem[]> {
         const token = await auth.currentUser?.getIdToken()
         const images = await httpClient.get(`${baseUrl}/resources/seminovo/imagens-seminovo/${idSeminovo}`, token )
         return images
     }
 
-    async getImagesFromDbByIdCharter(idSeminovo: number): Promise<Imagem[]> {
+    async getImagesFromDbByIdCharter(idSeminovo: string): Promise<Imagem[]> {
         const token = await auth.currentUser?.getIdToken()
         const images = await httpClient.get(`${baseUrl}/resources/charter/imagens-charter/${idSeminovo}`, token)
         return images

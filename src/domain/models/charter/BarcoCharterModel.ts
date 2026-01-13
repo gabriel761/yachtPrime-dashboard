@@ -10,6 +10,7 @@ import { TaxaChurrasco } from "@/types/applicationTypes/charter/TaxaChurrasco";
 import { BarcoCharter } from "@/types/applicationTypes/charter/BarcoCharter";
 import { Modelo } from "@/types/applicationTypes/Modelo";
 import { Proprietario } from "@/types/applicationTypes/Proprietario";
+import { Condicao } from "@/types/applicationTypes/charter/Condicoes";
 
 export class BarcoCharterModel {
     constructor(
@@ -31,22 +32,23 @@ export class BarcoCharterModel {
         public tipoPasseio: TipoPasseio,
         public tripulacaoSkipper: TripulacaoSkipper,
         public aluguelLancha: Preco,
+        public condicoes: Condicao[],
         public taxaChurrasco: TaxaChurrasco,
         public videoPromocional: string,
-        public id?: number,
+        public codigo?: string,
     ){
 
 
         
     }
 
-    setId(id: number){
-        this.id = id
+    setId(id: string){
+        this.codigo = id
     }
 
     extractData(): BarcoCharter {
         return {
-            id: this.id,
+            codigo: this.codigo,
             ativo: this.ativo,
             modelo: this.modelo,
             nome: this.nome,
@@ -65,6 +67,7 @@ export class BarcoCharterModel {
             tipoPasseio: this.tipoPasseio,
             tripulacaoSkipper: this.tripulacaoSkipper,
             aluguelLancha: this.aluguelLancha,
+            condicoes: this.condicoes,
             taxaChurrasco: this.taxaChurrasco,
             videoPromocional: this.videoPromocional
         }

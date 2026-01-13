@@ -24,7 +24,7 @@ export const charterSchema = z.object({
     combustivelPrecoHora: z.string(numberMessage).min(1, { message: "Preço inválido" }),
     proprietarioId: z.number({ message: "id proprietário inválido" }).positive({ message: "id proprietário inválido" }).optional(),
     proprietarioNome: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).min(1, { message: "Campo obrigatório" }),
-    proprietarioEmail: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).min(1, { message: "Campo obrigatório" }),
+    proprietarioEmail: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }).optional(),
     proprietarioTelefone: z.string(textMessage).min(1, { message: "Campo obrigatório" }).refine((v) => {
         const digits = v.replace(/\D/g, "");
         // internacional
@@ -35,7 +35,7 @@ export const charterSchema = z.object({
         return digits.length === 10 || digits.length === 11;
     }, `Telefone inválido (telefones internacionais devem iniciar com "+")`),
     passageiros: z.number(numberMessage).positive(numberMessage).min(1, { message: "Número de passageiros muito baixo" }).max(1000, { message: "Número de passageiros muito alto" }),
-    passageirosPernoite: z.number(numberMessage).positive(numberMessage).min(1, { message: "Número de passageiros muito baixo" }).max(1000, { message: "Número de passageiros muito alto" }),
+    passageirosPernoite: z.number(numberMessage).positive(numberMessage).min(0, { message: "Número de passageiros muito baixo" }).max(1000, { message: "Número de passageiros muito alto" }),
     passageirosTripulacao: z.number(numberMessage).positive(numberMessage).min(1, { message: "Número de passageiros muito baixo" }).max(1000, { message: "Número de passageiros muito alto" }),
     video: z.string(textMessage).url({ message: "Link inválido" }).or(z.string().length(0)),
     imagens: z.array(z.object({ fileName: z.string(textMessage), link: z.string(textMessage) }), { message: "Erro na estrura de dados das imagens" }).min(numeroMinimoImagens, { message: `Adicione pelo menos ${numeroMinimoImagens} imagens para seu barco.` }),
@@ -62,6 +62,9 @@ export const charterSchema = z.object({
         preco: z.string(numberMessage).min(1, { message: "Preço inválido" }),
         detalhesPagamento: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }),
     })).min(1, { message: "Adicione pelo menos 1 roteiro" }),
+    condicoes: z.array(z.object({
+        opcao: z.string(textMessage).max(150, { message: "Maximo de 150 characteres " }),
+    })).min(1, { message: "Adicione pelo menos 1 condição" }),
     ativo: z.boolean({ message: "boleana em ativo inválida" }),
 })
 export type CharterSchema = z.infer<typeof charterSchema>

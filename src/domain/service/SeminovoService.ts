@@ -8,6 +8,7 @@ import { Modelo } from "@/types/applicationTypes/Modelo";
 import { TipoCombustivel } from "@/types/applicationTypes/TipoCombustivel";
 import { Propulsao } from "@/types/applicationTypes/seminovo/Propulsao";
 import { ProprietarioModel } from "../models/ProprietarioModel";
+import { Imagem } from "@/types/applicationTypes/Imagem";
 
 export class SeminovoService {
     async prepareForSubmitSeminovo(data: SeminovoForm,  imageFirebaseHandling: Function){
@@ -18,7 +19,7 @@ export class SeminovoService {
         const motorizacaoModel = new MotorizacaoModel(data.modeloMotor, data.quantidadeMotor, data.potenciaMotor, data.horasMotor, data.anoMotor)
         const cabineModel = new CabineModel(data.passageirosCabine, data.tripulacaoCabine)
         const precoModel = new PrecoModel(data.moeda, data.preco)
-        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioEmail, data.proprietarioTelefone)
+        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioTelefone, data.proprietarioEmail)
         
         const cabineData = cabineModel.extractData()
         const motorizacaoData = motorizacaoModel.extractData()
@@ -33,12 +34,12 @@ export class SeminovoService {
 
     }
 
-    async prepareForUpdateSeminovo(data: SeminovoForm, idSeminovo: number | null, imageFirebaseHandling: Function) {
+    async prepareForUpdateSeminovo(data: SeminovoForm, idSeminovo: string | null, imageFirebaseHandling: Function) {
         if(!idSeminovo) throw new Error("Errro de cliente: idSeminovo não pode ser nulo")
         const formModelo: string = data.modelo
         const formCombustivel: TipoCombustivel = JSON.parse(data.combustivel)
         const formPropulsao: Propulsao = JSON.parse(data.propulsao)
-        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioEmail, data.proprietarioTelefone)
+        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioTelefone, data.proprietarioEmail)
 
         const motorizacaoModel = new MotorizacaoModel(data.modeloMotor, data.quantidadeMotor, data.potenciaMotor, data.horasMotor, data.anoMotor)
         const cabineModel = new CabineModel(data.passageirosCabine, data.tripulacaoCabine)
@@ -54,7 +55,7 @@ export class SeminovoService {
         const imagensDB = await imagemModel.getImagesFromDbByIdSeminovo(idSeminovo)
         const imagensToDeleteFromFirebase = imagemModel.extractImagesToDeleteFromFirebase(data.imagens, imagensDB)
         await imagemModel.deleteImageList(imagensToDeleteFromFirebase, "seminovos")
-        const imageLinks = await imageFirebaseHandling(data.imagens, "seminovos")
+       const imageLinks = await imageFirebaseHandling(data.imagens, "seminovos")
         const barcoSeminovoModel = new BarcoSeminovoModel(formModelo, data.ativo, data.nome, data.ano, data.tamanho, motorizacaoData, data.potenciaTotal, formCombustivel, formPropulsao, cabineData,proprietarioData, data.procedencia, data.destaque, precoData, imageLinks, data.equipadoCom, data.oportunidade, data.video)
         barcoSeminovoModel.setId(idSeminovo)
         const barcoSeminovoData = barcoSeminovoModel.extractData()

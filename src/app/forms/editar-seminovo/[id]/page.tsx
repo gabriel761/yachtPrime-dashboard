@@ -45,7 +45,7 @@ const EditarSeminovo = (props: { params: Params}) => {
     const router = useRouter()
     
    const params = use(props.params)
-    const idSeminovo = params.id ? parseInt(params.id) : null
+    const idSeminovo = params.id
     const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues } = useForm<SeminovoForm>({
         resolver: zodResolver(seminovoSchema)
     })
@@ -156,7 +156,7 @@ const EditarSeminovo = (props: { params: Params}) => {
                 })
             })
 
-            await getSeminovoData(token)
+           if(!!idSeminovo) await getSeminovoData(token)
             setPageIsLoading(false)
         }
 
@@ -172,6 +172,14 @@ const EditarSeminovo = (props: { params: Params}) => {
             </div>
         )
     }
+
+    // if (idSeminovo) {
+    //     return (
+    //         <div className="w-full flex justify-center mt-20">
+    //             <p>Barco seminovo não encontrado</p>
+    //         </div>
+    //     )
+    // }
 
     return (
         <DefaultLayout>

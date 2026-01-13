@@ -155,7 +155,7 @@ const CadastrarUsuario = (props: { params: Params }) => {
                         <FormCard title="Proprietários relacionados">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className=" w-full">
-                                    <Proprietarios control={control} errorMessage={errors.email} />
+                                    <Proprietarios control={control} errorMessage={errors.proprietarios} />
                                 </div>
                             </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">

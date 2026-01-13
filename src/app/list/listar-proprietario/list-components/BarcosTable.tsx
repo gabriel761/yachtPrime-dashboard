@@ -36,7 +36,7 @@ const BarcosTable = ({ idProprietario,  closeMainModal}: { idProprietario: numbe
     const deleteBarco = async (barco: Barco) => {
         try {
             const token = await auth.currentUser?.getIdToken()
-            await httpClient.delete(`${baseUrl}/barco/${barco.tipo}/`, {id: barco.id }, token || "")
+            await httpClient.delete(`${baseUrl}/barco/${barco.tipo}/`, {id: barco.codigo }, token || "")
             getBarcos()
         } catch (error: any) {
             openModal("Server Error", error.message, [{ text: "Ok", type: "bg-danger" }])
@@ -61,7 +61,7 @@ const BarcosTable = ({ idProprietario,  closeMainModal}: { idProprietario: numbe
 
     const handleEditBarco = (barco: Barco) => {
         closeMainModal()
-        router.push(`/forms/editar-${barco.tipo}/${barco.id}`)
+        router.push(`/forms/editar-${barco.tipo}/${barco.codigo}`)
     }
 
     useEffect(() => {

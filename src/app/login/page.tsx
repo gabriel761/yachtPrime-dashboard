@@ -30,7 +30,6 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.senha)
       if (!!userCredential) {
         const token = await userCredential.user.getIdToken()
-        console.log(token)
         document.cookie = `auth=${token}; path=/; max-age=86400`;
         await verifyToken(token)
         router.push("/list/listar-seminovo")

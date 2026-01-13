@@ -139,7 +139,7 @@ const EditarProprietario = (props: { params: Params }) => {
                         <FormCard title="Usuários relacionados">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className=" w-full">
-                                    <Users control={control} errorMessage={errors.email} />
+                                    <Users control={control} errorMessage={errors.usuarios} />
                                 </div>
                             </div>
                             <div className=" w-[300px] mt-10 xl:justify-self-start justify-self-center">

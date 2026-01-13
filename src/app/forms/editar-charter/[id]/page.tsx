@@ -37,6 +37,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { IoCloseSharp } from "react-icons/io5";
 import CheckBoxElement from "../../form-components/CheckboxElement";
 import { get } from "http";
+import Condicoes from "../../form-components/Condicoes/Condicoes";
 
 type Params = Promise<{ id: string }>
 
@@ -49,7 +50,8 @@ const EditarCharter = (props: { params: Params }) => {
     const router = useRouter()
         
        const params = use(props.params)
-        const idCharter = params.id ? parseInt(params.id) : null
+        const idCharter = params.id
+        console.log("ID do charter:", idCharter)
 
     const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues } = useForm<CharterSchema>({
         resolver: zodResolver(charterSchema),
@@ -107,6 +109,7 @@ const EditarCharter = (props: { params: Params }) => {
                 precoAluguelLancha: charter.aluguelLancha.valor,
                 precoTaxaChurrasco: charter.taxaChurrasco.preco.valor,
                 precoTaxaExtra: charter.horaExtra.valor,
+                condicoes: charter.condicoes,
                 taxaChurrascoMessage: charter.taxaChurrasco.mensagem,
                 roteiros: roteirosForm,
                 ativo: charter.ativo
@@ -178,7 +181,7 @@ const EditarCharter = (props: { params: Params }) => {
                 })
             })
 
-            await getCharterData(token)
+            if(!!idCharter) await getCharterData(token)
             setPageIsLoading(false)
         }
 
@@ -193,6 +196,14 @@ const EditarCharter = (props: { params: Params }) => {
             </div>
         )
     }
+
+    // if(idCharter){
+    //     return (
+    //         <div className="w-full flex justify-center mt-20">
+    //             <p>Barco charter não encontrado</p>
+    //         </div>
+    //     )
+    // }
 
     return (
         <DefaultLayout>
@@ -360,6 +371,13 @@ const EditarCharter = (props: { params: Params }) => {
                                 </div>
                             </div>
 
+                        </FormCard>
+                        <FormCard title="Regras e condições do passeio">
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-full">
+                                    <Condicoes control={control} errorMessage={errors.condicoes} />
+                                </div>
+                            </div>
                         </FormCard>
                         <FormCard title="Roteiros de passeio">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">

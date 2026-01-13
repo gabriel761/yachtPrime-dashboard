@@ -81,7 +81,7 @@ const Roteiros = ({ control, errorMessage }: props) => {
             control={control}
             render={({ field }) => (
                 <div className="border-red">
-                    <button type="button" onClick={() => {roteiroForEditRef.current = null ,setIsOpen(true)}} className={`flex w-[150px] justify-center rounded  p-3 mb-5 font-medium text-gray hover:bg-opacity-90 mt-8 bg-primary`}>Adicionar roteiro</button>
+                    <button type="button" onClick={() => {roteiroForEditRef.current = null ,setIsOpen(true)}} className={`flex w-[150px] justify-center rounded  p-3 mb-5 font-medium text-gray hover:bg-opacity-90 bg-primary`}>Adicionar roteiro</button>
                     <AddRoteiroModal isOpenModal={isOpen} setIsOpenModal={setIsOpen} addRoteiroToTable={(value: RoteiroCharterForm) => addItemToTable(value, field.onChange)} roteiroForEditRef={roteiroForEditRef} editItemOnTable={(value: RoteiroCharterForm) => editItemOnTable(value, field.onChange)}/>
                     <RoteirosTable
                         controlValue={field.value}

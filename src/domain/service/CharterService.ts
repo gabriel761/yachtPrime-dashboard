@@ -22,7 +22,7 @@ export class CharterService {
         const tipoPasseio: TipoPasseio = JSON.parse(data.tipoPasseio)
         const tripulcaoSkipper: TripulacaoSkipper = JSON.parse(data.tripulacaoSkipper)
         const petFriendly: PetFriendly = JSON.parse(data.petFriendly)
-        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioEmail, data.proprietarioTelefone)
+        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioTelefone, data.proprietarioEmail)
 
         const consumoCombustivelModel = new ConsumoCombustivelModel(data.combustivelLitrosHora, { moeda: data.combustivelMoeda, valor: data.combustivelPrecoHora }, formCombustivel)
         const passageirosModel = new PassageirosModel(data.passageiros, data.passageirosPernoite, data.passageirosTripulacao)
@@ -46,20 +46,20 @@ export class CharterService {
 
         const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
 
-        const barcoCharterModel = new BarcoCharterModel(data.ativo ,formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video )
+        const barcoCharterModel = new BarcoCharterModel(data.ativo ,formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, data.condicoes , precoTaxaChurrasco, data.video )
         const barcoCharterData = barcoCharterModel.extractData()
 
         return barcoCharterData
     }
 
-    async prepareForUpdateCharter(data: CharterSchema, idCharter:number | null, imageFirebaseHandling: Function) {
+    async prepareForUpdateCharter(data: CharterSchema, idCharter:string | null, imageFirebaseHandling: Function) {
         if (!idCharter) throw new Error("Errro de cliente: idCharter não pode ser nulo")
         const formModelo: string = data.modelo
         const formCombustivel: TipoCombustivel = JSON.parse(data.combustivel)
         const tipoPasseio: TipoPasseio = JSON.parse(data.tipoPasseio)
         const tripulcaoSkipper: TripulacaoSkipper = JSON.parse(data.tripulacaoSkipper)
         const petFriendly: PetFriendly = JSON.parse(data.petFriendly)
-        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioEmail, data.proprietarioTelefone)
+        const proprietarioModel = new ProprietarioModel(data.proprietarioNome, data.proprietarioTelefone, data.proprietarioEmail)
 
         const consumoCombustivelModel = new ConsumoCombustivelModel(data.combustivelLitrosHora, { moeda: data.combustivelMoeda, valor: data.combustivelPrecoHora }, formCombustivel)
         const passageirosModel = new PassageirosModel(data.passageiros, data.passageirosPernoite, data.passageirosTripulacao)
@@ -86,9 +86,8 @@ export class CharterService {
         const imagensToDeleteFromFirebase = imagemModel.extractImagesToDeleteFromFirebase(data.imagens, imagensDB)
         await imagemModel.deleteImageList(imagensToDeleteFromFirebase, "charters")
        const imageLinks = await imageFirebaseHandling(data.imagens, "charters")
-     // const imageLinks:Imagem[] = data.imagens
 
-        const barcoCharterModel = new BarcoCharterModel(data.ativo, formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, precoTaxaChurrasco, data.video)
+        const barcoCharterModel = new BarcoCharterModel(data.ativo, formModelo, data.nome, data.ano, data.tamanho, data.cidade, preco, passageiros, petFriendly, data.itensDisponiveis, imageLinks, consumoCombustivel, roteiros, precoTaxaExtra, proprietarioData, tipoPasseio, tripulcaoSkipper, precoAluguelLancha, data.condicoes,precoTaxaChurrasco, data.video)
 
         barcoCharterModel.setId(idCharter)
         const barcoCharterData = barcoCharterModel.extractData()

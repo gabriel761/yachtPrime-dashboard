@@ -5,22 +5,24 @@ import httpClient from "@/infra/httpClient";
 import { BarcoSeminovoList } from "@/types/applicationTypes/seminovo/BarcoSeminovo";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import placeholder from "@/../../public/images/placeholder/360_F_671923740_x0zOL3OIuUAnSF6sr7PuznCI5bQFKhI0.jpg"
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
 import Pencil from "@/../public/images/svg/pencil.svg"
 import Bin from "@/../public/images/svg/bin.svg"
-import { get } from "http";
-
+import { MdOutlineContentCopy } from "react-icons/md";
+import frontEndLink from "@/infra/front-end-connection"
+import SuccessAlert, { SuccessAlertRef } from "@/components/Alerts/SuccessAlert";
 
 
 const SeminovoTable = () => {
     const [seminovoData, setSeminovoData] = useState<BarcoSeminovoList[] | null>(null)
+    const toastRef = useRef<SuccessAlertRef>(null);
     const { openModal } = useModal()
     const router = useRouter();
 
-    const getSeminovos = useCallback( async () => {
+    const getSeminovos = useCallback(async () => {
         try {
             const token = await auth.currentUser?.getIdToken()
             const result = await httpClient.get(`${baseUrl}/barco/seminovo/list/dashboard`, token)
@@ -29,12 +31,12 @@ const SeminovoTable = () => {
             openModal("clientError", error.message)
             console.error(error)
         }
-    },[openModal]);
+    }, [openModal]);
 
-    const deleteSeminovo = async (id: number) => {
+    const deleteSeminovo = async (codigo: string) => {
         try {
             const token = await auth.currentUser?.getIdToken()
-            await httpClient.delete(`${baseUrl}/barco/seminovo/`, { id }, token || "")
+            await httpClient.delete(`${baseUrl}/barco/seminovo/`, { codigo }, token || "")
             getSeminovos()
         } catch (error: any) {
             openModal("Server Error", error.message, [{ text: "Ok", type: "bg-danger" }])
@@ -42,12 +44,12 @@ const SeminovoTable = () => {
         }
     }
 
-    const handleDeleteModal = (idSeminovo: number) => {
+    const handleDeleteModal = (codigo: string) => {
         openModal("Atenção!", "Deseja realmente deletar permanentemente este item do banco de dados?", [
             {
                 type: "bg-danger",
                 text: "Deletar",
-                onClick: () => deleteSeminovo(idSeminovo)
+                onClick: () => deleteSeminovo(codigo)
             },
             {
                 type: "bg-primary",
@@ -56,9 +58,29 @@ const SeminovoTable = () => {
         ])
     }
 
-    const handleEditSeminovo = (idSeminovo: number) => {
-        router.push(`/forms/editar-seminovo/${idSeminovo}`)
+    const handleEditSeminovo = (codigo: string) => {
+        router.push(`/forms/editar-seminovo/${codigo}`)
     }
+
+    const openSeminovoPage = (codigo: string) => {
+        router.push(`/info-page/seminovo/${codigo}`)
+    }
+
+    const copyCharterLink = (codigo: string) => {
+        const link = `${frontEndLink}/charter/barco-charter/${codigo}`;
+
+        navigator.clipboard.writeText(link)
+            .then(() => {
+                toastRef.current?.showToast(
+                    "Link copiado!",
+                    "O link de compartilhamento do barco foi copiado para a área de transferência.",
+                    3000
+                )
+            })
+            .catch(err => {
+                console.error("Erro ao copiar:", err);
+            });
+    };
 
     useEffect(() => {
         const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -96,7 +118,7 @@ const SeminovoTable = () => {
                     <p className="font-medium">Tamanho</p>
                 </div>
                 <div className="col-span-1 flex items-center">
-                    <p className="font-medium">Ano</p>
+                    <p className="font-medium">Código</p>
                 </div>
                 <div className="col-span-1 flex items-center">
                     <p className="font-medium">Preço</p>
@@ -126,7 +148,7 @@ const SeminovoTable = () => {
                                     priority
                                 />
                             </div>
-                            <p className="text-sm text-black dark:text-white">
+                            <p onClick={() => openSeminovoPage(seminovo.codigo)} className="text-sm text-black dark:text-white hover:text-primary cursor-pointer">
                                 {seminovo.modelo}
                             </p>
                         </div>
@@ -150,21 +172,27 @@ const SeminovoTable = () => {
                         </p>
                     </div>
                     <div className="col-span-1 flex items-center">
-                        <p className="text-sm text-black dark:text-white">{seminovo.ano}</p>
+                        <p className="inline-flex items-center justify-center pr-3 py-1 text-sm">
+                            {seminovo.codigo}
+                        </p>
                     </div>
                     <div className="col-span-1 flex items-center">
                         <p className="text-sm text-meta-3">{seminovo.moeda + seminovo.valor}</p>
                     </div>
                     <div className="col-span-1 flex items-center justify-start gap-6">
-                        <button onClick={() => handleDeleteModal(seminovo.id)} className="hover:text-primary">
+                        <button onClick={() => handleDeleteModal(seminovo.codigo)} className="hover:text-primary">
                             <Bin width={20} height={20} />
                         </button>
-                        <button onClick={() => handleEditSeminovo(seminovo.id)} className="hover:text-primary">
+                        <button onClick={() => handleEditSeminovo(seminovo.codigo)} className="hover:text-primary">
                             <Pencil width={25} height={25} />
+                        </button>
+                        <button onClick={() => copyCharterLink(seminovo.codigo)} className="hover:text-primary">
+                            <MdOutlineContentCopy width={25} height={25} />
                         </button>
                     </div>
                 </div>
             ))}
+            <SuccessAlert ref={toastRef} />
         </div>
     );
 };

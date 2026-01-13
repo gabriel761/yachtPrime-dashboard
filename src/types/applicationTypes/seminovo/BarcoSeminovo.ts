@@ -10,7 +10,7 @@ import { Propulsao } from "./Propulsao";
 import { Proprietario } from "../Proprietario";
 
 export type BarcoSeminovoOutput = {
-    id?:number;
+    codigo?: string
     ativo: boolean;
     modelo: string;
     nome: string;
@@ -32,7 +32,7 @@ export type BarcoSeminovoOutput = {
 };
 
 export type BarcoSeminovoList = {
-    id: number,
+    codigo: string,
     ativo: boolean,
     modelo: string,
     nome: string,
@@ -42,3 +42,5 @@ export type BarcoSeminovoList = {
     moeda: string,
     valor: string
 }
+
+

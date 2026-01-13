@@ -33,6 +33,7 @@ import Bin from "@/../public/images/svg/bin.svg"
 import { IoCloseSharp } from "react-icons/io5";
 import { onAuthStateChanged } from "firebase/auth";
 import CheckBoxElement from "../form-components/CheckboxElement";
+import Condicoes from "../form-components/Condicoes/Condicoes";
 
 
 const CadastrarCharter = () => {
@@ -42,7 +43,7 @@ const CadastrarCharter = () => {
     const [token, setToken] = useState('')
     const { openModal } = useModal()
 
-    const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues } = useForm<CharterSchema>({
+    const { register, handleSubmit, control, reset, formState: { errors }, setValue, watch, getValues, resetField } = useForm<CharterSchema>({
         resolver: zodResolver(charterSchema),
         defaultValues: {
             taxaChurrascoMessage: "Pagamento no dia do passeio diretamente ao capitão"
@@ -109,9 +110,14 @@ const CadastrarCharter = () => {
         const unsub = onAuthStateChanged(auth, async (user) => {
           if (user) {
             const token = await user.getIdToken()
+              const result = await httpClient.get(`${baseUrl}/resources/charter/condicoes-padrao`, token)
+              reset({
+                condicoes: result
+              })
             setToken(token)
+              
           }
-    
+          
           setPageIsLoading(false) // <-- sempre sai do loading
         })
     
@@ -293,12 +299,20 @@ const CadastrarCharter = () => {
                             </div>
 
                         </FormCard>
+                        <FormCard title="Regras e condições do passeio">
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                                <div className=" w-full">
+                                    <Condicoes control={control} errorMessage={errors.condicoes} />
+                                </div>
+                            </div>
+                        </FormCard>
                         <FormCard title="Roteiros de passeio">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className=" w-full">
                                     <Roteiros control={control} errorMessage={errors.roteiros} />
                                 </div>
                             </div>
+                            
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className=" w-full">
                                     <CheckBoxElement control={control} registerName="ativo" label="Ativo (Você pode desmarcar esta caixa para tornar seu barco invisível para os usuário de seu site)" errorMessage={errors.ativo?.message} />

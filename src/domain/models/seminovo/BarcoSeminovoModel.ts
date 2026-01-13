@@ -10,7 +10,7 @@ import { Propulsao } from "@/types/applicationTypes/seminovo/Propulsao";
 import { Proprietario } from "@/types/applicationTypes/Proprietario";
 
 export class BarcoSeminovoModel implements BarcoSeminovoOutput {
-    public id?: number
+    public codigo?: string
     constructor(
         public modelo: string,
         public ativo: boolean,
@@ -33,12 +33,12 @@ export class BarcoSeminovoModel implements BarcoSeminovoOutput {
     ) {
 
     }
-    setId(id: number) {
-        this.id = id
+    setId(id: string) {
+        this.codigo = id
     }
     extractData(): BarcoSeminovoOutput {
         return {
-            id: this.id,
+            codigo: this.codigo,
             ativo: this.ativo,
             modelo: this.modelo,
             nome: this.nome,

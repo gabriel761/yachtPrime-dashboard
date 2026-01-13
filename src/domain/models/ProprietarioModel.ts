@@ -3,8 +3,8 @@ import { Proprietario } from "@/types/applicationTypes/Proprietario";
 export class ProprietarioModel {
     constructor(
         public nome:string,
-        public email: string,
         public telefone: string,
+        public email?: string,
         public id?: number
     ){
         

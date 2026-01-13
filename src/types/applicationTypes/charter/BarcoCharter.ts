@@ -2,6 +2,7 @@ import { Imagem } from "../Imagem";
 import { Modelo } from "../Modelo";
 import { Preco } from "../Preco";
 import { Proprietario } from "../Proprietario";
+import { Condicao } from "./Condicoes";
 import { ConsumoCombustivel } from "./ConsumoCombustivel";
 import { ItemCharter } from "./ItemCharter";
 import { Passageiros } from "./Passageiros";
@@ -11,7 +12,7 @@ import { TipoPasseio } from "./TipoPasseio";
 import { TripulacaoSkipper } from "./TripulacaoSkipper";
 
 export type BarcoCharter = {
-    id?: number;
+    codigo?: string
     ativo: boolean;
     modelo: string;
     nome: string | null;
@@ -30,12 +31,13 @@ export type BarcoCharter = {
     tripulacaoSkipper: TripulacaoSkipper;
     horaExtra: Preco;
     aluguelLancha: Preco;
+    condicoes: Condicao[];
     taxaChurrasco: TaxaChurrasco;
     videoPromocional: string | null
 }
 
 export type BarcoCharterUpdate = {
-    id?: number;
+    codigo?: string
     ativo: boolean;
     modelo: string;
     nome: string | null;
@@ -54,18 +56,26 @@ export type BarcoCharterUpdate = {
     tripulacaoSkipper: TripulacaoSkipper;
     horaExtra: Preco;
     aluguelLancha: Preco;
+    condicoes: Condicao[];
     taxaChurrasco: TaxaChurrasco;
     videoPromocional: string | null
 }
 
 
 export type BarcoCharterList = {
-    id: number,
+    codigo: string,
     ativo: boolean,
     imagem: string,
-    nome: string,
+    cidade: string,
     modelo: string,
     tamanho: number,
     preco: Preco,
     passageiros: number
+}
+
+export type BarcoCharterRelated = {
+    codigo: string,
+    modelo: string,
+    imagem: string,
+    preco: Preco,
 }
