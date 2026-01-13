@@ -67,7 +67,7 @@ const SeminovoTable = () => {
     }
 
     const copyCharterLink = (codigo: string) => {
-        const link = `${frontEndLink}/charter/barco-charter/${codigo}`;
+        const link = `${frontEndLink}/seminovos/barco-seminovo/${codigo}`;
 
         navigator.clipboard.writeText(link)
             .then(() => {
