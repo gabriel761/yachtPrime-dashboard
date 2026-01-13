@@ -75,6 +75,9 @@ const EditarCharter = (props: { params: Params }) => {
     const getCharterData = useCallback( async (newToken:string) => {
         try{
             const charter: BarcoCharter = await httpClient.get(`${baseUrl}/barco/charter/dashboard/${idCharter}`, newToken)
+            if (!charter.condicoes){
+               charter.condicoes = await httpClient.get(`${baseUrl}/resources/charter/condicoes-padrao`, token)
+            }
             const roteirosModel = new RoteiroCharterModel()
             roteirosModel.setRoteirosForm(charter.roteiros)
             const roteirosForm = roteirosModel.extractDataForm()
