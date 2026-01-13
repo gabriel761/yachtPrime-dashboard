@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import httpClient from './infra/httpClient'
 import baseUrl from './infra/back-end-connection'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = request.cookies.get('auth')?.value;
 
   try {
