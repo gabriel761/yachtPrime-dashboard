@@ -148,7 +148,7 @@ const SeminovoTable = () => {
                                     priority
                                 />
                             </div>
-                            <p onClick={() => openSeminovoPage(seminovo.codigo)} className="text-sm text-black dark:text-white hover:text-primary cursor-pointer">
+                            <p onClick={() => openSeminovoPage(seminovo.codigo)} className="text-sm text-black dark:text-white hover:text-primary dark:hover:text-primary cursor-pointer">
                                 {seminovo.modelo}
                             </p>
                         </div>

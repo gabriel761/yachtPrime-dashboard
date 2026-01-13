@@ -150,7 +150,7 @@ const CharterTable = () => {
                                     priority
                                 />
                             </div>
-                            <p onClick={() => openCharterPage(charter.codigo)} className="text-sm text-black dark:text-white hover:text-primary cursor-pointer">
+                            <p onClick={() => openCharterPage(charter.codigo)} className="text-sm text-black dark:text-white hover:text-primary dark:hover:text-primary cursor-pointer">
                                 {charter.modelo}
                             </p>
                         </div>
